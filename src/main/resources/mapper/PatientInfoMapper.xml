@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinxt.surveyscale.mapper.PatientInfoMapper">
+
+    <resultMap id="patientInfoResultMap" type="com.yinxt.surveyscale.pojo.PatientInfo">
+        <result column="patient_id" property="patientId"/>
+        <result column="patient_name" property="name"/>
+        <result column="gender" property="gender"/>
+        <result column="birthday" property="birthday"/>
+        <result column="telephone_number" property="telephoneNumber"/>
+        <result column="family_address" property="familyAddress"/>
+    </resultMap>
+
+    <select id="selectPatientInfo" parameterType="com.yinxt.surveyscale.pojo.PatientInfo"
+            resultMap="patientInfoResultMap">
+        select *
+        from tb_patient_info
+        <where>
+            <if test="patientId != null and patientId != ''">
+                patient_id=#{patientId,jdbcType=VARCHAR}
+            </if>
+            <if test="name != null and name != ''">
+                patient_name=#{name,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPatientInfoList" parameterType="com.yinxt.surveyscale.pojo.PatientInfo"
+            resultMap="patientInfoResultMap">
+        select *
+        from tb_patient_info
+        <where>
+            status = '1'
+            <if test="dto != null and dto.name != null and dto.name != ''">
+                and patient_name = #{dto.name,jdbcType=VARCHAR}
+            </if>
+            <if test="dto != null and dto.telephoneNumber != null and dto.telephoneNumber != ''">
+                and telephone_number=#{dto.telephoneNumber,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <insert id="insertPatientInfo" parameterType="com.yinxt.surveyscale.pojo.PatientInfo">
+        insert into tb_patient_info
+        (patient_id, patient_name, gender, birthday, telephone_number, family_address, create_time)
+        values (
+        #{patientId,jdbcType=VARCHAR},
+        #{name,jdbcType=VARCHAR},
+        #{gender,jdbcType=INTEGER},
+        #{birthday, jdbcType=DATE},
+        #{telephoneNumber,jdbcType=VARCHAR},
+        #{familyAddress,jdbcType=VARCHAR},
+        now()
+        )
+    </insert>
+
+    <update id="updatePatientInfo" parameterType="com.yinxt.surveyscale.pojo.PatientInfo">
+        update tb_patient_info
+        <set>
+            <if test="name != null and name != ''">
+                patient_name=#{name,jdbcType=VARCHAR},
+            </if>
+            <if test="gender != null and gender != ''">
+                gender=#{gender,jdbcType=VARCHAR},
+            </if>
+            <if test="telephoneNumber != null and telephoneNumber != ''">
+                birthday=#{telephoneNumber,jdbcType=DATE},
+            </if>
+            <if test="telephoneNumber != null and telephoneNumber != ''">
+                telephone_number=#{telephoneNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="familyAddress != null and familyAddress != ''">
+                family_address=#{familyAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status, jdbcType=VARCHAR},
+            </if>
+            update_time = now()
+        </set>
+        <where>
+            patient_id=#{patientId,jdbcType=VARCHAR}
+        </where>
+    </update>
+
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinxt.surveyscale.mapper.ScaleInfoMapper">
+
+    <resultMap id="scaleInfoResultMap" type="com.yinxt.surveyscale.pojo.ScaleInfo">
+        <result column="scale_id" jdbcType="VARCHAR" property="scaleId"/>
+        <result column="doctor_id" jdbcType="VARCHAR" property="doctorId"/>
+        <result column="scale_name" jdbcType="VARCHAR" property="scaleName"/>
+        <result column="question_sort" jdbcType="VARCHAR" property="questionSort"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <insert id="insertScaleInfo" parameterType="com.yinxt.surveyscale.pojo.ScaleInfo">
+        insert into
+        tb_scale_info
+        (scale_id, doctor_id, scale_name, question_sort, create_time)
+        VALUES
+        (
+          #{scaleId,jdbcType=VARCHAR},#{doctorId,jdbcType=VARCHAR},#{scaleName,jdbcType=VARCHAR},
+          #{questionSort,jdbcType=VARCHAR},now()
+        )
+    </insert>
+
+    <select id="selectScaleInfoList" resultMap="scaleInfoResultMap">
+        select
+        *
+        from tb_scale_info
+        <where>
+            <if test="scaleName != null and scaleName != ''">
+                scale_name like concat('%', #{scaleName}, '%')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectScaleInfo" resultMap="scaleInfoResultMap">
+        select *
+        -- scale_id scaleId,
+        -- doctor_id doctorId,
+        -- scale_name scaleName,
+        -- DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') createTime
+        from tb_scale_info
+        <where>
+            scale_id=#{scaleId,jdbcType=VARCHAR}
+        </where>
+    </select>
+
+    <update id="updateScaleInfo">
+        update tb_scale_info
+        <set>
+            <trim suffixOverrides=",">
+                <if test="scaleName != null and scaleName != ''">
+                    scale_name=#{scaleName,jdbcType=VARCHAR},
+                </if>
+                <if test="status != null and status != ''">
+                    status=#{status,jdbcType=VARCHAR},
+                </if>
+                update_time=now()
+            </trim>
+        </set>
+        <where>
+            scale_id=#{scaleId,jdbcType=VARCHAR}
+        </where>
+    </update>
+
+</mapper>
+
