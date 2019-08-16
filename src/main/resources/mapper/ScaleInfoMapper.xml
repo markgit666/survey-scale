@@ -26,10 +26,10 @@
         *
         from tb_scale_info
         <where>
+            and status='1'
             <if test="scaleName != null and scaleName != ''">
                 scale_name like concat('%', #{scaleName}, '%')
             </if>
-            and status='0'
         </where>
         order by create_time desc
     </select>
