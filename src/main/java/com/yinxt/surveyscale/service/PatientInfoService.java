@@ -3,7 +3,7 @@ package com.yinxt.surveyscale.service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.yinxt.surveyscale.StatusEnum;
+import com.yinxt.surveyscale.util.enums.StatusEnum;
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
 import com.yinxt.surveyscale.mapper.PatientInfoMapper;
 import com.yinxt.surveyscale.pojo.PatientInfo;

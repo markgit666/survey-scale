@@ -23,13 +23,11 @@ public class ScaleInfoController {
     @Autowired
     private ScaleInfoService scaleInfoService;
 
-    @CrossOrigin
     @RequestMapping(value = "info/add")
     public Result addScaleInfo(@RequestBody @Valid ScaleInfo scaleInfo) throws Exception {
         return scaleInfoService.saveScaleInfo(scaleInfo);
     }
 
-    @CrossOrigin
     @RequestMapping(value = "info/getList")
     public Result getScaleInfoList(@RequestBody @Valid ListDataReqDTO<String> dataReqDTO) {
         return scaleInfoService.getScaleInfoList(dataReqDTO);

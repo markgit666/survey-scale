@@ -3,7 +3,7 @@ package com.yinxt.surveyscale.service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.yinxt.surveyscale.StatusEnum;
+import com.yinxt.surveyscale.util.enums.StatusEnum;
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
 import com.yinxt.surveyscale.mapper.ScaleInfoMapper;
 import com.yinxt.surveyscale.pojo.Question;
@@ -172,6 +172,7 @@ public class ScaleInfoService {
         } else {
             info.setQuestionList(questionList);
         }
+        log.info("返回量表信息：{}", JSON.toJSONString(info));
         return Result.success(info);
     }
 

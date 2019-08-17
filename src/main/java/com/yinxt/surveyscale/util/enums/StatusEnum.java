@@ -1,4 +1,4 @@
-package com.yinxt.surveyscale;
+package com.yinxt.surveyscale.util.enums;
 
 import lombok.Data;
 

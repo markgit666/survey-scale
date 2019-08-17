@@ -1,7 +1,7 @@
 package com.yinxt.surveyscale.service;
 
 import com.alibaba.fastjson.JSON;
-import com.yinxt.surveyscale.StatusEnum;
+import com.yinxt.surveyscale.util.enums.StatusEnum;
 import com.yinxt.surveyscale.mapper.QuestionMapper;
 import com.yinxt.surveyscale.pojo.Question;
 import com.yinxt.surveyscale.util.result.Result;
