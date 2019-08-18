@@ -147,6 +147,11 @@ public class ScaleInfoService {
     @Transactional
     public Result getScaleInfo(ScaleInfo scaleInfo) {
         ScaleInfo info = scaleInfoMapper.selectScaleInfo(scaleInfo.getScaleId());
+
+        if(info == null){
+            return Result.error();
+        }
+
         /**
          * 查找每张量表的题目
          */
