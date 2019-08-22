@@ -7,7 +7,7 @@ import com.yinxt.surveyscale.util.enums.StatusEnum;
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
 import com.yinxt.surveyscale.mapper.PatientInfoMapper;
 import com.yinxt.surveyscale.pojo.PatientInfo;
-import com.yinxt.surveyscale.util.PageBean;
+import com.yinxt.surveyscale.util.page.PageBean;
 import com.yinxt.surveyscale.util.result.Result;
 import com.yinxt.surveyscale.util.result.ResultEnum;
 import lombok.extern.slf4j.Slf4j;

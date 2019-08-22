@@ -8,7 +8,7 @@ import com.yinxt.surveyscale.dto.ListDataReqDTO;
 import com.yinxt.surveyscale.mapper.ScaleInfoMapper;
 import com.yinxt.surveyscale.pojo.Question;
 import com.yinxt.surveyscale.pojo.ScaleInfo;
-import com.yinxt.surveyscale.util.PageBean;
+import com.yinxt.surveyscale.util.page.PageBean;
 import com.yinxt.surveyscale.util.result.Result;
 import com.yinxt.surveyscale.util.result.ResultEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -50,13 +50,9 @@ public class ScaleInfoService {
             List<Question> questionList = scaleInfo.getQuestionList();
             if (questionList != null) {
                 for (Question question : questionList) {
-                    /**
-                     * 处理选择题
-                     */
-                    questionItemFormat(question);
+
                     question.setScaleId(scaleInfo.getScaleId());
-                    String questionId = "Q_" + UUID.randomUUID().toString().substring(0, 8);
-                    question.setQuestionId(questionId);
+
                     questionService.addQuestion(question);
                     if (stringBuffer.length() > 0) {
                         stringBuffer.append("%").append(question.getQuestionId());
@@ -81,40 +77,6 @@ public class ScaleInfoService {
     }
 
     /**
-     * 选择题选项转换
-     *
-     * @param question
-     */
-    public void questionItemFormat(Question question) {
-        int i = 0;
-        if (question.getItems() != null) {
-            for (Map<String, String> itemMap : question.getItems()) {
-                switch (i) {
-                    case 0:
-                        question.setItem_01(itemMap.get("option"));
-                        break;
-                    case 1:
-                        question.setItem_02(itemMap.get("option"));
-                        break;
-                    case 2:
-                        question.setItem_03(itemMap.get("option"));
-                        break;
-                    case 3:
-                        question.setItem_04(itemMap.get("option"));
-                        break;
-                    case 4:
-                        question.setItem_05(itemMap.get("option"));
-                        break;
-                    case 5:
-                        question.setItem_06(itemMap.get("option"));
-                        break;
-                }
-                i++;
-            }
-        }
-    }
-
-    /**
      * 获取量表信息列表
      *
      * @param listDataReqDTO
@@ -123,12 +85,8 @@ public class ScaleInfoService {
     public Result getScaleInfoList(ListDataReqDTO<String> listDataReqDTO) {
         try {
             PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
-            /**
-             * 查找量表
-             */
+            //查找量表
             List<ScaleInfo> scaleInfos = scaleInfoMapper.selectScaleInfoList(listDataReqDTO.getData());
-
-
             PageInfo pageInfo = new PageInfo(scaleInfos);
             PageBean pageBean = new PageBean(pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getPages(), pageInfo.getTotal(), scaleInfos);
             return Result.success(pageBean);
@@ -148,7 +106,7 @@ public class ScaleInfoService {
     public Result getScaleInfo(ScaleInfo scaleInfo) {
         ScaleInfo info = scaleInfoMapper.selectScaleInfo(scaleInfo.getScaleId());
 
-        if(info == null){
+        if (info == null) {
             return Result.error();
         }
 
@@ -156,9 +114,6 @@ public class ScaleInfoService {
          * 查找每张量表的题目
          */
         List<Question> questionList = questionService.getQuestion(scaleInfo.getScaleId());
-        for (Question question : questionList) {
-            formartItems(question);
-        }
 
         //题目顺序列表
         List<Question> questionSortList = new ArrayList<>();
@@ -179,44 +134,6 @@ public class ScaleInfoService {
         }
         log.info("返回量表信息：{}", JSON.toJSONString(info));
         return Result.success(info);
-    }
-
-    /**
-     * 封装选项
-     */
-    public void formartItems(Question question) {
-        List<Map<String, String>> items = new ArrayList<>();
-        if (StringUtils.isNotBlank(question.getItem_01())) {
-            Map<String, String> item = new HashMap<>();
-            item.put("option", question.getItem_01());
-            items.add(item);
-        }
-        if (StringUtils.isNotBlank(question.getItem_02())) {
-            Map<String, String> item = new HashMap<>();
-            item.put("option", question.getItem_02());
-            items.add(item);
-        }
-        if (StringUtils.isNotBlank(question.getItem_03())) {
-            Map<String, String> item = new HashMap<>();
-            item.put("option", question.getItem_03());
-            items.add(item);
-        }
-        if (StringUtils.isNotBlank(question.getItem_04())) {
-            Map<String, String> item = new HashMap<>();
-            item.put("option", question.getItem_04());
-            items.add(item);
-        }
-        if (StringUtils.isNotBlank(question.getItem_05())) {
-            Map<String, String> item = new HashMap<>();
-            item.put("option", question.getItem_05());
-            items.add(item);
-        }
-        if (StringUtils.isNotBlank(question.getItem_06())) {
-            Map<String, String> item = new HashMap<>();
-            item.put("option", question.getItem_06());
-            items.add(item);
-        }
-        question.setItems(items);
     }
 
     /**

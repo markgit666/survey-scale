@@ -44,6 +44,10 @@ public class Question {
     /**
      * 附件
      */
+    private List<String> attachmentList;
+    /**
+     * 附件字符串
+     */
     private String attachment;
     /**
      * 状态

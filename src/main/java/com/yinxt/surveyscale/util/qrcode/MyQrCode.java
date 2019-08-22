@@ -7,7 +7,6 @@ import com.google.zxing.common.BitMatrix;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
@@ -18,8 +17,8 @@ import java.util.Map;
 @Slf4j
 public class MyQrCode {
     private final static int WIDTH = 300;
-    private final static int HEIGH = 300;
-    private final static String IMAGE_FORMART = "png";
+    private final static int HIGH = 300;
+    private final static String IMAGE_FORMAT = "png";
 
     public static void main(String[] args) {
 
@@ -35,9 +34,9 @@ public class MyQrCode {
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
 
         try {
-            BitMatrix bitMatrix = multiFormatWriter.encode(content, BarcodeFormat.QR_CODE, WIDTH, HEIGH, hintMap);
+            BitMatrix bitMatrix = multiFormatWriter.encode(content, BarcodeFormat.QR_CODE, WIDTH, HIGH, hintMap);
             Path file = Paths.get("/Users/yinxiaotian/文件/erweima");
-            MatrixToImageWriter.writeToPath(bitMatrix, IMAGE_FORMART, file);
+            MatrixToImageWriter.writeToPath(bitMatrix, IMAGE_FORMAT, file);
         } catch (Exception e) {
             log.error("二维码写入文件异常：", e);
         }
@@ -56,8 +55,8 @@ public class MyQrCode {
         hintMap.put(EncodeHintType.CHARACTER_SET, "utf-8");
         hintMap.put(EncodeHintType.MARGIN, 1);
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-        BitMatrix bitMatrix = multiFormatWriter.encode(content, BarcodeFormat.QR_CODE, WIDTH, HEIGH, hintMap);
+        BitMatrix bitMatrix = multiFormatWriter.encode(content, BarcodeFormat.QR_CODE, WIDTH, HIGH, hintMap);
         BufferedImage bufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
-        ImageIO.write(bufferedImage, IMAGE_FORMART, response.getOutputStream());
+        ImageIO.write(bufferedImage, IMAGE_FORMAT, response.getOutputStream());
     }
 }

@@ -1,15 +1,35 @@
 package com.yinxt.surveyscale.service;
 
+import com.alibaba.fastjson.JSON;
+import com.yinxt.surveyscale.mapper.FileInfoMapper;
+import com.yinxt.surveyscale.pojo.FileInfo;
+import com.yinxt.surveyscale.util.enums.FileTypeEnum;
 import com.yinxt.surveyscale.util.qrcode.MyQrCode;
+import com.yinxt.surveyscale.util.result.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
 public class FileService {
+
+    @Value("${image.path}")
+    private String imageRootPath;
+    @Autowired
+    private FileInfoMapper fileInfoMapper;
 
     public void downloadQrCodeImage(HttpServletRequest request, HttpServletResponse response) {
         String addr = request.getLocalAddr();
@@ -26,5 +46,111 @@ public class FileService {
         } catch (Exception e) {
             log.error("获取二维码异常：{}", e);
         }
+    }
+
+    /**
+     * 上传图片
+     *
+     * @param multipartFiles
+     */
+    public Result uploadImage(MultipartFile[] multipartFiles) {
+        log.info("上传图片：{}", JSON.toJSONString(multipartFiles.toString()));
+        String imageFullPath = "";
+        String fileName;
+        String fileNo = "";
+        List<String> fileNoList = new ArrayList<>();
+        try {
+            for (MultipartFile multipartFile : multipartFiles) {
+
+                DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+                String dateString = dateFormat.format(new Date());
+                String originName = multipartFile.getOriginalFilename();
+                fileNo = dateString + UUID.randomUUID().toString().substring(0, 6);
+                fileName = fileNo + originName.substring(originName.lastIndexOf("."));
+                imageFullPath = imageRootPath + File.separator + fileName;
+                File file = new File(imageFullPath);
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+                multipartFile.transferTo(file);
+
+                /**
+                 * 保存文件信息
+                 */
+                FileInfo fileInfo = new FileInfo();
+                fileInfo.setFileNo(fileNo);
+                fileInfo.setFileName(fileName);
+                fileInfo.setFileType(FileTypeEnum.IMAGE.getCode());
+                saveFileInfo(fileInfo);
+                fileNoList.add(fileNo);
+            }
+        } catch (IOException e) {
+            log.error("文件上传异常：", e);
+            return Result.error();
+        }
+        log.info("文件上传成功：{}", imageFullPath);
+        return Result.success(fileNoList);
+    }
+
+    /**
+     * 保存文件信息
+     *
+     * @param fileInfo
+     */
+    public void saveFileInfo(FileInfo fileInfo) {
+        fileInfoMapper.insertFileInfo(fileInfo);
+    }
+
+
+    /**
+     * 图片下载
+     *
+     * @param fileNo
+     * @param response
+     */
+    public void downloadImage(String fileNo, HttpServletResponse response) {
+        FileInfo fileInfo = queryFileInfo(fileNo);
+        if (fileInfo != null) {
+            String fileName = fileInfo.getFileName();
+            InputStream inputStream = null;
+            BufferedInputStream bufferedInputStream = null;
+            BufferedOutputStream bufferedOutputStream = null;
+            String filePath = imageRootPath + File.separator + fileName;
+            File file = new File(filePath);
+            try {
+                inputStream = new FileInputStream(file);
+                bufferedInputStream = new BufferedInputStream(inputStream);
+                bufferedOutputStream = new BufferedOutputStream(response.getOutputStream());
+                response.setHeader("Content-disposition", "attachment; filename=" + new String(fileName.getBytes("utf-8"), "ISO8859-1"));
+                byte[] bytes = new byte[inputStream.available()];
+                bufferedInputStream.read(bytes);
+                bufferedOutputStream.write(bytes);
+                bufferedOutputStream.flush();
+            } catch (FileNotFoundException e) {
+                log.error("找不到图片，下载失败", e);
+                throw new RuntimeException();
+            } catch (IOException e) {
+                log.error("文件下载失败：", e);
+            } finally {
+                try {
+                    inputStream.close();
+                    bufferedInputStream.close();
+                    bufferedOutputStream.close();
+                } catch (IOException e) {
+                    log.error("资源关闭异常", e);
+                }
+            }
+        }
+    }
+
+    /**
+     * 查询文件信息
+     *
+     * @param fileNo
+     * @return
+     */
+    public FileInfo queryFileInfo(String fileNo) {
+        FileInfo fileInfo = fileInfoMapper.selectFileInfo(fileNo);
+        return fileInfo;
     }
 }

@@ -1,10 +1,14 @@
 package com.yinxt.surveyscale.controller;
 
 import com.yinxt.surveyscale.service.FileService;
+import com.yinxt.surveyscale.util.result.Result;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,5 +27,15 @@ public class FileController {
     @RequestMapping(value = "qrCode/image/download")
     public void downloadQrCodeImage(HttpServletRequest request, HttpServletResponse response) {
         fileService.downloadQrCodeImage(request, response);
+    }
+
+    @RequestMapping(value = "upload")
+    public Result uploadFile(@RequestParam("file") MultipartFile[] multipartFiles) {
+        return fileService.uploadImage(multipartFiles);
+    }
+
+    @RequestMapping(value = "download")
+    public void downloadFile(@RequestParam("fileNo") String fileNo, HttpServletResponse response) {
+        fileService.downloadImage(fileNo, response);
     }
 }

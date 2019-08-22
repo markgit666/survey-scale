@@ -1,4 +1,4 @@
-package com.yinxt.surveyscale.util;
+package com.yinxt.surveyscale.util.page;
 
 import lombok.Data;
 
