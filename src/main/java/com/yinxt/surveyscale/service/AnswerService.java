@@ -15,24 +15,5 @@ public class AnswerService {
     @Autowired
     private ScaleInfoService scaleInfoService;
 
-    /**
-     * 答题-获取量表信息
-     *
-     * @param answerReqDTO
-     * @return
-     */
-    public Result getScaleInfo(GetAnswerReqDTO answerReqDTO) throws Exception {
-        PatientInfo patientInfo = new PatientInfo();
-        patientInfo.setPatientId(answerReqDTO.getPatientId());
-        Result result = patientInfoService.getPatientInfo(patientInfo);
-        result.setData(null);
-        //判断当前病人ID是否存在
-        if (result.getData() == null) {
-            throw new Exception("抛出异常");
-        } else {
-            ScaleInfo scaleInfo = new ScaleInfo();
-            scaleInfo.setScaleId(answerReqDTO.getScaleId());
-            return scaleInfoService.getScaleInfo(scaleInfo);
-        }
-    }
+
 }

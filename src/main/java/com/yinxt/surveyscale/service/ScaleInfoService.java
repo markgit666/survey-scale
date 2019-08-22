@@ -3,6 +3,8 @@ package com.yinxt.surveyscale.service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.yinxt.surveyscale.dto.GetAnswerReqDTO;
+import com.yinxt.surveyscale.pojo.PatientInfo;
 import com.yinxt.surveyscale.util.enums.StatusEnum;
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
 import com.yinxt.surveyscale.mapper.ScaleInfoMapper;
@@ -30,6 +32,8 @@ public class ScaleInfoService {
     private ScaleInfoMapper scaleInfoMapper;
     @Autowired
     private QuestionService questionService;
+    @Autowired
+    private PatientInfoService patientInfoService;
 
     /**
      * 添加量表
@@ -164,6 +168,27 @@ public class ScaleInfoService {
         }
         log.info("删除量表成功");
         return Result.success();
+    }
+
+    /**
+     * 答题-获取量表信息
+     *
+     * @param answerReqDTO
+     * @return
+     */
+    public Result getScaleInfo(GetAnswerReqDTO answerReqDTO) throws Exception {
+        PatientInfo patientInfo = new PatientInfo();
+        patientInfo.setPatientId(answerReqDTO.getPatientId());
+        Result result = patientInfoService.getPatientInfo(patientInfo);
+        result.setData(result);
+        //判断当前病人ID是否存在
+        if (result.getData() == null) {
+            throw new Exception("抛出异常");
+        } else {
+            ScaleInfo scaleInfo = new ScaleInfo();
+            scaleInfo.setScaleId(answerReqDTO.getScaleId());
+            return getScaleInfo(scaleInfo);
+        }
     }
 
 }

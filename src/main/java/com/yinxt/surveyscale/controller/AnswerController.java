@@ -19,13 +19,7 @@ public class AnswerController {
     @Autowired
     private AnswerService answerService;
 
-    /**
-     *
-     */
-    @RequestMapping(value = "scale/info/get")
-    public Result getScaleInfo(@RequestBody @Valid GetAnswerReqDTO answerReqDTO) throws Exception {
-        return answerService.getScaleInfo(answerReqDTO);
-    }
+
 
 
 }

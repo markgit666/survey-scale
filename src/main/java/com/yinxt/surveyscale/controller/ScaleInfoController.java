@@ -1,5 +1,6 @@
 package com.yinxt.surveyscale.controller;
 
+import com.yinxt.surveyscale.dto.GetAnswerReqDTO;
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
 import com.yinxt.surveyscale.pojo.ScaleInfo;
 import com.yinxt.surveyscale.service.ScaleInfoService;
@@ -42,6 +43,14 @@ public class ScaleInfoController {
     @RequestMapping(value = "info/remove")
     public Result remove(@RequestBody @Valid ScaleInfo scaleInfo) {
         return scaleInfoService.removeScaleInfo(scaleInfo);
+    }
+
+    /**
+     *
+     */
+    @RequestMapping(value = "paper/info/get")
+    public Result getScaleInfo(@RequestBody @Valid GetAnswerReqDTO answerReqDTO) throws Exception {
+        return scaleInfoService.getScaleInfo(answerReqDTO);
     }
 
 }
