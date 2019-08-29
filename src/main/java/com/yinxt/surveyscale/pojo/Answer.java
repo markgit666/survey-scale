@@ -15,13 +15,13 @@ public class Answer {
      */
     private String answerId;
     /**
-     * 病人ID
-     */
-    private String patientId;
-    /**
      * 问题ID
      */
     private String questionId;
+    /**
+     * 答卷ID
+     */
+    private String examinationPaperId;
     /**
      * 答案内容
      */
@@ -31,9 +31,9 @@ public class Answer {
      */
     private List<String> chooseAnswerList;
     /**
-     * 答题时间
+     * 每道题的分数
      */
-    private int useTime;
+    private int score;
     /**
      * 创建时间
      */
@@ -42,4 +42,5 @@ public class Answer {
      * 更新时间
      */
     private Date updateTime;
+
 }

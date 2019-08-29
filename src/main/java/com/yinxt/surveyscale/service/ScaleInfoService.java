@@ -3,13 +3,11 @@ package com.yinxt.surveyscale.service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.yinxt.surveyscale.dto.GetAnswerReqDTO;
-import com.yinxt.surveyscale.pojo.PatientInfo;
-import com.yinxt.surveyscale.util.enums.StatusEnum;
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
 import com.yinxt.surveyscale.mapper.ScaleInfoMapper;
 import com.yinxt.surveyscale.pojo.Question;
 import com.yinxt.surveyscale.pojo.ScaleInfo;
+import com.yinxt.surveyscale.util.enums.StatusEnum;
 import com.yinxt.surveyscale.util.page.PageBean;
 import com.yinxt.surveyscale.util.result.Result;
 import com.yinxt.surveyscale.util.result.ResultEnum;
@@ -19,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * 量表service
@@ -109,11 +109,10 @@ public class ScaleInfoService {
     @Transactional
     public Result getScaleInfo(ScaleInfo scaleInfo) {
         ScaleInfo info = scaleInfoMapper.selectScaleInfo(scaleInfo.getScaleId());
-
+        //若找不到量表信息
         if (info == null) {
             return Result.error();
         }
-
         /**
          * 查找每张量表的题目
          */
@@ -170,25 +169,5 @@ public class ScaleInfoService {
         return Result.success();
     }
 
-    /**
-     * 答题-获取量表信息
-     *
-     * @param answerReqDTO
-     * @return
-     */
-    public Result getScaleInfo(GetAnswerReqDTO answerReqDTO) throws Exception {
-        PatientInfo patientInfo = new PatientInfo();
-        patientInfo.setPatientId(answerReqDTO.getPatientId());
-        Result result = patientInfoService.getPatientInfo(patientInfo);
-        result.setData(result);
-        //判断当前病人ID是否存在
-        if (result.getData() == null) {
-            throw new Exception("抛出异常");
-        } else {
-            ScaleInfo scaleInfo = new ScaleInfo();
-            scaleInfo.setScaleId(answerReqDTO.getScaleId());
-            return getScaleInfo(scaleInfo);
-        }
-    }
 
 }

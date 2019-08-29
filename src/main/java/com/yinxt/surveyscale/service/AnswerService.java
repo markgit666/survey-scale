@@ -1,9 +1,7 @@
 package com.yinxt.surveyscale.service;
 
-import com.yinxt.surveyscale.dto.GetAnswerReqDTO;
-import com.yinxt.surveyscale.pojo.PatientInfo;
-import com.yinxt.surveyscale.pojo.ScaleInfo;
-import com.yinxt.surveyscale.util.result.Result;
+import com.yinxt.surveyscale.mapper.AnswerMapper;
+import com.yinxt.surveyscale.pojo.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +9,35 @@ import org.springframework.stereotype.Service;
 public class AnswerService {
 
     @Autowired
-    private PatientInfoService patientInfoService;
-    @Autowired
-    private ScaleInfoService scaleInfoService;
+    private AnswerMapper answerMapper;
 
+    /**
+     * 保存答案
+     *
+     * @param answer
+     * @return
+     */
+    public void saveAnswer(Answer answer) {
+        answerMapper.insertAnswer(answer);
+    }
+
+    /**
+     * 更新答案
+     *
+     * @param answer
+     */
+    public void updateAnswer(Answer answer) {
+        answerMapper.updateAnswer(answer);
+    }
+
+    /**
+     * 查询答案
+     *
+     * @param answer
+     * @return
+     */
+    public Answer queryAnwer(Answer answer) {
+        return answerMapper.selectAnswer(answer);
+    }
 
 }

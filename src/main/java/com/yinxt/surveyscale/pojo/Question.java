@@ -50,6 +50,10 @@ public class Question {
      */
     private String attachment;
     /**
+     * 答案信息
+     */
+    private Answer answer;
+    /**
      * 状态
      */
     private String status;

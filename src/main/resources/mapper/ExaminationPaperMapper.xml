@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinxt.surveyscale.mapper.ExaminationPaperMapper">
+
+    <resultMap id="ExaminationPaperResultMap" type="com.yinxt.surveyscale.pojo.ExaminationPaper">
+        <result column="examination_paper_id" property="examinationPaperId"/>
+        <result column="patient_id" property="patientId"/>
+        <result column="scale_id" property="scaleId"/>
+        <result column="use_time" property="useTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <insert id="insertExaminationPaper" parameterType="com.yinxt.surveyscale.pojo.ExaminationPaper">
+        insert into tb_examination_paper(examination_papaer_id, patient_id, scale_id, use_time, create_time)
+        values (#{examinationPaperId,jdbcType=VARCHAR}, #{patientId, jdbcType=VARCHAR}, #{scaleId, jdbcType=VARCHAR},
+        #{useTime,jdbcType=VARCHAR}, now())
+    </insert>
+
+    <select id="selectExaminationPaperList" parameterType="com.yinxt.surveyscale.dto.ExaminationPaperReqDTO"
+            resultMap="ExaminationPaperResultMap">
+        select * from tb_examination_paper
+        <where>
+            <if test="examinationPaperId != null and examinationPaperId != ''.toString()">
+                examination_paper_id=#{examinationPaperId,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+
+</mapper>
