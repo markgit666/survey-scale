@@ -32,8 +32,6 @@ public class ScaleInfoService {
     private ScaleInfoMapper scaleInfoMapper;
     @Autowired
     private QuestionService questionService;
-    @Autowired
-    private PatientInfoService patientInfoService;
 
     /**
      * 添加量表
@@ -43,10 +41,13 @@ public class ScaleInfoService {
      */
     @Transactional
     public Result saveScaleInfo(ScaleInfo scaleInfo) {
-        log.info("添加量表：请求参数：{}", JSON.toJSONString(scaleInfo));
+        log.info("保存量表：请求参数：{}", JSON.toJSONString(scaleInfo));
         try {
-            String scaleId = "S_" + UUID.randomUUID().toString().substring(0, 8);
-            scaleInfo.setScaleId(scaleId);
+            Result result = getScaleInfo(scaleInfo);
+            if (result.getData() == null) {
+                String scaleId = "S_" + UUID.randomUUID().toString().substring(0, 8);
+                scaleInfo.setScaleId(scaleId);
+            }
             /**
              * 处理题目
              */
@@ -54,10 +55,10 @@ public class ScaleInfoService {
             List<Question> questionList = scaleInfo.getQuestionList();
             if (questionList != null) {
                 for (Question question : questionList) {
-
                     question.setScaleId(scaleInfo.getScaleId());
-
-                    questionService.addQuestion(question);
+                    //保存题目
+                    questionService.saveQuestion(question);
+                    //记录题目顺序
                     if (stringBuffer.length() > 0) {
                         stringBuffer.append("%").append(question.getQuestionId());
                     } else {
@@ -65,13 +66,15 @@ public class ScaleInfoService {
                     }
                 }
             }
-
             /**
              * 添加量表
              */
             scaleInfo.setQuestionSort(stringBuffer.toString());
-            scaleInfoMapper.insertScaleInfo(scaleInfo);
-
+            if (result.getData() == null) {
+                scaleInfoMapper.insertScaleInfo(scaleInfo);
+            } else {
+                scaleInfoMapper.updateScaleInfo(scaleInfo);
+            }
             log.info("保存量表成功");
         } catch (Exception e) {
             log.info("保存量表异常：{}", e);
@@ -132,8 +135,6 @@ public class ScaleInfoService {
                 }
             }
             info.setQuestionList(questionSortList);
-        } else {
-            info.setQuestionList(questionList);
         }
         log.info("返回量表信息：{}", JSON.toJSONString(info));
         return Result.success(info);

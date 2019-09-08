@@ -24,7 +24,7 @@ public class ScaleInfoController {
     private ScaleInfoService scaleInfoService;
 
     @RequestMapping(value = "info/add")
-    public Result addScaleInfo(@RequestBody @Valid ScaleInfo scaleInfo) throws Exception {
+    public Result saveScaleInfo(@RequestBody @Valid ScaleInfo scaleInfo) throws Exception {
         return scaleInfoService.saveScaleInfo(scaleInfo);
     }
 
@@ -42,6 +42,11 @@ public class ScaleInfoController {
     @RequestMapping(value = "info/remove")
     public Result remove(@RequestBody @Valid ScaleInfo scaleInfo) {
         return scaleInfoService.removeScaleInfo(scaleInfo);
+    }
+
+    @RequestMapping(value = "info/modify")
+    public Result modify(@RequestBody ScaleInfo scaleInfo) {
+        return scaleInfoService.saveScaleInfo(scaleInfo);
     }
 
 

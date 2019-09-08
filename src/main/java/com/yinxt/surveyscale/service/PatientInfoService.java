@@ -30,16 +30,21 @@ public class PatientInfoService {
      *
      * @param patientInfo
      */
-    public Result addPatientInfo(PatientInfo patientInfo) {
+    public Result savePatientInfo(PatientInfo patientInfo) {
         try {
             log.info("[savePatientInfo]请求信息：{}", JSON.toJSONString(patientInfo));
-            String patientId = UUID.randomUUID().toString().substring(0, 8);
-            patientInfo.setPatientId(patientId);
-            patientInfoMapper.insertPatientInfo(patientInfo);
+            PatientInfo checkPatientInfo = patientInfoMapper.selectPatientInfoByPatientId(patientInfo.getPatientId());
+            if (checkPatientInfo == null) {
+                String patientId = UUID.randomUUID().toString().substring(0, 8);
+                patientInfo.setPatientId(patientId);
+                patientInfoMapper.insertPatientInfo(patientInfo);
+            } else {
+                patientInfoMapper.updatePatientInfo(patientInfo);
+            }
             log.info("[savePatientInfo]数据保存成功");
             return new Result(ResultEnum.SUCCESS);
         } catch (Exception e) {
-            log.info("保存病人信息异常：{}", e.getMessage());
+            log.info("保存病人信息异常：{}", e);
             return new Result().error();
         }
     }

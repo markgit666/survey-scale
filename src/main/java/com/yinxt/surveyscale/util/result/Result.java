@@ -47,14 +47,26 @@ public class Result<T> {
     }
 
     public static Result success() {
-        return Result.success(null);
+        return new Result(ResultEnum.SUCCESS);
+    }
+
+    public static Result success(ResultEnum resultEnum) {
+        return new Result(resultEnum.getCode(), resultEnum.getName());
     }
 
     public static Result success(Object data) {
         return new Result(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getName(), data);
     }
 
+    public static Result success(ResultEnum resultEnum, Object data) {
+        return new Result(resultEnum.getCode(), resultEnum.getName(), data);
+    }
+
     public static Result error() {
         return new Result<>(ResultEnum.SYSTEM_ERROR.getCode(), ResultEnum.SYSTEM_ERROR.getName());
+    }
+
+    public static Result error(ResultEnum resultEnum) {
+        return new Result(resultEnum.getCode(), resultEnum.getName());
     }
 }

@@ -20,8 +20,16 @@
                 patient_id=#{patientId,jdbcType=VARCHAR}
             </if>
             <if test="name != null and name != ''">
-                patient_name=#{name,jdbcType=VARCHAR}
+                and patient_name=#{name,jdbcType=VARCHAR}
             </if>
+        </where>
+    </select>
+
+    <select id="selectPatientInfoByPatientId" resultMap="patientInfoResultMap">
+        select *
+        from tb_patient_info
+        <where>
+            patient_id=#{patientId,jdbcType=VARCHAR}
         </where>
     </select>
 
@@ -43,7 +51,13 @@
 
     <insert id="insertPatientInfo" parameterType="com.yinxt.surveyscale.pojo.PatientInfo">
         insert into tb_patient_info
-        (patient_id, patient_name, gender, birthday, telephone_number, family_address, create_time)
+--         (patient_id, patient_name, gender, birthday, telephone_number, family_address, create_time, na)
+          (patient_id, patient_name, gender, birthday, telephone_number, family_address, create_time,
+          nation, marriage_status, work_status, in_service_job, education_level, education_year, is_snoring,
+          living_way, medical_history, other_medical_hository, smoking_hosihory, smoking_num_eachday,
+          is_mental_disease_family_history, mental_disease_family_history, other_mental_disease_family_history,
+          current_medical_history_memory_loss, memory_loss_time, physical_examination, is_use_cognitive_drugs,
+          drugs_dosage, hand, drinking_history, drinking_type, drinking_um_eachday, drinking_years, drugs_type)
         values (
         #{patientId,jdbcType=VARCHAR},
         #{name,jdbcType=VARCHAR},
@@ -51,7 +65,16 @@
         #{birthday, jdbcType=DATE},
         #{telephoneNumber,jdbcType=VARCHAR},
         #{familyAddress,jdbcType=VARCHAR},
-        now()
+        now(),
+        #{nation,jdbcType=VARCHAR}, #{marriageStatus,jdbcType=VARCHAR}, #{inServiceJob,jdbcType=VARCHAR}, #{educationLevel,jdbcType=VARCHAR},
+        #{educationYears,jdbcType=VARCHAR},#{isSnoring,jdbcType=VARCHAR},#{livingWay,jdbcType=VARCHAR},#{medicalHistory,jdbcType=VARCHAR},
+        #{otherMedicalHistory,jdbcType=VARCHAR},#{smokingHistory,jdbcType=VARCHAR},
+        #{smokingNumEachDay,jdbcType=VARCHAR},#{smokingYears,jdbcType=VARCHAR},#{isMentalDiseaseFamilyHistory,jdbcType=VARCHAR},
+        #{mentalDiseaseFamilyHistory,jdbcType=VARCHAR},#{otherMentalDiseaseFamilyHistory,jdbcType=VARCHAR},
+        #{currentMedicalHistoryMemoryLoss,jdbcType=VARCHAR},#{memoryLossTime,jdbcType=VARCHAR},#{physicalExamination,jdbcType=VARCHAR},
+        #{isUseCognitiveDrugs,jdbcType=VARCHAR},#{drugsDosage,jdbcType=VARCHAR},#{hand,jdbcType=VARCHAR},
+        #{drinkingHistory,jdbcType=VARCHAR},#{drinkingType,jdbcType=VARCHAR},#{drinkingNumEachDay,jdbcType=VARCHAR},
+        #{drinkingYears,jdbcType=VARCHAR},#{drugsType,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -65,7 +88,7 @@
                 gender=#{gender,jdbcType=VARCHAR},
             </if>
             <if test="telephoneNumber != null and telephoneNumber != ''">
-                birthday=#{telephoneNumber,jdbcType=DATE},
+                birthday=#{birthday,jdbcType=DATE},
             </if>
             <if test="telephoneNumber != null and telephoneNumber != ''">
                 telephone_number=#{telephoneNumber,jdbcType=VARCHAR},

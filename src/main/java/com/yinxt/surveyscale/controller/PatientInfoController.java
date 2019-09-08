@@ -34,7 +34,7 @@ public class PatientInfoController {
 
     @RequestMapping(value = "info/save")
     public Result savePatientInfo(@RequestBody @Valid PatientInfo patientInfo) {
-        return patientInfoService.addPatientInfo(patientInfo);
+        return patientInfoService.savePatientInfo(patientInfo);
     }
 
     @RequestMapping(value = "info/remove")

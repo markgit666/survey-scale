@@ -28,7 +28,7 @@ public class QuestionController {
      */
     @RequestMapping(value = "info/add")
     public Result add(@RequestBody @Valid Question question) throws Exception {
-        return questionService.addQuestion(question);
+        return questionService.saveQuestion(question);
     }
 
 }

@@ -24,24 +24,32 @@ public class QuestionService {
     private QuestionMapper questionMapper;
 
     /**
-     * 添加题目
+     * 保存（新增/修改）题目
      *
      * @param question
      */
-    public Result addQuestion(Question question) throws Exception {
+    public Result saveQuestion(Question question) throws Exception {
         try {
             //处理选择题
             questionItemFormat(question);
             //处理附件
             questionAttachmentFormat(question);
-            String questionId = "Q_" + UUID.randomUUID().toString().substring(0, 8);
-            question.setQuestionId(questionId);
-            log.info("添加题目：{}", JSON.toJSONString(question));
-            questionMapper.insertQuestion(question);
-            log.info("添加题目成功");
+            String questionId = question.getQuestionId();
+            Question checkQuestion = questionMapper.selectQuestion(questionId);
+            if (checkQuestion == null) {
+                questionId = "Q_" + UUID.randomUUID().toString().substring(0, 8);
+                question.setQuestionId(questionId);
+                log.info("添加题目：{}", JSON.toJSONString(question));
+                questionMapper.insertQuestion(question);
+                log.info("添加题目成功");
+            } else {
+                log.info("修改题目：{}", JSON.toJSONString(question));
+                questionMapper.updateQuestion(question);
+                log.info("修改题目成功");
+            }
         } catch (Exception e) {
-            log.info("添加题目异常：{}", e);
-            throw new Exception("添加题目异常", e);
+            log.info("保存题目异常：{}", e);
+            throw new Exception("保存题目异常", e);
         }
         return new Result(ResultEnum.SUCCESS);
     }
@@ -109,7 +117,7 @@ public class QuestionService {
         Question question = new Question();
         question.setScaleId(scaleId);
         question.setStatus(StatusEnum.NO.getCode());
-        questionMapper.updatePatientInfo(question);
+        questionMapper.updateQuestion(question);
     }
 
     /**
@@ -119,7 +127,7 @@ public class QuestionService {
      * @return
      */
     public List<Question> getQuestion(String scaleId) {
-        List<Question> questionList = questionMapper.selectQuestion(scaleId);
+        List<Question> questionList = questionMapper.selectQuestionList(scaleId);
         for (Question question : questionList) {
             //封装选项
             formatItems(question);

@@ -70,7 +70,7 @@ public class PatientInfo {
      */
     private String isMentalDiseaseFamilyHistory;
     /**
-     * 精神疾病家族史
+         * 精神疾病家族史
      */
     private String mentalDiseaseFamilyHistory;
     /**
@@ -80,7 +80,7 @@ public class PatientInfo {
     /**
      * 现病史（有无记忆下降）
      */
-    private String currentMedicalHistory_memoryLoss;
+    private String currentMedicalHistoryMemoryLoss;
     /**
      * 记忆力下降多久
      */

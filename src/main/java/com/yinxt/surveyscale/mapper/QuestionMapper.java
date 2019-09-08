@@ -12,7 +12,9 @@ public interface QuestionMapper {
 
     int insertQuestion(Question question);
 
-    int updatePatientInfo(Question question);
+    int updateQuestion(Question question);
 
-    List<Question> selectQuestion(@Param("scaleId") String scaleId);
+    List<Question> selectQuestionList(@Param("scaleId") String scaleId);
+
+    Question selectQuestion(@Param("questionId") String questionId);
 }
