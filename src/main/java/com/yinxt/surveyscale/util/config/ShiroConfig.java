@@ -72,6 +72,8 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/authc/**", "anon");
         filterChainDefinitionMap.put("/file/**", "anon");
+        filterChainDefinitionMap.put("/paper/blank/get", "anon");
+        filterChainDefinitionMap.put("/paper/answer/commit", "anon");
         filterChainDefinitionMap.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
