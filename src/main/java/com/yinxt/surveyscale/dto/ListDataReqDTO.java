@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class ListDataReqDTO<T> {
 
-    private int pageNo;
-    private int pageSize;
+    private int pageNo = 1;
+    private int pageSize = 10;
     private T data;
 }

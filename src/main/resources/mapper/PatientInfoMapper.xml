@@ -99,6 +99,42 @@
             <if test="status != null and status != ''">
                 status = #{status, jdbcType=VARCHAR},
             </if>
+            <if test="nation != null">
+                nation = #{nation, jdbcType=VARCHAR},
+            </if>
+            <if test="marriageStatus != null">
+                marriage_status = #{marriageStatus, jdbcType=VARCHAR},
+            </if>
+            <if test="inServiceJob != null">
+                in_service_job = #{inServiceJob,jdbcType=VARCHAR},
+            </if>
+            <if test="educationLevel != null">
+                education_level = #{educationLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="educationYears != null">
+                education_years = #{educationYears,jdbcType=VARCHAR},
+            </if>
+            <if test="isSnoring != null">
+                is_snoring != #{isSnoring,jdbcType=VARCHAR},
+            </if>
+            <if test="livingWay != null">
+                living_way = #{livingWay,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalHistory != null">
+                medical_history = #{medicalHistory,jdbcType=VARCHAR},
+            </if>
+            <if test="otherMedicalHistory != null">
+                other_medical_history = #{otherMedicalHistory,jdbcType=VARCHAR},
+            </if>
+            <if test="smokingHistory != null">
+                smoking_history = #{smokingHistory,jdbcType=VARCHAR}
+            </if>
+            <if test="smokingYears != null">
+                smoking_years = #{smokingYears,jdbcType=VARCHAR},
+            </if>
+            <if test="smokingNumEachDay != null">
+                smoking_num_eachday = #{smokingNumEachDay,jdbcType=VARCHAR},
+            </if>
             update_time = now()
         </set>
         <where>

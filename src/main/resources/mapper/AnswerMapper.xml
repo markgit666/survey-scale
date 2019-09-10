@@ -38,13 +38,14 @@
 
     <select id="selectAnswer" parameterType="com.yinxt.surveyscale.pojo.Answer" resultMap="AnswerResultMap">
         select * from tb_answer
-        where
-        <if test="questionId != null and questionId != ''.toString()">
-            qeustion_id = #{questionId,jdbcType=VARCHAR}
-        </if>
-        <if test="examinationPaperId != null and examinationPaperId != ''.toString()">
-            and examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
-        </if>
+        <where>
+            <if test="questionId != null and questionId != ''.toString()">
+                qeustion_id = #{questionId,jdbcType=VARCHAR}
+            </if>
+            <if test="examinationPaperId != null and examinationPaperId != ''.toString()">
+                and examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
+            </if>
+        </where>
     </select>
 
 </mapper>

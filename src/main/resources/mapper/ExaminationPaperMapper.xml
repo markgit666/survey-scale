@@ -12,7 +12,7 @@
     </resultMap>
 
     <insert id="insertExaminationPaper" parameterType="com.yinxt.surveyscale.pojo.ExaminationPaper">
-        insert into tb_examination_paper(examination_papaer_id, patient_id, scale_id, use_time, create_time)
+        insert into tb_examination_paper(examination_paper_id, patient_id, scale_id, use_time, create_time)
         values (#{examinationPaperId,jdbcType=VARCHAR}, #{patientId, jdbcType=VARCHAR}, #{scaleId, jdbcType=VARCHAR},
         #{useTime,jdbcType=VARCHAR}, now())
     </insert>

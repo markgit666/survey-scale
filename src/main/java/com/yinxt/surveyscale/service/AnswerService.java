@@ -36,7 +36,7 @@ public class AnswerService {
      * @param answer
      * @return
      */
-    public Answer queryAnwer(Answer answer) {
+    public Answer queryAnswer(Answer answer) {
         return answerMapper.selectAnswer(answer);
     }
 

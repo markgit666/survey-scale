@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -169,7 +171,7 @@ public class ExaminationPaperService {
             patientInfo = (PatientInfo) result.getData();
             examinationPaper.setPatientInfo(patientInfo);
 
-            //封装量表信息
+            //封装量表及题目信息
             String scaleId = examinationPaper.getScaleId();
             ScaleInfo scaleInfo = new ScaleInfo();
             scaleInfo.setScaleId(scaleId);
@@ -191,7 +193,16 @@ public class ExaminationPaperService {
             for (Question question : questionList) {
                 String questionId = question.getQuestionId();
                 answer.setQuestionId(questionId);
-                question.setAnswer(answerService.queryAnwer(answer));
+                answer = answerService.queryAnswer(answer);
+                question.setAnswer(answer);
+
+                if ("checkBox".equals(question.getQuestionType())) {
+                    String answerContent = answer.getContent();
+                    if (answerContent != null) {
+                        String[] answerArray = answerContent.split("\\|");
+                        answer.setChooseAnswerList(Arrays.asList(answerArray));
+                    }
+                }
             }
 
         }
