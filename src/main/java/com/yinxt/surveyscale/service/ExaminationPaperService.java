@@ -188,9 +188,9 @@ public class ExaminationPaperService {
 
             //封装题目答案
             List<Question> questionList = scaleInfo.getQuestionList();
-            Answer answer = new Answer();
-            answer.setExaminationPaperId(examinationPaperId);
             for (Question question : questionList) {
+                Answer answer = new Answer();
+                answer.setExaminationPaperId(examinationPaperId);
                 String questionId = question.getQuestionId();
                 answer.setQuestionId(questionId);
                 answer = answerService.queryAnswer(answer);
