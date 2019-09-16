@@ -196,7 +196,7 @@ public class ExaminationPaperService {
                 answer = answerService.queryAnswer(answer);
                 question.setAnswer(answer);
 
-                if ("checkBox".equals(question.getQuestionType())) {
+                if ("checkBox".equals(question.getQuestionType()) && answer != null) {
                     String answerContent = answer.getContent();
                     if (answerContent != null) {
                         String[] answerArray = answerContent.split("\\|");

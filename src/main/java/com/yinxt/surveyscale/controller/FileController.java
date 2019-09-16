@@ -1,13 +1,11 @@
 package com.yinxt.surveyscale.controller;
 
+import com.yinxt.surveyscale.dto.ImageBase64ReqDTO;
 import com.yinxt.surveyscale.service.FileService;
 import com.yinxt.surveyscale.util.result.Result;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,5 +35,10 @@ public class FileController {
     @RequestMapping(value = "download")
     public void downloadFile(@RequestParam("fileNo") String fileNo, HttpServletResponse response) {
         fileService.downloadImage(fileNo, response);
+    }
+
+    @RequestMapping(value = "base64/upload")
+    public Result uploadBase64File(@RequestBody ImageBase64ReqDTO imageBase64ReqDTO) {
+        return fileService.uploadBase64File(imageBase64ReqDTO.getBase64Image());
     }
 }

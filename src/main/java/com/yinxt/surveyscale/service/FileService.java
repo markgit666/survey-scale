@@ -1,6 +1,7 @@
 package com.yinxt.surveyscale.service;
 
 import com.alibaba.fastjson.JSON;
+import com.mchange.util.Base64Encoder;
 import com.yinxt.surveyscale.mapper.FileInfoMapper;
 import com.yinxt.surveyscale.pojo.FileInfo;
 import com.yinxt.surveyscale.util.enums.FileTypeEnum;
@@ -15,12 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.Buffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -101,6 +100,51 @@ public class FileService {
         fileInfoMapper.insertFileInfo(fileInfo);
     }
 
+    /**
+     * 保存base64图片
+     *
+     * @param base64Image
+     */
+    public Result uploadBase64File(String base64Image) {
+
+        Base64.Decoder decoder = Base64.getDecoder();
+        byte[] decodeByte = decoder.decode(base64Image);
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        String dateString = dateFormat.format(new Date());
+        String fileNo = dateString + UUID.randomUUID().toString().substring(0, 6);
+        String fileName = fileNo + ".png";
+        String fullName = imageRootPath + File.separator + fileName;
+        File file = new File(fullName);
+        FileOutputStream fileOutputStream = null;
+        BufferedOutputStream bufferedOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+            bufferedOutputStream.write(decodeByte);
+            bufferedOutputStream.flush();
+
+            /**
+             * 保存文件信息
+             */
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setFileNo(fileNo);
+            fileInfo.setFileName(fileName);
+            fileInfo.setFileType(FileTypeEnum.IMAGE.getCode());
+            saveFileInfo(fileInfo);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufferedOutputStream.close();
+                fileOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return Result.success(fileNo);
+    }
 
     /**
      * 图片下载
