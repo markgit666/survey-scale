@@ -8,6 +8,10 @@ import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
+import org.crazycake.shiro.RedisCacheManager;
+import org.crazycake.shiro.RedisManager;
+import org.crazycake.shiro.RedisSessionDAO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,6 +21,12 @@ import java.util.Map;
 
 @Configuration
 public class ShiroConfig {
+
+    @Value("${spring.redis.host}")
+    private String redisHost;
+
+    @Value("${spring.redis.port}")
+    private String redisPort;
 
     @Bean
     public SecurityManager securityManager() {
@@ -33,6 +43,7 @@ public class ShiroConfig {
         simpleCookie.setPath("/");
         simpleCookie.setHttpOnly(false);
         SessionManager sessionManager = new SessionManager();
+        sessionManager.setSessionDAO(redisSessionDAO());
         sessionManager.setSessionIdCookie(simpleCookie);
         sessionManager.setDeleteInvalidSessions(true);
         sessionManager.setSessionValidationSchedulerEnabled(true);
@@ -41,12 +52,10 @@ public class ShiroConfig {
     }
 
     @Bean
-    public CredentialsMatcher credentialsMatcher() {
-        return new CredentialsMatcher();
-    }
-
-    @Bean
     public CacheManager cacheManager() {
+        RedisCacheManager redisCacheManager = new RedisCacheManager();
+        redisCacheManager.setRedisManager(redisManager());
+        redisCacheManager.setKeyPrefix("SPRINGBOOT_CACHE_");
         return new MemoryConstrainedCacheManager();
     }
 
@@ -55,6 +64,26 @@ public class ShiroConfig {
         UserRealm userRealm = new UserRealm();
         userRealm.setCredentialsMatcher(credentialsMatcher());
         return userRealm;
+    }
+
+    @Bean
+    public RedisSessionDAO redisSessionDAO() {
+        RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
+        redisSessionDAO.setRedisManager(redisManager());
+        redisSessionDAO.setKeyPrefix("SPRINGBOOT_SESSION_");
+        return redisSessionDAO;
+    }
+
+    @Bean
+    public RedisManager redisManager() {
+        RedisManager redisManager = new RedisManager();
+        redisManager.setHost(redisHost + ":" + redisPort);
+        return redisManager;
+    }
+
+    @Bean
+    public CredentialsMatcher credentialsMatcher() {
+        return new CredentialsMatcher();
     }
 
     @Bean

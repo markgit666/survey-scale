@@ -13,15 +13,17 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class InterceptorHandler implements HandlerInterceptor {
 
+    private final static String REQUEST_KEY = "requestId";
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        log.info("拦截器生效");
+        log.info("拦截器:preHandle");
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) {
-
+        log.info("拦截器:postHandle");
     }
 
 }

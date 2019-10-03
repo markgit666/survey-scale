@@ -8,6 +8,7 @@ import com.yinxt.surveyscale.dto.ListDataReqDTO;
 import com.yinxt.surveyscale.mapper.PatientInfoMapper;
 import com.yinxt.surveyscale.pojo.PatientInfo;
 import com.yinxt.surveyscale.util.page.PageBean;
+import com.yinxt.surveyscale.util.redis.RedisUtil;
 import com.yinxt.surveyscale.util.result.Result;
 import com.yinxt.surveyscale.util.result.ResultEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,7 @@ public class PatientInfoService {
             log.info("[savePatientInfo]请求信息：{}", JSON.toJSONString(patientInfo));
             PatientInfo checkPatientInfo = patientInfoMapper.selectPatientInfoByPatientId(patientInfo.getPatientId());
             if (checkPatientInfo == null) {
-                String patientId = UUID.randomUUID().toString().substring(0, 8);
+                String patientId = RedisUtil.getSequenceId("PT");
                 patientInfo.setPatientId(patientId);
                 patientInfoMapper.insertPatientInfo(patientInfo);
             } else {

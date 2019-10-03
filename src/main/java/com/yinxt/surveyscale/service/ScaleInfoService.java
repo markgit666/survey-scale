@@ -9,6 +9,7 @@ import com.yinxt.surveyscale.pojo.Question;
 import com.yinxt.surveyscale.pojo.ScaleInfo;
 import com.yinxt.surveyscale.util.enums.StatusEnum;
 import com.yinxt.surveyscale.util.page.PageBean;
+import com.yinxt.surveyscale.util.redis.RedisUtil;
 import com.yinxt.surveyscale.util.result.Result;
 import com.yinxt.surveyscale.util.result.ResultEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,7 @@ public class ScaleInfoService {
         try {
             Result result = getScaleInfo(scaleInfo);
             if (result.getData() == null) {
-                String scaleId = "S_" + UUID.randomUUID().toString().substring(0, 8);
+                String scaleId = RedisUtil.getSequenceId("SL");
                 scaleInfo.setScaleId(scaleId);
             }
             /**

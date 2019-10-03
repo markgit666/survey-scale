@@ -6,17 +6,17 @@ import com.github.pagehelper.PageInfo;
 import com.yinxt.surveyscale.dto.*;
 import com.yinxt.surveyscale.mapper.ExaminationPaperMapper;
 import com.yinxt.surveyscale.pojo.*;
+import com.yinxt.surveyscale.util.exeption.LogicException;
 import com.yinxt.surveyscale.util.page.PageBean;
+import com.yinxt.surveyscale.util.redis.RedisUtil;
 import com.yinxt.surveyscale.util.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * 试卷service
@@ -41,14 +41,14 @@ public class ExaminationPaperService {
      * @param examinationPaperReqDTO
      * @return
      */
-    public Result getBlankExaminationPaper(ExaminationPaperReqDTO examinationPaperReqDTO) throws Exception {
+    public Result getBlankExaminationPaper(ExaminationPaperReqDTO examinationPaperReqDTO) {
         PatientInfo patientInfo = new PatientInfo();
         //查询病人信息
         patientInfo.setPatientId(examinationPaperReqDTO.getPatientId());
         patientInfo = (PatientInfo) patientInfoService.getPatientInfo(patientInfo).getData();
         //判断当前病人ID是否存在
         if (patientInfo == null) {
-            throw new Exception("输入的病人ID不存在");
+            throw new LogicException("输入的病人ID不存在");
         } else {
             ExaminationPaper examinationPaper = new ExaminationPaper();
             //赋值病人信息
@@ -78,7 +78,7 @@ public class ExaminationPaperService {
         examinationPaper.setScaleId(examinationPaperCommitDTO.getScaleId());
         examinationPaper.setPatientId(examinationPaperCommitDTO.getPatientId());
         examinationPaper.setUseTime(examinationPaperCommitDTO.getUseTime());
-        examinationPaper.setExaminationPaperId("E_" + UUID.randomUUID().toString().substring(0, 8));
+        examinationPaper.setExaminationPaperId(RedisUtil.getSequenceId("EX"));
         //保存答题记录
         examinationPaperMapper.insertExaminationPaper(examinationPaper);
 
@@ -89,7 +89,7 @@ public class ExaminationPaperService {
                  * 封装答案信息
                  */
                 Answer answer = new Answer();
-                answer.setAnswerId("A_" + UUID.randomUUID().toString().substring(0, 8));
+                answer.setAnswerId(RedisUtil.getSequenceId("AN"));
                 answer.setQuestionId(commitAnswerReqDTO.getQuestionId());
                 answer.setExaminationPaperId(examinationPaper.getExaminationPaperId());
                 answer.setContent(commitAnswerReqDTO.getContent());

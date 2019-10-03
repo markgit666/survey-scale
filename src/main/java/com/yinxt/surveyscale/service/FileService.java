@@ -6,6 +6,7 @@ import com.yinxt.surveyscale.mapper.FileInfoMapper;
 import com.yinxt.surveyscale.pojo.FileInfo;
 import com.yinxt.surveyscale.util.enums.FileTypeEnum;
 import com.yinxt.surveyscale.util.qrcode.MyQrCode;
+import com.yinxt.surveyscale.util.redis.RedisUtil;
 import com.yinxt.surveyscale.util.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,10 +62,8 @@ public class FileService {
         try {
             for (MultipartFile multipartFile : multipartFiles) {
 
-                DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-                String dateString = dateFormat.format(new Date());
                 String originName = multipartFile.getOriginalFilename();
-                fileNo = dateString + UUID.randomUUID().toString().substring(0, 6);
+                fileNo = RedisUtil.getSequenceId("IMG");
                 fileName = fileNo + originName.substring(originName.lastIndexOf("."));
                 imageFullPath = imageRootPath + File.separator + fileName;
                 File file = new File(imageFullPath);
@@ -109,9 +108,7 @@ public class FileService {
 
         Base64.Decoder decoder = Base64.getDecoder();
         byte[] decodeByte = decoder.decode(base64Image);
-        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        String dateString = dateFormat.format(new Date());
-        String fileNo = dateString + UUID.randomUUID().toString().substring(0, 6);
+        String fileNo = RedisUtil.getSequenceId("IMG");
         String fileName = fileNo + ".png";
         String fullName = imageRootPath + File.separator + fileName;
         File file = new File(fullName);

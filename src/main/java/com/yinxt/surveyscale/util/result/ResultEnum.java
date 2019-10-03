@@ -11,7 +11,8 @@ public enum ResultEnum {
     UNAUTHC("100001", "用户未登录"),
     AUTHC_ERROR("100002", "认证失败"),
     PASSWORD_NOT_EQUAL("100003", "两次密码不相等"),
-    LOGIN_NAME_EXISTS("100004", "登录名已存在");
+    LOGIN_NAME_EXISTS("100004", "登录名已存在"),
+    PARRAM_NOT_READ_ERROR("100005", "参数异常");
 
     private String code;
     private String name;
@@ -29,4 +30,4 @@ public enum ResultEnum {
         return name;
     }
 
-}
+    }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.yinxt.surveyscale.util.enums.StatusEnum;
 import com.yinxt.surveyscale.mapper.QuestionMapper;
 import com.yinxt.surveyscale.pojo.Question;
+import com.yinxt.surveyscale.util.redis.RedisUtil;
 import com.yinxt.surveyscale.util.result.Result;
 import com.yinxt.surveyscale.util.result.ResultEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ public class QuestionService {
             String questionId = question.getQuestionId();
             Question checkQuestion = questionMapper.selectQuestion(questionId);
             if (checkQuestion == null) {
-                questionId = "Q_" + UUID.randomUUID().toString().substring(0, 8);
+                questionId = RedisUtil.getSequenceId("QT");
                 question.setQuestionId(questionId);
                 log.info("添加题目：{}", JSON.toJSONString(question));
                 questionMapper.insertQuestion(question);

@@ -12,7 +12,7 @@ import org.junit.Test;
 public class ShiroTest {
 
     @Test
-    public void testIniSercurityManager(){
+    public void testIniSecurityManager() {
 
         Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro.ini");
         SecurityManager securityManager = factory.getInstance();

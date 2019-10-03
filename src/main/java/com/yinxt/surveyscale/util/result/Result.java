@@ -63,10 +63,18 @@ public class Result<T> {
     }
 
     public static Result error() {
-        return new Result<>(ResultEnum.SYSTEM_ERROR.getCode(), ResultEnum.SYSTEM_ERROR.getName());
+        return new Result(ResultEnum.SYSTEM_ERROR.getCode(), ResultEnum.SYSTEM_ERROR.getName());
+    }
+
+    public static Result error(String errorCode, String errorMsg) {
+        return new Result(errorCode, errorMsg);
     }
 
     public static Result error(ResultEnum resultEnum) {
         return new Result(resultEnum.getCode(), resultEnum.getName());
+    }
+
+    public static Result paramError(String errorMsg) {
+        return new Result(ResultEnum.PARRAM_NOT_READ_ERROR, errorMsg);
     }
 }

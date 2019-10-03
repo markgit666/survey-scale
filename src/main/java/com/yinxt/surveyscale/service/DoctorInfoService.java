@@ -2,6 +2,7 @@ package com.yinxt.surveyscale.service;
 
 import com.yinxt.surveyscale.mapper.DoctorInfoMapper;
 import com.yinxt.surveyscale.pojo.DoctorAuthInfo;
+import com.yinxt.surveyscale.util.redis.RedisUtil;
 import com.yinxt.surveyscale.util.result.Result;
 import com.yinxt.surveyscale.util.result.ResultEnum;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
@@ -55,7 +56,7 @@ public class DoctorInfoService {
             return Result.error(ResultEnum.LOGIN_NAME_EXISTS);
         }
         String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
-        doctorAuthInfo.setDoctorId(UUID.randomUUID().toString().substring(0, 8));
+        doctorAuthInfo.setDoctorId(RedisUtil.getSequenceId("DR"));
         doctorAuthInfo.setSalt(salt);
         String password = doctorAuthInfo.getPassword();
         String md5Password = new Md5Hash(password, salt, 3).toString();

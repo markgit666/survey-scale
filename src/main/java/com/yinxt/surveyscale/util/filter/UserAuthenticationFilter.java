@@ -33,7 +33,7 @@ public class UserAuthenticationFilter extends PassThruAuthenticationFilter {
         httpServletResponse.addHeader("Access-Control-Allow-Headers", "*");
         httpServletResponse.addHeader("Access-Control-Allow-Methods", "*");
         httpServletResponse.addHeader("Access-Control-Allow-Credentials", "true");
-        httpServletResponse.sendRedirect("/authc/unauthc");
+        httpServletResponse.sendRedirect("/survey/authc/unauthc");
         return false;
     }
 }
