@@ -34,7 +34,10 @@
 
     <update id="updatePassword">
         update tb_doctor_info
-        set login_name = #{loginName,jdbcType=VARCHAR},
-        password = #{newPassword,jdbcType=VARCHAR}
+        set
+        password = #{newPassword,jdbcType=VARCHAR},
+        salt = #{salt,jdbcType=VARCHAR}
+        where
+        login_name = #{loginName,jdbcType=VARCHAR}
     </update>
 </mapper>

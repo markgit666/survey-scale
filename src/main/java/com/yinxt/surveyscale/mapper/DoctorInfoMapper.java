@@ -11,5 +11,5 @@ public interface DoctorInfoMapper {
 
     int insertDoctorInfo(DoctorAuthInfo doctorAuthInfo);
 
-    int updatePassword(@Param("loginName") String loginName, @Param("newPassword") String newPassword);
+    int updatePassword(@Param("loginName") String loginName, @Param("newPassword") String newPassword, @Param("salt") String salt);
 }

@@ -73,7 +73,9 @@ public class DoctorInfoService {
      * @param newPassword
      */
     public void modifyPassword(String loginName, String newPassword) {
-        doctorInfoMapper.updatePassword(loginName, newPassword);
+        String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
+        String md5Password = new Md5Hash(newPassword, salt, 3).toString();
+        doctorInfoMapper.updatePassword(loginName, md5Password, salt);
     }
 
 //    public Result setIdentify
