@@ -19,7 +19,7 @@ public class ShiroTest {
         SecurityUtils.setSecurityManager(securityManager);
         Subject subject = SecurityUtils.getSubject();
 
-        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken("yin", "1234");
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken("yin", "123");
 
         subject.login(usernamePasswordToken);
 

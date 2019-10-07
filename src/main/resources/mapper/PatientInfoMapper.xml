@@ -45,6 +45,7 @@
             <if test="dto != null and dto.telephoneNumber != null and dto.telephoneNumber != ''">
                 and telephone_number=#{dto.telephoneNumber,jdbcType=VARCHAR}
             </if>
+            and doctor_id = #{dto.doctorId,jdbcType=VARCHAR}
         </where>
         order by create_time desc
     </select>

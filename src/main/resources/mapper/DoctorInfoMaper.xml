@@ -31,4 +31,10 @@
         insert into tb_doctor_info(doctor_id, login_name, password, salt, doctor_name, create_time)
         values (#{doctorId,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{doctorName,jdbcType=VARCHAR}, now())
     </insert>
+
+    <update id="updatePassword">
+        update tb_doctor_info
+        set login_name = #{loginName,jdbcType=VARCHAR},
+        password = #{newPassword,jdbcType=VARCHAR}
+    </update>
 </mapper>

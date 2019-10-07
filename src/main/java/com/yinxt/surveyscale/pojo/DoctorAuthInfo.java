@@ -29,6 +29,18 @@ public class DoctorAuthInfo {
      */
     private String confirmPassword;
     /**
+     * 注册验证码
+     */
+    private String verifyCode;
+    /**
+     * 验证码token
+     */
+    private String captchaToken;
+    /**
+     * 验证码
+     */
+    private String captcha;
+    /**
      * 盐
      */
     private String salt;

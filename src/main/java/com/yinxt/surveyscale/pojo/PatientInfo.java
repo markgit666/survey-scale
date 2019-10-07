@@ -18,6 +18,10 @@ public class PatientInfo {
      */
     private String patientId;
     /**
+     * 医生编号
+     */
+    private String doctorId;
+    /**
      * 病人姓名
      */
     private String name;
@@ -70,7 +74,7 @@ public class PatientInfo {
      */
     private String isMentalDiseaseFamilyHistory;
     /**
-         * 精神疾病家族史
+     * 精神疾病家族史
      */
     private String mentalDiseaseFamilyHistory;
     /**

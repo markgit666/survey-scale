@@ -46,6 +46,14 @@ public class Result<T> {
         this.data = data;
     }
 
+    public boolean isSuccess() {
+        if (ResultEnum.SUCCESS.getCode().equals(this.getRetCode())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static Result success() {
         return new Result(ResultEnum.SUCCESS);
     }
@@ -75,6 +83,6 @@ public class Result<T> {
     }
 
     public static Result paramError(String errorMsg) {
-        return new Result(ResultEnum.PARRAM_NOT_READ_ERROR, errorMsg);
+        return new Result(ResultEnum.PARAM_NOT_READ_ERROR, errorMsg);
     }
 }

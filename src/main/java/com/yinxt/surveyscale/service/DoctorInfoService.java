@@ -65,4 +65,16 @@ public class DoctorInfoService {
 
         return Result.success(ResultEnum.REGISTER_SUCCESS);
     }
+
+    /**
+     * 修改密码
+     *
+     * @param loginName
+     * @param newPassword
+     */
+    public void modifyPassword(String loginName, String newPassword) {
+        doctorInfoMapper.updatePassword(loginName, newPassword);
+    }
+
+//    public Result setIdentify
 }

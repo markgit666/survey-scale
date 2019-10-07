@@ -4,13 +4,11 @@ import com.yinxt.surveyscale.util.result.Result;
 import com.yinxt.surveyscale.util.result.ResultEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.logging.LogException;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +36,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     public Result httpMessageNotReadableExceptionHandler(HttpServletRequest request, HttpMessageNotReadableException e) {
         logError(request, e);
-        return Result.error(ResultEnum.PARRAM_NOT_READ_ERROR);
+        return Result.error(ResultEnum.PARAM_NOT_READ_ERROR);
     }
 
     @ResponseBody
