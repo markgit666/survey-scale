@@ -12,7 +12,7 @@ public interface ScaleInfoMapper {
 
     int insertScaleInfo(ScaleInfo scaleInfo);
 
-    List<ScaleInfo> selectScaleInfoList(@Param("scaleName") String scaleName);
+    List<ScaleInfo> selectScaleInfoList(@Param("scaleName") String scaleName, @Param("doctorId") String doctorId);
 
     ScaleInfo selectScaleInfo(@Param("scaleId") String scaleId);
 

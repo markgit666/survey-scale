@@ -2,6 +2,7 @@ package com.yinxt.surveyscale.service;
 
 import com.yinxt.surveyscale.mapper.DoctorInfoMapper;
 import com.yinxt.surveyscale.pojo.DoctorAuthInfo;
+import com.yinxt.surveyscale.util.config.UserHolder;
 import com.yinxt.surveyscale.util.redis.RedisUtil;
 import com.yinxt.surveyscale.util.result.Result;
 import com.yinxt.surveyscale.util.result.ResultEnum;
@@ -9,8 +10,6 @@ import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 /**
  * 医生service
@@ -78,5 +77,18 @@ public class DoctorInfoService {
         doctorInfoMapper.updatePassword(loginName, md5Password, salt);
     }
 
-//    public Result setIdentify
+    /**
+     * 获取医生ID
+     *
+     * @return
+     */
+    public String getLoginDoctorId() {
+        //获取登录名
+        String loginName = UserHolder.getLoginName();
+        //通过登录名获取账户信息
+        DoctorAuthInfo doctorAuthInfo = getDoctorInfoByLoginName(loginName);
+        //返回医生ID
+        return doctorAuthInfo.getDoctorId();
+    }
+
 }

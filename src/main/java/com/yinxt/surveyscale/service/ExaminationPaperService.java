@@ -34,6 +34,8 @@ public class ExaminationPaperService {
     private AnswerService answerService;
     @Autowired
     private JudgeInfoService judgeInfoService;
+    @Autowired
+    private DoctorInfoService doctorInfoService;
 
     /**
      * 获取空试卷
@@ -161,7 +163,13 @@ public class ExaminationPaperService {
     public Result getExaminationPaperList(ListDataReqDTO<ExaminationPaperReqDTO> listDataReqDTO) {
         log.info("获取试卷列表参数：{}", JSON.toJSONString(listDataReqDTO));
         PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
-        List<ExaminationPaper> examinationPaperList = examinationPaperMapper.selectExaminationPaperList(listDataReqDTO.getData());
+        String doctorId = doctorInfoService.getLoginDoctorId();
+        ExaminationPaperReqDTO examinationPaperReqDTO = listDataReqDTO.getData();
+        if (examinationPaperReqDTO == null) {
+            examinationPaperReqDTO = new ExaminationPaperReqDTO();
+        }
+        examinationPaperReqDTO.setDoctorId(doctorId);
+        List<ExaminationPaper> examinationPaperList = examinationPaperMapper.selectExaminationPaperList(examinationPaperReqDTO);
         for (ExaminationPaper examinationPaper : examinationPaperList) {
             //封装病人信息
             String patientId = examinationPaper.getPatientId();

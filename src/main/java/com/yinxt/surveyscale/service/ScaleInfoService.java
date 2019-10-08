@@ -33,6 +33,8 @@ public class ScaleInfoService {
     private ScaleInfoMapper scaleInfoMapper;
     @Autowired
     private QuestionService questionService;
+    @Autowired
+    private DoctorInfoService doctorInfoService;
 
     /**
      * 添加量表
@@ -94,7 +96,8 @@ public class ScaleInfoService {
         try {
             PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
             //查找量表
-            List<ScaleInfo> scaleInfos = scaleInfoMapper.selectScaleInfoList(listDataReqDTO.getData());
+            String doctorId = doctorInfoService.getLoginDoctorId();
+            List<ScaleInfo> scaleInfos = scaleInfoMapper.selectScaleInfoList(listDataReqDTO.getData(), doctorId);
             PageInfo pageInfo = new PageInfo(scaleInfos);
             PageBean pageBean = new PageBean(pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getPages(), pageInfo.getTotal(), scaleInfos);
             return Result.success(pageBean);

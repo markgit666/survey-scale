@@ -28,8 +28,9 @@
         <where>
             and status='1'
             <if test="scaleName != null and scaleName != ''">
-                scale_name like concat('%', #{scaleName}, '%')
+                and scale_name like concat('%', #{scaleName}, '%')
             </if>
+            and doctor_id = #{doctorId,jdbcType=VARCHAR}
         </where>
         order by create_time desc
     </select>

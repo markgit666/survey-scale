@@ -16,6 +16,10 @@ public class ExaminationPaperReqDTO {
      */
     private String patientId;
     /**
+     * 医生ID
+     */
+    private String doctorId;
+    /**
      * 答卷ID
      */
     private String examinationPaperId;

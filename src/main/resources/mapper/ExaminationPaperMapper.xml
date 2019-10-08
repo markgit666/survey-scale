@@ -19,13 +19,15 @@
 
     <select id="selectExaminationPaperList" parameterType="com.yinxt.surveyscale.dto.ExaminationPaperReqDTO"
             resultMap="ExaminationPaperResultMap">
-        select * from tb_examination_paper
+        select * from tb_examination_paper tep
+        left join tb_patient_info tpi on tep.patient_id = tpi.patient_id
         <where>
             <if test="examinationPaperId != null and examinationPaperId != ''.toString()">
-                examination_paper_id=#{examinationPaperId,jdbcType=VARCHAR}
+                tep.examination_paper_id=#{examinationPaperId,jdbcType=VARCHAR}
             </if>
+            and tpi.doctor_id = #{doctorId,jdbcType=VARCHAR}
         </where>
-        order by create_time desc
+        order by tep.create_time desc
     </select>
 
 

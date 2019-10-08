@@ -3,6 +3,7 @@ package com.yinxt.surveyscale.service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.yinxt.surveyscale.pojo.DoctorAuthInfo;
 import com.yinxt.surveyscale.util.enums.StatusEnum;
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
 import com.yinxt.surveyscale.mapper.PatientInfoMapper;
@@ -24,7 +25,9 @@ import java.util.UUID;
 public class PatientInfoService {
 
     @Autowired
-    PatientInfoMapper patientInfoMapper;
+    private PatientInfoMapper patientInfoMapper;
+    @Autowired
+    private DoctorInfoService doctorInfoService;
 
     /**
      * 添加病人基本信息
@@ -77,7 +80,13 @@ public class PatientInfoService {
         try {
             PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
             log.info("病人信息列表查询参数：{}", JSON.toJSONString(listDataReqDTO));
-            List<PatientInfo> patientInfos = patientInfoMapper.selectPatientInfoList(listDataReqDTO.getData());
+            PatientInfo patientInfo = listDataReqDTO.getData();
+            if (patientInfo == null) {
+                patientInfo = new PatientInfo();
+            }
+            String doctorId = doctorInfoService.getLoginDoctorId();
+            patientInfo.setDoctorId(doctorId);
+            List<PatientInfo> patientInfos = patientInfoMapper.selectPatientInfoList(patientInfo);
             PageInfo pageInfo = new PageInfo(patientInfos);
             log.info("返回病人信息列表：{}", JSON.toJSONString(patientInfos));
             PageBean pageBean = new PageBean(pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getPages(), pageInfo.getTotal(), patientInfos);
