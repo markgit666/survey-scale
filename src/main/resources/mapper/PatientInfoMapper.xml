@@ -24,6 +24,7 @@
         <result column="other_medical_hository" property="otherMentalDiseaseFamilyHistory"/>
         <result column="smoking_hosihory" property="smokingHistory"/>
         <result column="smoking_num_eachday" property="smokingNumEachDay"/>
+        <result column="smoking_years" property="smokingYears"/>
         <result column="is_mental_disease_family_history" property="isMentalDiseaseFamilyHistory"/>
         <result column="mental_disease_family_history" property="mentalDiseaseFamilyHistory"/>
         <result column="other_mental_disease_family_history" property="otherMentalDiseaseFamilyHistory"/>
@@ -83,7 +84,7 @@
         insert into tb_patient_info
           (patient_id, doctor_id, patient_name, gender, birthday, telephone_number, family_address, create_time,
           nation, marriage_status, work_status, in_service_job, education_level, education_year, is_snoring,
-          living_way, medical_history, other_medical_hository, smoking_hosihory, smoking_num_eachday,
+          living_way, medical_history, other_medical_hository, smoking_hosihory, smoking_num_eachday, smoking_years,
           is_mental_disease_family_history, mental_disease_family_history, other_mental_disease_family_history,
           current_medical_history_memory_loss, memory_loss_time, physical_examination, is_use_cognitive_drugs,
           drugs_dosage, hand, drinking_history, drinking_type, drinking_num_eachday, drinking_years, drugs_type)
@@ -96,7 +97,7 @@
         #{telephoneNumber,jdbcType=VARCHAR},
         #{familyAddress,jdbcType=VARCHAR},
         now(),
-        #{nation,jdbcType=VARCHAR}, #{marriageStatus,jdbcType=VARCHAR}, #{inServiceJob,jdbcType=VARCHAR}, #{educationLevel,jdbcType=VARCHAR},
+        #{nation,jdbcType=VARCHAR}, #{marriageStatus,jdbcType=VARCHAR}, #{workStatus,jdbcType=VARCHAR}, #{inServiceJob,jdbcType=VARCHAR}, #{educationLevel,jdbcType=VARCHAR},
         #{educationYears,jdbcType=VARCHAR},#{isSnoring,jdbcType=VARCHAR},#{livingWay,jdbcType=VARCHAR},#{medicalHistory,jdbcType=VARCHAR},
         #{otherMedicalHistory,jdbcType=VARCHAR},#{smokingHistory,jdbcType=VARCHAR},
         #{smokingNumEachDay,jdbcType=VARCHAR},#{smokingYears,jdbcType=VARCHAR},#{isMentalDiseaseFamilyHistory,jdbcType=VARCHAR},
@@ -135,6 +136,9 @@
             <if test="marriageStatus != null">
                 marriage_status = #{marriageStatus, jdbcType=VARCHAR},
             </if>
+            <if test="workStatus != null">
+                work_status = #{workStatus,jdbcType=VARCHAR},
+            </if>
             <if test="inServiceJob != null">
                 in_service_job = #{inServiceJob,jdbcType=VARCHAR},
             </if>
@@ -157,7 +161,7 @@
                 other_medical_history = #{otherMedicalHistory,jdbcType=VARCHAR},
             </if>
             <if test="smokingHistory != null">
-                smoking_history = #{smokingHistory,jdbcType=VARCHAR}
+                smoking_history = #{smokingHistory,jdbcType=VARCHAR},
             </if>
             <if test="smokingYears != null">
                 smoking_years = #{smokingYears,jdbcType=VARCHAR},
