@@ -4,11 +4,40 @@
 
     <resultMap id="patientInfoResultMap" type="com.yinxt.surveyscale.pojo.PatientInfo">
         <result column="patient_id" property="patientId"/>
+        <result column="doctorId" property="doctorId"/>
         <result column="patient_name" property="name"/>
         <result column="gender" property="gender"/>
         <result column="birthday" property="birthday"/>
         <result column="telephone_number" property="telephoneNumber"/>
         <result column="family_address" property="familyAddress"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="nation" property="nation"/>
+        <result column="marriage_status" property="marriageStatus"/>
+        <result column="work_status" property="workStatus"/>
+        <result column="in_service_job" property="inServiceJob"/>
+        <result column="education_level" property="educationLevel"/>
+        <result column="education_year" property="educationYears"/>
+        <result column="is_snoring" property="isSnoring"/>
+        <result column="living_way" property="livingWay"/>
+        <result column="medical_history" property="medicalHistory"/>
+        <result column="other_medical_hository" property="otherMentalDiseaseFamilyHistory"/>
+        <result column="smoking_hosihory" property="smokingHistory"/>
+        <result column="smoking_num_eachday" property="smokingNumEachDay"/>
+        <result column="is_mental_disease_family_history" property="isMentalDiseaseFamilyHistory"/>
+        <result column="mental_disease_family_history" property="mentalDiseaseFamilyHistory"/>
+        <result column="other_mental_disease_family_history" property="otherMentalDiseaseFamilyHistory"/>
+        <result column="current_medical_history_memory_loss" property="currentMedicalHistoryMemoryLoss"/>
+        <result column="memory_loss_time" property="memoryLossTime"/>
+        <result column="physical_examination" property="physicalExamination"/>
+        <result column="is_use_cognitive_drugs" property="isUseCognitiveDrugs"/>
+        <result column="drugs_dosage" property="drugsDosage"/>
+        <result column="hand" property="hand"/>
+        <result column="drinking_history" property="drinkingHistory"/>
+        <result column="drinking_type" property="drinkingType"/>
+        <result column="drinking_num_eachday" property="drinkingNumEachDay"/>
+        <result column="drinking_years" property="drinkingYears"/>
+        <result column="drugs_type" property="drugsType"/>
     </resultMap>
 
     <select id="selectPatientInfo" parameterType="com.yinxt.surveyscale.pojo.PatientInfo"
@@ -52,15 +81,15 @@
 
     <insert id="insertPatientInfo" parameterType="com.yinxt.surveyscale.pojo.PatientInfo">
         insert into tb_patient_info
---         (patient_id, patient_name, gender, birthday, telephone_number, family_address, create_time, na)
-          (patient_id, patient_name, gender, birthday, telephone_number, family_address, create_time,
+          (patient_id, doctor_id, patient_name, gender, birthday, telephone_number, family_address, create_time,
           nation, marriage_status, work_status, in_service_job, education_level, education_year, is_snoring,
           living_way, medical_history, other_medical_hository, smoking_hosihory, smoking_num_eachday,
           is_mental_disease_family_history, mental_disease_family_history, other_mental_disease_family_history,
           current_medical_history_memory_loss, memory_loss_time, physical_examination, is_use_cognitive_drugs,
-          drugs_dosage, hand, drinking_history, drinking_type, drinking_um_eachday, drinking_years, drugs_type)
+          drugs_dosage, hand, drinking_history, drinking_type, drinking_num_eachday, drinking_years, drugs_type)
         values (
         #{patientId,jdbcType=VARCHAR},
+        #{doctorId,jdbcType=VARCHAR},
         #{name,jdbcType=VARCHAR},
         #{gender,jdbcType=INTEGER},
         #{birthday, jdbcType=DATE},
@@ -116,7 +145,7 @@
                 education_years = #{educationYears,jdbcType=VARCHAR},
             </if>
             <if test="isSnoring != null">
-                is_snoring != #{isSnoring,jdbcType=VARCHAR},
+                is_snoring = #{isSnoring,jdbcType=VARCHAR},
             </if>
             <if test="livingWay != null">
                 living_way = #{livingWay,jdbcType=VARCHAR},
@@ -135,6 +164,48 @@
             </if>
             <if test="smokingNumEachDay != null">
                 smoking_num_eachday = #{smokingNumEachDay,jdbcType=VARCHAR},
+            </if>
+            <if test="isMentalDiseaseFamilyHistory!=null">
+                is_mental_disease_family_history=#{isMentalDiseaseFamilyHistory,jdbcType=VARCHAR},
+            </if>
+            <if test="mentalDiseaseFamilyHistory!=null">
+                mental_disease_family_history=#{mentalDiseaseFamilyHistory,jdbcType=VARCHAR},
+            </if>
+            <if test="otherMentalDiseaseFamilyHistory!=null">
+                other_mental_disease_family_history=#{otherMentalDiseaseFamilyHistory,jdbcType=VARCHAR},
+            </if>
+            <if test="currentMedicalHistoryMemoryLoss!=null">
+                current_medical_history_memory_loss=#{currentMedicalHistoryMemoryLoss,jdbcType=VARCHAR},
+            </if>
+            <if test="memoryLossTime!=null">
+                memory_loss_time=#{memoryLossTime,jdbcType=VARCHAR},
+            </if>
+            <if test="physicalExamination!=null">
+                physical_examination=#{physicalExamination,jdbcType=VARCHAR},
+            </if>
+            <if test="isUseCognitiveDrugs!=null">
+                is_use_cognitive_drugs=#{isUseCognitiveDrugs,jdbcType=VARCHAR},
+            </if>
+            <if test="drugsDosage!=null">
+                drugs_dosage=#{drugsDosage,jdbcType=VARCHAR},
+            </if>
+            <if test="hand!=null">
+                hand=#{hand,jdbcType=VARCHAR},
+            </if>
+            <if test="drinkingHistory!=null">
+                drinking_history=#{drinkingHistory,jdbcType=VARCHAR},
+            </if>
+            <if test="drinkingType!=null">
+                drinking_type=#{drinkingType,jdbcType=VARCHAR},
+            </if>
+            <if test="drinkingNumEachDay!=null">
+                drinking_num_eachday=#{drinkingNumEachDay,jdbcType=VARCHAR},
+            </if>
+            <if test="drinkingYears!=null">
+                drinking_years=#{drinkingYears,jdbcType=VARCHAR},
+            </if>
+            <if test="drugsType!=null">
+                drugs_type=#{drugsType,jdbcType=VARCHAR},
             </if>
             update_time = now()
         </set>

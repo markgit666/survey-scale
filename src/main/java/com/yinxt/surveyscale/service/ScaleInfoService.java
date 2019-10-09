@@ -51,6 +51,9 @@ public class ScaleInfoService {
                 String scaleId = RedisUtil.getSequenceId("SL");
                 scaleInfo.setScaleId(scaleId);
             }
+            //doctorId取当前登录人
+            String doctorId = doctorInfoService.getLoginDoctorId();
+            scaleInfo.setDoctorId(doctorId);
             /**
              * 处理题目
              */

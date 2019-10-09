@@ -41,6 +41,8 @@ public class PatientInfoService {
             if (checkPatientInfo == null) {
                 String patientId = RedisUtil.getSequenceId("PT");
                 patientInfo.setPatientId(patientId);
+                String doctorId = doctorInfoService.getLoginDoctorId();
+                patientInfo.setDoctorId(doctorId);
                 patientInfoMapper.insertPatientInfo(patientInfo);
             } else {
                 patientInfoMapper.updatePatientInfo(patientInfo);

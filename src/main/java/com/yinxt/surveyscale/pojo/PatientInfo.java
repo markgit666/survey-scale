@@ -130,5 +130,13 @@ public class PatientInfo {
      * 状态（是否有效）
      */
     private String status;
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
 
 }
