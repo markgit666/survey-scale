@@ -17,12 +17,12 @@
         <result column="work_status" property="workStatus"/>
         <result column="in_service_job" property="inServiceJob"/>
         <result column="education_level" property="educationLevel"/>
-        <result column="education_year" property="educationYears"/>
+        <result column="education_years" property="educationYears"/>
         <result column="is_snoring" property="isSnoring"/>
         <result column="living_way" property="livingWay"/>
         <result column="medical_history" property="medicalHistory"/>
         <result column="other_medical_hository" property="otherMentalDiseaseFamilyHistory"/>
-        <result column="smoking_hosihory" property="smokingHistory"/>
+        <result column="smoking_history" property="smokingHistory"/>
         <result column="smoking_num_eachday" property="smokingNumEachDay"/>
         <result column="smoking_years" property="smokingYears"/>
         <result column="is_mental_disease_family_history" property="isMentalDiseaseFamilyHistory"/>
@@ -83,8 +83,8 @@
     <insert id="insertPatientInfo" parameterType="com.yinxt.surveyscale.pojo.PatientInfo">
         insert into tb_patient_info
           (patient_id, doctor_id, patient_name, gender, birthday, telephone_number, family_address, create_time,
-          nation, marriage_status, work_status, in_service_job, education_level, education_year, is_snoring,
-          living_way, medical_history, other_medical_hository, smoking_hosihory, smoking_num_eachday, smoking_years,
+          nation, marriage_status, work_status, in_service_job, education_level, education_years, is_snoring,
+          living_way, medical_history, other_medical_hository, smoking_history, smoking_num_eachday, smoking_years,
           is_mental_disease_family_history, mental_disease_family_history, other_mental_disease_family_history,
           current_medical_history_memory_loss, memory_loss_time, physical_examination, is_use_cognitive_drugs,
           drugs_dosage, hand, drinking_history, drinking_type, drinking_num_eachday, drinking_years, drugs_type)
