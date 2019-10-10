@@ -1,5 +1,6 @@
 package com.yinxt.surveyscale.service;
 
+import com.yinxt.surveyscale.dto.RegisterReqDTO;
 import com.yinxt.surveyscale.mapper.DoctorInfoMapper;
 import com.yinxt.surveyscale.pojo.DoctorAuthInfo;
 import com.yinxt.surveyscale.util.config.UserHolder;
@@ -8,6 +9,7 @@ import com.yinxt.surveyscale.util.result.Result;
 import com.yinxt.surveyscale.util.result.ResultEnum;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Md5Hash;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,18 +45,20 @@ public class DoctorInfoService {
     /**
      * 注册
      *
-     * @param doctorAuthInfo
+     * @param registerReqDTO
      * @return
      */
-    public Result register(DoctorAuthInfo doctorAuthInfo) {
-        if (!doctorAuthInfo.getPassword().equals(doctorAuthInfo.getConfirmPassword())) {
+    public Result register(RegisterReqDTO registerReqDTO) {
+        if (!registerReqDTO.getPassword().equals(registerReqDTO.getConfirmPassword())) {
             return Result.error(ResultEnum.PASSWORD_NOT_EQUAL);
         }
-        DoctorAuthInfo checkDoctorAuthInfo = getDoctorInfoByLoginName(doctorAuthInfo.getLoginName());
+        DoctorAuthInfo checkDoctorAuthInfo = getDoctorInfoByLoginName(registerReqDTO.getLoginName());
         if (checkDoctorAuthInfo != null) {
             return Result.error(ResultEnum.LOGIN_NAME_EXISTS);
         }
         String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
+        DoctorAuthInfo doctorAuthInfo = new DoctorAuthInfo();
+        BeanUtils.copyProperties(registerReqDTO, doctorAuthInfo);
         doctorAuthInfo.setDoctorId(RedisUtil.getSequenceId("DR"));
         doctorAuthInfo.setSalt(salt);
         String password = doctorAuthInfo.getPassword();

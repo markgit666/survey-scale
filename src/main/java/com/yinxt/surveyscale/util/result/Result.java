@@ -83,6 +83,6 @@ public class Result<T> {
     }
 
     public static Result paramError(String errorMsg) {
-        return new Result(ResultEnum.PARAM_NOT_READ_ERROR, errorMsg);
+        return new Result(ResultEnum.PARAM_NOT_READ_ERROR.getCode(), errorMsg);
     }
 }

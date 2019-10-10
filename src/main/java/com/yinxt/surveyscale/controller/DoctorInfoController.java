@@ -1,6 +1,8 @@
 package com.yinxt.surveyscale.controller;
 
 import com.yinxt.surveyscale.dto.FindBackPasswordReqDTO;
+import com.yinxt.surveyscale.dto.LoginReqDTO;
+import com.yinxt.surveyscale.dto.RegisterReqDTO;
 import com.yinxt.surveyscale.dto.VerifyCodeReqDTO;
 import com.yinxt.surveyscale.pojo.DoctorAuthInfo;
 import com.yinxt.surveyscale.pojo.ModifyPasswordReqDTO;
@@ -42,18 +44,18 @@ public class DoctorInfoController {
     /**
      * 登录
      *
-     * @param doctorAuthInfo
+     * @param loginReqDTO
      * @return
      */
     @RequestMapping(value = "login")
-    public Result login(@RequestBody DoctorAuthInfo doctorAuthInfo) {
+    public Result login(@RequestBody @Valid LoginReqDTO loginReqDTO) {
         //校验验证码
-        Result result = captchaService.verifyCaptcha(doctorAuthInfo.getCaptchaToken(), doctorAuthInfo.getCaptcha());
+        Result result = captchaService.verifyCaptcha(loginReqDTO.getCaptchaToken(), loginReqDTO.getCaptcha());
         if (!result.isSuccess()) {
             return result;
         }
         //验证账号和密码
-        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(doctorAuthInfo.getLoginName(), doctorAuthInfo.getPassword());
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginReqDTO.getLoginName(), loginReqDTO.getPassword());
         Subject subject = SecurityUtils.getSubject();
         try {
             subject.login(usernamePasswordToken);
@@ -62,7 +64,7 @@ public class DoctorInfoController {
         }
         if (subject.isAuthenticated()) {
             String sessionId = subject.getSession().getId().toString();
-            doctorAuthInfo = doctorInfoService.getDoctorInfoByLoginName(doctorAuthInfo.getLoginName());
+            DoctorAuthInfo doctorAuthInfo = doctorInfoService.getDoctorInfoByLoginName(loginReqDTO.getLoginName());
             RedisUtil.setKey("identity_" + sessionId, doctorAuthInfo.getDoctorId(), 600);
             return Result.success(ResultEnum.AUTHC, sessionId);
         } else {
@@ -73,17 +75,17 @@ public class DoctorInfoController {
     /**
      * 注册
      *
-     * @param doctorAuthInfo
+     * @param registerReqDTO
      * @return
      */
     @RequestMapping(value = "register")
-    public Result register(@RequestBody DoctorAuthInfo doctorAuthInfo) {
+    public Result register(@RequestBody RegisterReqDTO registerReqDTO) {
         Result result;
         //校验验证码
-        String cacheKey = doctorAuthInfo.getLoginName() + "_register";
+        String cacheKey = "register_" + registerReqDTO.getLoginName();
         String cacheValue = (String) RedisUtil.getKey(cacheKey);
-        if (StringUtils.isNotBlank(cacheValue) && StringUtils.equals(cacheValue, doctorAuthInfo.getVerifyCode())) {
-            result = doctorInfoService.register(doctorAuthInfo);
+        if (StringUtils.isNotBlank(cacheValue) && StringUtils.equals(cacheValue, registerReqDTO.getVerifyCode())) {
+            result = doctorInfoService.register(registerReqDTO);
             if (ResultEnum.REGISTER_SUCCESS.getCode().equals(result.getRetCode())) {
                 //删除验证码缓存
                 RedisUtil.deleteKey(cacheKey);
@@ -133,7 +135,7 @@ public class DoctorInfoController {
         try {
             String code = sendEmailService.sendVerifyCodeEmail(emailAddress);
             //将验证码缓存入redis
-            RedisUtil.setKey(emailAddress + "_register", code, 600);
+            RedisUtil.setKey("register_" + emailAddress, code, 600);
         } catch (Exception e) {
             log.error("邮件发送失败：", e);
             throw new LogicException("验证码发送失败，请检查邮件是否填写无误");
@@ -175,7 +177,7 @@ public class DoctorInfoController {
         try {
             //发送验证码邮件
             String code = sendEmailService.sendVerifyCodeEmail(emailAddress);
-            RedisUtil.setKey(emailAddress + "_modifyPassword", code, 600);
+            RedisUtil.setKey("modifyPassword_" + emailAddress, code, 600);
         } catch (Exception e) {
             log.error("邮件发送失败：", e);
             throw new LogicException("验证码发送失败，请检查邮件是否填写无误");
@@ -193,7 +195,7 @@ public class DoctorInfoController {
     public Result modifyPassword(@RequestBody ModifyPasswordReqDTO modifyPasswordReqDTO) {
         //校验验证码
         String emailAddress = modifyPasswordReqDTO.getEmailAddress();
-        String redisVerifyCode = (String) RedisUtil.getKey(emailAddress + "_modifyPassword");
+        String redisVerifyCode = (String) RedisUtil.getKey("modifyPassword_" + emailAddress);
         String verifyCode = modifyPasswordReqDTO.getVerifyCode();
         if (!StringUtils.equals(verifyCode, redisVerifyCode)) {
             return Result.error(ResultEnum.VERIFY_CODE_NOT_CORRECT);
