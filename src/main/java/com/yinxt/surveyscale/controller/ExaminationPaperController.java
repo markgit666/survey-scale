@@ -5,7 +5,7 @@ import com.yinxt.surveyscale.dto.ExaminationPaperJudgeReqDTO;
 import com.yinxt.surveyscale.dto.ExaminationPaperReqDTO;
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
 import com.yinxt.surveyscale.service.ExaminationPaperService;
-import com.yinxt.surveyscale.util.result.Result;
+import com.yinxt.surveyscale.common.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +17,6 @@ import javax.validation.Valid;
 /**
  * 答卷controller
  */
-@CrossOrigin
 @RestController
 @RequestMapping(value = "paper")
 public class ExaminationPaperController {

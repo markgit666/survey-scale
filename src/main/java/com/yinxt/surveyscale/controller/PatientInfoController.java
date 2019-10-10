@@ -3,7 +3,7 @@ package com.yinxt.surveyscale.controller;
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
 import com.yinxt.surveyscale.pojo.PatientInfo;
 import com.yinxt.surveyscale.service.PatientInfoService;
-import com.yinxt.surveyscale.util.result.Result;
+import com.yinxt.surveyscale.common.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-@CrossOrigin
 @RestController
 @RequestMapping(value = "patient")
 @Slf4j

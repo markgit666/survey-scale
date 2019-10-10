@@ -3,7 +3,7 @@ package com.yinxt.surveyscale.controller;
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
 import com.yinxt.surveyscale.pojo.ScaleInfo;
 import com.yinxt.surveyscale.service.ScaleInfoService;
-import com.yinxt.surveyscale.util.result.Result;
+import com.yinxt.surveyscale.common.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +15,6 @@ import javax.validation.Valid;
 /**
  * 量表controller
  */
-@CrossOrigin
 @RestController
 @RequestMapping(value = "scale")
 public class ScaleInfoController {
@@ -32,7 +31,6 @@ public class ScaleInfoController {
     public Result getScaleInfoList(@RequestBody @Valid ListDataReqDTO<String> dataReqDTO) {
         return scaleInfoService.getScaleInfoList(dataReqDTO);
     }
-
 
     @RequestMapping(value = "info/get")
     public Result getScaleInfo(@RequestBody @Valid ScaleInfo scaleInfo) {

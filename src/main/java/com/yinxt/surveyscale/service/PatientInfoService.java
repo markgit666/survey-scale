@@ -3,22 +3,20 @@ package com.yinxt.surveyscale.service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.yinxt.surveyscale.pojo.DoctorAuthInfo;
-import com.yinxt.surveyscale.util.enums.StatusEnum;
+import com.yinxt.surveyscale.common.enums.StatusEnum;
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
 import com.yinxt.surveyscale.mapper.PatientInfoMapper;
 import com.yinxt.surveyscale.pojo.PatientInfo;
-import com.yinxt.surveyscale.util.page.PageBean;
-import com.yinxt.surveyscale.util.redis.RedisUtil;
-import com.yinxt.surveyscale.util.result.Result;
-import com.yinxt.surveyscale.util.result.ResultEnum;
+import com.yinxt.surveyscale.common.page.PageBean;
+import com.yinxt.surveyscale.common.redis.RedisUtil;
+import com.yinxt.surveyscale.common.result.Result;
+import com.yinxt.surveyscale.common.result.ResultEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Service

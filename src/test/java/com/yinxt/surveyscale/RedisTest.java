@@ -1,6 +1,6 @@
 package com.yinxt.surveyscale;
 
-import com.yinxt.surveyscale.util.redis.RedisUtil;
+import com.yinxt.surveyscale.common.redis.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

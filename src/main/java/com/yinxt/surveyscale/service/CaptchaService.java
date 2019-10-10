@@ -1,9 +1,9 @@
 package com.yinxt.surveyscale.service;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
-import com.yinxt.surveyscale.util.redis.RedisUtil;
-import com.yinxt.surveyscale.util.result.Result;
-import com.yinxt.surveyscale.util.result.ResultEnum;
+import com.yinxt.surveyscale.common.redis.RedisUtil;
+import com.yinxt.surveyscale.common.result.Result;
+import com.yinxt.surveyscale.common.result.ResultEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class CaptchaService {
      *
      * @return
      */
-    public Map<String, Object> getCaptcha() {
+    public Result getCaptcha() {
         //生成验证码文字
         String kaptchaText = defaultKaptcha.createText();
 
@@ -60,7 +60,7 @@ public class CaptchaService {
         } catch (IOException e) {
             log.error("验证码图片写入字节流失败");
         }
-        return captchaMap;
+        return Result.success(captchaMap);
     }
 
     /**

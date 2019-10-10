@@ -2,7 +2,7 @@ package com.yinxt.surveyscale.controller;
 
 import com.yinxt.surveyscale.pojo.Question;
 import com.yinxt.surveyscale.service.QuestionService;
-import com.yinxt.surveyscale.util.result.Result;
+import com.yinxt.surveyscale.common.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +13,6 @@ import javax.validation.Valid;
 /**
  * 题目controller
  */
-@RestController
 @RequestMapping(value = "question")
 public class QuestionController {
 

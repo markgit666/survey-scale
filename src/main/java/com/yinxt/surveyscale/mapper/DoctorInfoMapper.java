@@ -2,7 +2,9 @@ package com.yinxt.surveyscale.mapper;
 
 import com.yinxt.surveyscale.pojo.DoctorAuthInfo;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
+@Component
 public interface DoctorInfoMapper {
 
     DoctorAuthInfo getDoctorInfoByLoginNameAndPassword(@Param("loginName") String loginName, @Param("password") String password);

@@ -1,14 +1,27 @@
 package com.yinxt.surveyscale.service;
 
+import com.yinxt.surveyscale.dto.FindBackPasswordReqDTO;
+import com.yinxt.surveyscale.dto.LoginReqDTO;
 import com.yinxt.surveyscale.dto.RegisterReqDTO;
+import com.yinxt.surveyscale.dto.VerifyCodeReqDTO;
 import com.yinxt.surveyscale.mapper.DoctorInfoMapper;
 import com.yinxt.surveyscale.pojo.DoctorAuthInfo;
-import com.yinxt.surveyscale.util.config.UserHolder;
-import com.yinxt.surveyscale.util.redis.RedisUtil;
-import com.yinxt.surveyscale.util.result.Result;
-import com.yinxt.surveyscale.util.result.ResultEnum;
+import com.yinxt.surveyscale.pojo.ModifyPasswordReqDTO;
+import com.yinxt.surveyscale.common.config.UserHolder;
+import com.yinxt.surveyscale.common.email.service.SendEmailService;
+import com.yinxt.surveyscale.common.exeption.LogicException;
+import com.yinxt.surveyscale.common.redis.RedisUtil;
+import com.yinxt.surveyscale.common.result.Result;
+import com.yinxt.surveyscale.common.result.ResultEnum;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Md5Hash;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +29,15 @@ import org.springframework.stereotype.Service;
 /**
  * 医生service
  */
+@Slf4j
 @Service
 public class DoctorInfoService {
     @Autowired
     private DoctorInfoMapper doctorInfoMapper;
+    @Autowired
+    private CaptchaService captchaService;
+    @Autowired
+    private SendEmailService sendEmailService;
 
     /**
      * 通过登录名和密码查询医生信息
@@ -43,28 +61,103 @@ public class DoctorInfoService {
     }
 
     /**
+     * 登录
+     *
+     * @param loginReqDTO
+     * @return
+     */
+    public Result login(LoginReqDTO loginReqDTO) {
+        //校验验证码
+        Result result = captchaService.verifyCaptcha(loginReqDTO.getCaptchaToken(), loginReqDTO.getCaptcha());
+        if (!result.isSuccess()) {
+            return result;
+        }
+        //验证账号和密码
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginReqDTO.getLoginName(), loginReqDTO.getPassword());
+        Subject subject = SecurityUtils.getSubject();
+        try {
+            subject.login(usernamePasswordToken);
+        } catch (UnknownAccountException | IncorrectCredentialsException e) {
+            return Result.error(ResultEnum.AUTHC_ERROR);
+        }
+        if (subject.isAuthenticated()) {
+            String sessionId = subject.getSession().getId().toString();
+            DoctorAuthInfo doctorAuthInfo = getDoctorInfoByLoginName(loginReqDTO.getLoginName());
+            RedisUtil.setKey("identity_" + sessionId, doctorAuthInfo.getDoctorId(), 600);
+            return Result.success(ResultEnum.AUTHC, sessionId);
+        } else {
+            return Result.error(ResultEnum.AUTHC_ERROR);
+        }
+    }
+
+    /**
+     * 登出
+     *
+     * @return
+     */
+    public Result logout() {
+        SecurityUtils.getSubject().logout();
+        return Result.success();
+    }
+
+    /**
+     * 获取注册验证码
+     *
+     * @param verifyCodeReqDTO
+     * @return
+     */
+    public Result getRegisterVerifyCode(VerifyCodeReqDTO verifyCodeReqDTO) {
+        //校验是否注册
+        String emailAddress = verifyCodeReqDTO.getEmailAddress();
+        DoctorAuthInfo doctorAuthInfo = getDoctorInfoByLoginName(emailAddress);
+        if (doctorAuthInfo != null) {
+            Result.error(ResultEnum.LOGIN_NAME_EXISTS);
+        }
+        //发送验证码邮件
+        try {
+            String code = sendEmailService.sendVerifyCodeEmail(emailAddress);
+            //将验证码缓存入redis
+            RedisUtil.setKey("register_" + emailAddress, code, 600);
+        } catch (Exception e) {
+            log.error("邮件发送失败：", e);
+            throw new LogicException("验证码发送失败，请检查邮件是否填写无误");
+        }
+        return Result.success(ResultEnum.VERIFY_CODE_SEND_SUCCESS);
+    }
+
+    /**
      * 注册
      *
      * @param registerReqDTO
      * @return
      */
     public Result register(RegisterReqDTO registerReqDTO) {
+        //校验验证码
+        String cacheKey = "register_" + registerReqDTO.getLoginName();
+        String cacheValue = (String) RedisUtil.getKey(cacheKey);
+        if (StringUtils.isBlank(cacheValue) || !StringUtils.equals(cacheValue, registerReqDTO.getVerifyCode())) {
+            return Result.error(ResultEnum.VERIFY_CODE_NOT_CORRECT);
+        }
+        //校验密码是否相等
         if (!registerReqDTO.getPassword().equals(registerReqDTO.getConfirmPassword())) {
             return Result.error(ResultEnum.PASSWORD_NOT_EQUAL);
         }
+        //校验登录名是否已存在
         DoctorAuthInfo checkDoctorAuthInfo = getDoctorInfoByLoginName(registerReqDTO.getLoginName());
         if (checkDoctorAuthInfo != null) {
             return Result.error(ResultEnum.LOGIN_NAME_EXISTS);
         }
-        String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
         DoctorAuthInfo doctorAuthInfo = new DoctorAuthInfo();
         BeanUtils.copyProperties(registerReqDTO, doctorAuthInfo);
         doctorAuthInfo.setDoctorId(RedisUtil.getSequenceId("DR"));
+        String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
         doctorAuthInfo.setSalt(salt);
         String password = doctorAuthInfo.getPassword();
         String md5Password = new Md5Hash(password, salt, 3).toString();
         doctorAuthInfo.setPassword(md5Password);
         doctorInfoMapper.insertDoctorInfo(doctorAuthInfo);
+        //删除缓存
+        RedisUtil.deleteKey(cacheKey);
 
         return Result.success(ResultEnum.REGISTER_SUCCESS);
     }
@@ -72,13 +165,50 @@ public class DoctorInfoService {
     /**
      * 修改密码
      *
-     * @param loginName
-     * @param newPassword
+     * @param modifyPasswordReqDTO
      */
-    public void modifyPassword(String loginName, String newPassword) {
+    public Result modifyPassword(ModifyPasswordReqDTO modifyPasswordReqDTO) {
+        //校验验证码
+        String emailAddress = modifyPasswordReqDTO.getEmailAddress();
+        String redisVerifyCode = (String) RedisUtil.getKey("modifyPassword_" + emailAddress);
+        String verifyCode = modifyPasswordReqDTO.getVerifyCode();
+        if (!StringUtils.equals(verifyCode, redisVerifyCode)) {
+            return Result.error(ResultEnum.VERIFY_CODE_NOT_CORRECT);
+        }
+        //修改密码
         String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
-        String md5Password = new Md5Hash(newPassword, salt, 3).toString();
-        doctorInfoMapper.updatePassword(loginName, md5Password, salt);
+        String md5Password = new Md5Hash(modifyPasswordReqDTO.getNewPassword(), salt, 3).toString();
+        doctorInfoMapper.updatePassword(modifyPasswordReqDTO.getEmailAddress(), md5Password, salt);
+        return Result.success();
+    }
+
+    /**
+     * 找回密码
+     *
+     * @param findBackPasswordReqDTO
+     * @return
+     */
+    public Result findBackPassword(FindBackPasswordReqDTO findBackPasswordReqDTO) {
+        //校验验证码
+        Result result = captchaService.verifyCaptcha(findBackPasswordReqDTO.getCaptchaToken(), findBackPasswordReqDTO.getCaptcha());
+        if (!result.isSuccess()) {
+            return result;
+        }
+        //校验是否注册
+        String emailAddress = findBackPasswordReqDTO.getEmailAddress();
+        DoctorAuthInfo doctorAuthInfo = getDoctorInfoByLoginName(emailAddress);
+        if (doctorAuthInfo == null) {
+            return Result.error(ResultEnum.EMAIL_NO_REGISER);
+        }
+        try {
+            //发送验证码邮件
+            String code = sendEmailService.sendVerifyCodeEmail(emailAddress);
+            RedisUtil.setKey("modifyPassword_" + emailAddress, code, 600);
+        } catch (Exception e) {
+            log.error("邮件发送失败：", e);
+            throw new LogicException("验证码发送失败，请检查邮件是否填写无误");
+        }
+        return Result.success(ResultEnum.VERIFY_CODE_SEND_SUCCESS);
     }
 
     /**

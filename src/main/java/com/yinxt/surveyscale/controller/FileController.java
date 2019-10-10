@@ -2,8 +2,7 @@ package com.yinxt.surveyscale.controller;
 
 import com.yinxt.surveyscale.dto.ImageBase64ReqDTO;
 import com.yinxt.surveyscale.service.FileService;
-import com.yinxt.surveyscale.util.result.Result;
-import org.apache.ibatis.annotations.Param;
+import com.yinxt.surveyscale.common.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 图片/文件下载和上传controller
  */
-@CrossOrigin
 @RequestMapping(value = "file")
 @RestController
 public class FileController {

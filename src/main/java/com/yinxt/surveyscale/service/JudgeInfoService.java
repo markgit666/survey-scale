@@ -2,7 +2,7 @@ package com.yinxt.surveyscale.service;
 
 import com.yinxt.surveyscale.mapper.JudgeInfoMapper;
 import com.yinxt.surveyscale.pojo.JudgeInfo;
-import com.yinxt.surveyscale.util.redis.RedisUtil;
+import com.yinxt.surveyscale.common.redis.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
