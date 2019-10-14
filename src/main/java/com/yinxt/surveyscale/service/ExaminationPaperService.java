@@ -162,13 +162,13 @@ public class ExaminationPaperService {
      */
     public Result getExaminationPaperList(ListDataReqDTO<ExaminationPaperReqDTO> listDataReqDTO) {
         log.info("获取试卷列表参数：{}", JSON.toJSONString(listDataReqDTO));
-        PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
         String doctorId = doctorInfoService.getLoginDoctorId();
         ExaminationPaperReqDTO examinationPaperReqDTO = listDataReqDTO.getData();
         if (examinationPaperReqDTO == null) {
             examinationPaperReqDTO = new ExaminationPaperReqDTO();
         }
         examinationPaperReqDTO.setDoctorId(doctorId);
+        PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
         List<ExaminationPaper> examinationPaperList = examinationPaperMapper.selectExaminationPaperList(examinationPaperReqDTO);
         for (ExaminationPaper examinationPaper : examinationPaperList) {
             //封装病人信息

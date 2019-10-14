@@ -21,4 +21,13 @@
         select * from tb_judge_info
         where examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
     </select>
+
+    <update id="updateJudgeInfo" parameterType="com.yinxt.surveyscale.pojo.JudgeInfo">
+        update
+        tb_judge_info
+        set
+        check_time = now(),
+        total_score = #{totalScore,jdbcType=VARCHAR},
+        update_time = now()
+    </update>
 </mapper>

@@ -38,7 +38,7 @@ public class FileService {
         String scaleId = request.getParameter("scaleId");
         String url = request.getParameter("url");
         StringBuilder urlContentBuilder = new StringBuilder();
-        urlContentBuilder.append("http://").append(addr).append(":").append("8080").append("/").append(url).append("?").append("scaleId=").append(scaleId);
+        urlContentBuilder.append("http://").append("192.168.1.147").append(":").append("8080").append("/").append(url).append("?").append("scaleId=").append(scaleId);
         log.info("二维码内容：{}", urlContentBuilder.toString());
         String urlContent = urlContentBuilder.toString();
         try {

@@ -97,9 +97,9 @@ public class ScaleInfoService {
      */
     public Result getScaleInfoList(ListDataReqDTO<String> listDataReqDTO) {
         try {
-            PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
             //查找量表
             String doctorId = doctorInfoService.getLoginDoctorId();
+            PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
             List<ScaleInfo> scaleInfos = scaleInfoMapper.selectScaleInfoList(listDataReqDTO.getData(), doctorId);
             PageInfo pageInfo = new PageInfo(scaleInfos);
             PageBean pageBean = new PageBean(pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getPages(), pageInfo.getTotal(), scaleInfos);

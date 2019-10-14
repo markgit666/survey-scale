@@ -80,7 +80,6 @@ public class PatientInfoService {
      */
     public Result getPatientInfoList(ListDataReqDTO<PatientInfo> listDataReqDTO) {
         try {
-            PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
             log.info("病人信息列表查询参数：{}", JSON.toJSONString(listDataReqDTO));
             PatientInfo patientInfo = listDataReqDTO.getData();
             if (patientInfo == null) {
@@ -88,6 +87,7 @@ public class PatientInfoService {
             }
             String doctorId = doctorInfoService.getLoginDoctorId();
             patientInfo.setDoctorId(doctorId);
+            PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
             List<PatientInfo> patientInfos = patientInfoMapper.selectPatientInfoList(patientInfo);
             PageInfo pageInfo = new PageInfo(patientInfos);
             log.info("返回病人信息列表：{}", JSON.toJSONString(patientInfos));
