@@ -28,11 +28,11 @@ public class UserAuthenticationFilter extends PassThruAuthenticationFilter {
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest httpServletRequest = WebUtils.toHttp(request);
         HttpServletResponse httpServletResponse = WebUtils.toHttp(response);
-//
-//        httpServletResponse.addHeader("Access-Control-Allow-Origin", httpServletRequest.getHeader("Origin"));
-//        httpServletResponse.addHeader("Access-Control-Allow-Headers", "*");
-//        httpServletResponse.addHeader("Access-Control-Allow-Methods", "*");
-//        httpServletResponse.addHeader("Access-Control-Allow-Credentials", "true");
+
+        httpServletResponse.addHeader("Access-Control-Allow-Origin", httpServletRequest.getHeader("Origin"));
+        httpServletResponse.addHeader("Access-Control-Allow-Headers", "*");
+        httpServletResponse.addHeader("Access-Control-Allow-Methods", "*");
+        httpServletResponse.addHeader("Access-Control-Allow-Credentials", "true");
         httpServletResponse.sendRedirect("/survey/authc/unauthc");
         return false;
     }
