@@ -22,7 +22,7 @@ public class JudgeInfoService {
     public void saveJudgeInfo(JudgeInfo judgeInfo) {
         judgeInfo.setJudgeId(RedisUtil.getSequenceId("JG"));
         String doctorId = doctorInfoService.getLoginDoctorId();
-        judgeInfo.setCheckUser(doctorId);
+        judgeInfo.setCheckUser(judgeInfo.getCheckUser());
         JudgeInfo queryResult = judgeInfoMapper.selectJudgeInfo(judgeInfo);
         if (queryResult != null) {
             judgeInfoMapper.updateJudgeInfo(judgeInfo);

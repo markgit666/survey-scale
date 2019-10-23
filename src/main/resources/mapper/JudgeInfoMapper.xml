@@ -27,6 +27,7 @@
         tb_judge_info
         set
         check_time = now(),
+        check_user = #{checkUser,jdbcType=VARCHAR},
         total_score = #{totalScore,jdbcType=VARCHAR},
         update_time = now()
     </update>

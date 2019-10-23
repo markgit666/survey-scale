@@ -27,6 +27,8 @@ public class FileService {
     @Autowired
     private FileInfoMapper fileInfoMapper;
 
+    private static final String FRONT_URL = "http://192.168.43.205:8080/";
+
     public void downloadQrCodeImage(HttpServletRequest request, HttpServletResponse response) {
         String addr = request.getLocalAddr();
         int port = request.getRemotePort();
@@ -34,7 +36,7 @@ public class FileService {
         String scaleId = request.getParameter("scaleId");
         String url = request.getParameter("url");
         StringBuilder urlContentBuilder = new StringBuilder();
-        urlContentBuilder.append("http://").append("192.168.1.147").append(":").append("8080").append("/").append(url).append("?").append("scaleId=").append(scaleId);
+        urlContentBuilder.append(FRONT_URL).append(url).append("?").append("scaleId=").append(scaleId);
         log.info("二维码内容：{}", urlContentBuilder.toString());
         String urlContent = urlContentBuilder.toString();
         try {

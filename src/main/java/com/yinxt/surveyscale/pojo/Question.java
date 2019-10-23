@@ -29,14 +29,9 @@ public class Question {
      */
     private String title;
     /**
-     * 01-06 选择题的选项
+     * 选择题的选项拼接到字符串
      */
-    private String item_01;
-    private String item_02;
-    private String item_03;
-    private String item_04;
-    private String item_05;
-    private String item_06;
+    private String itemStr;
     /**
      * 选项列表
      */

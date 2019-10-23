@@ -3,6 +3,7 @@ package com.yinxt.surveyscale.service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.yinxt.surveyscale.common.constant.Constant;
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
 import com.yinxt.surveyscale.mapper.ScaleInfoMapper;
 import com.yinxt.surveyscale.pojo.Question;
@@ -47,7 +48,7 @@ public class ScaleInfoService {
         try {
             Result result = getScaleInfo(scaleInfo);
             if (result.getData() == null) {
-                String scaleId = RedisUtil.getSequenceId("SL");
+                String scaleId = RedisUtil.getSequenceId(Constant.SCALE_PREFIX);
                 scaleInfo.setScaleId(scaleId);
             }
             //doctorId取当前登录人
@@ -65,7 +66,7 @@ public class ScaleInfoService {
                     questionService.saveQuestion(question);
                     //记录题目顺序
                     if (stringBuffer.length() > 0) {
-                        stringBuffer.append("%").append(question.getQuestionId());
+                        stringBuffer.append(Constant.NORMAL_SPLIT).append(question.getQuestionId());
                     } else {
                         stringBuffer.append(question.getQuestionId());
                     }
@@ -129,7 +130,7 @@ public class ScaleInfoService {
 
         //题目顺序列表
         List<Question> questionSortList = new ArrayList<>();
-        String[] questionIdSortArray = info.getQuestionSort().split("%");
+        String[] questionIdSortArray = info.getQuestionSort().split(Constant.NORMAL_SPLIT);
         //如果题目顺序列表不为空则对题目进行排序
         if (questionIdSortArray.length > 0) {
             for (int i = 0; i < questionIdSortArray.length; i++) {

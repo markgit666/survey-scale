@@ -1,6 +1,7 @@
 package com.yinxt.surveyscale.service;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.yinxt.surveyscale.common.constant.Constant;
 import com.yinxt.surveyscale.common.redis.RedisUtil;
 import com.yinxt.surveyscale.common.result.Result;
 import com.yinxt.surveyscale.common.result.ResultEnum;
@@ -43,7 +44,7 @@ public class CaptchaService {
 
         //生成token，并缓存验证码到redis
         String token = UUID.randomUUID().toString();
-        RedisUtil.setKey("captcha_" + token, kaptchaText, time);
+        RedisUtil.setKey(Constant.REDIS_CAPTCHA_PREFIX + token, kaptchaText, time);
 
         Map<String, Object> captchaMap = new HashMap<>();
         captchaMap.put("captchaToken", token);
@@ -75,7 +76,7 @@ public class CaptchaService {
         if (StringUtils.isBlank(captchaToken)) {
             return Result.error(ResultEnum.VERIFY_CODE_NOT_CORRECT);
         }
-        String redisCaptcha = (String) RedisUtil.getKey("captcha_" + captchaToken);
+        String redisCaptcha = (String) RedisUtil.getKey(Constant.REDIS_CAPTCHA_PREFIX + captchaToken);
         if (!StringUtils.equals(captcha, redisCaptcha)) {
             return Result.error(ResultEnum.VERIFY_CODE_NOT_CORRECT);
         }

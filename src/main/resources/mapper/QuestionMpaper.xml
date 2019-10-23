@@ -6,12 +6,7 @@
         <result column="scale_id" property="scaleId"/>
         <result column="question_type" property="questionType"/>
         <result column="title" property="title"/>
-        <result column="item_01" property="item_01"/>
-        <result column="item_02" property="item_02"/>
-        <result column="item_03" property="item_03"/>
-        <result column="item_04" property="item_04"/>
-        <result column="item_05" property="item_05"/>
-        <result column="item_06" property="item_06"/>
+        <result column="items" property="itemStr"/>
         <result column="attachment" property="attachment"/>
         <result column="status" property="status"/>
         <result column="create_time" property="createTime"/>
@@ -33,12 +28,11 @@
     <insert id="insertQuestion" parameterType="com.yinxt.surveyscale.pojo.Question">
         insert into
         tb_question
-        (question_id, scale_id, question_type, title, item_01, item_02, item_03, item_04, item_05, item_06, attachment,
+        (question_id, scale_id, question_type, title, items, attachment,
         create_time)
         values (
         #{questionId,jdbcType=VARCHAR}, #{scaleId,jdbcType=VARCHAR},#{questionType,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},
-        #{item_01,jdbcType=VARCHAR}, #{item_02,jdbcType=VARCHAR}, #{item_03,jdbcType=VARCHAR},
-        #{item_04,jdbcType=VARCHAR}, #{item_05,jdbcType=VARCHAR}, #{item_06}, #{attachment,jdbcType=VARCHAR},
+        #{itemStr,jdbcType=VARCHAR}, #{attachment,jdbcType=VARCHAR},
         now()
         )
     </insert>
@@ -53,23 +47,8 @@
                 <if test="title != null">
                     title=#{title,jdbcType=VARCHAR},
                 </if>
-                <if test="item_01 != null">
-                    item_01=#{item_01,jdbcType=VARCHAR},
-                </if>
-                <if test="item_02 != null">
-                    item_02=#{item_02,jdbcType=VARCHAR},
-                </if>
-                <if test="item_03 != null">
-                    item_03=#{item_03,jdbcType=VARCHAR},
-                </if>
-                <if test="item_04 != null">
-                    item_04=#{item_04,jdbcType=VARCHAR},
-                </if>
-                <if test="item_05 != null">
-                    item_05=#{item_05,jdbcType=VARCHAR},
-                </if>
-                <if test="item_06 != null">
-                    item_06=#{item_06,jdbcType=VARCHAR},
+                <if test="itemStr != null">
+                    items=#{itemStr,jdbcType=VARCHAR},
                 </if>
                 <if test="attachment != null">
                     attachment=#{attachment,jdbcType=VARCHAR},

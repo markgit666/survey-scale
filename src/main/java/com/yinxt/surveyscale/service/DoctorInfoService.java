@@ -1,5 +1,6 @@
 package com.yinxt.surveyscale.service;
 
+import com.yinxt.surveyscale.common.constant.Constant;
 import com.yinxt.surveyscale.dto.FindBackPasswordReqDTO;
 import com.yinxt.surveyscale.dto.LoginReqDTO;
 import com.yinxt.surveyscale.dto.RegisterReqDTO;
@@ -117,7 +118,7 @@ public class DoctorInfoService {
         try {
             String code = sendEmailService.sendVerifyCodeEmail(emailAddress);
             //将验证码缓存入redis
-            RedisUtil.setKey("register_" + emailAddress, code, 600);
+            RedisUtil.setKey( Constant.REDIS_REGISTER_PREFIX + emailAddress, code, 600);
         } catch (Exception e) {
             log.error("邮件发送失败：", e);
             throw new LogicException("验证码发送失败，请检查邮件是否填写无误");
@@ -133,7 +134,7 @@ public class DoctorInfoService {
      */
     public Result register(RegisterReqDTO registerReqDTO) {
         //校验验证码
-        String cacheKey = "register_" + registerReqDTO.getLoginName();
+        String cacheKey = Constant.REDIS_REGISTER_PREFIX + registerReqDTO.getLoginName();
         String cacheValue = (String) RedisUtil.getKey(cacheKey);
         if (StringUtils.isBlank(cacheValue) || !StringUtils.equals(cacheValue, registerReqDTO.getVerifyCode())) {
             return Result.error(ResultEnum.VERIFY_CODE_NOT_CORRECT);
@@ -149,7 +150,7 @@ public class DoctorInfoService {
         }
         DoctorAuthInfo doctorAuthInfo = new DoctorAuthInfo();
         BeanUtils.copyProperties(registerReqDTO, doctorAuthInfo);
-        doctorAuthInfo.setDoctorId(RedisUtil.getSequenceId("DR"));
+        doctorAuthInfo.setDoctorId(RedisUtil.getSequenceId(Constant.DOCTOR_PREFIX));
         String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
         doctorAuthInfo.setSalt(salt);
         String password = doctorAuthInfo.getPassword();
@@ -170,7 +171,7 @@ public class DoctorInfoService {
     public Result modifyPassword(ModifyPasswordReqDTO modifyPasswordReqDTO) {
         //校验验证码
         String emailAddress = modifyPasswordReqDTO.getEmailAddress();
-        String redisVerifyCode = (String) RedisUtil.getKey("modifyPassword_" + emailAddress);
+        String redisVerifyCode = (String) RedisUtil.getKey(Constant.REDIS_MODIFY_PASSWORD_PREFIX + emailAddress);
         String verifyCode = modifyPasswordReqDTO.getVerifyCode();
         if (!StringUtils.equals(verifyCode, redisVerifyCode)) {
             return Result.error(ResultEnum.VERIFY_CODE_NOT_CORRECT);
@@ -203,7 +204,7 @@ public class DoctorInfoService {
         try {
             //发送验证码邮件
             String code = sendEmailService.sendVerifyCodeEmail(emailAddress);
-            RedisUtil.setKey("modifyPassword_" + emailAddress, code, 600);
+            RedisUtil.setKey(Constant.REDIS_MODIFY_PASSWORD_PREFIX + emailAddress, code, 600);
         } catch (Exception e) {
             log.error("邮件发送失败：", e);
             throw new LogicException("验证码发送失败，请检查邮件是否填写无误");

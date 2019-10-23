@@ -1,6 +1,7 @@
 package com.yinxt.surveyscale.service;
 
 import com.alibaba.fastjson.JSON;
+import com.yinxt.surveyscale.common.constant.Constant;
 import com.yinxt.surveyscale.common.enums.StatusEnum;
 import com.yinxt.surveyscale.mapper.QuestionMapper;
 import com.yinxt.surveyscale.pojo.Question;
@@ -61,31 +62,16 @@ public class QuestionService {
      * @param question
      */
     public void questionItemFormat(Question question) {
-        int i = 0;
         if (question.getItems() != null) {
+            StringBuilder stringBuilder = new StringBuilder();
             for (Map<String, String> itemMap : question.getItems()) {
-                switch (i) {
-                    case 0:
-                        question.setItem_01(itemMap.get("option"));
-                        break;
-                    case 1:
-                        question.setItem_02(itemMap.get("option"));
-                        break;
-                    case 2:
-                        question.setItem_03(itemMap.get("option"));
-                        break;
-                    case 3:
-                        question.setItem_04(itemMap.get("option"));
-                        break;
-                    case 4:
-                        question.setItem_05(itemMap.get("option"));
-                        break;
-                    case 5:
-                        question.setItem_06(itemMap.get("option"));
-                        break;
+                if (stringBuilder.length() > 0) {
+                    stringBuilder.append(Constant.ITEMS_SPLIT).append(itemMap.get("option"));
+                } else {
+                    stringBuilder.append(itemMap.get("option"));
                 }
-                i++;
             }
+            question.setItemStr(stringBuilder.toString());
         }
     }
 
@@ -102,7 +88,7 @@ public class QuestionService {
                 if (stringBuilder.length() == 0) {
                     stringBuilder.append(attachment);
                 } else {
-                    stringBuilder.append("|").append(attachment);
+                    stringBuilder.append(Constant.NORMAL_SPLIT).append(attachment);
                 }
             }
             question.setAttachment(stringBuilder.toString());
@@ -142,38 +128,17 @@ public class QuestionService {
      * 封装选项
      */
     public void formatItems(Question question) {
-        List<Map<String, String>> items = new ArrayList<>();
-        if (StringUtils.isNotBlank(question.getItem_01())) {
-            Map<String, String> item = new HashMap<>();
-            item.put("option", question.getItem_01());
-            items.add(item);
+        String itemStr = question.getItemStr();
+        if (StringUtils.isNotBlank(itemStr)) {
+            String[] itemArray = itemStr.split(Constant.ITEMS_SPLIT);
+            List<Map<String, String>> items = new ArrayList<>();
+            for (String item : itemArray) {
+                Map<String, String> itemMap = new HashMap<>();
+                itemMap.put("option", item);
+                items.add(itemMap);
+            }
+            question.setItems(items);
         }
-        if (StringUtils.isNotBlank(question.getItem_02())) {
-            Map<String, String> item = new HashMap<>();
-            item.put("option", question.getItem_02());
-            items.add(item);
-        }
-        if (StringUtils.isNotBlank(question.getItem_03())) {
-            Map<String, String> item = new HashMap<>();
-            item.put("option", question.getItem_03());
-            items.add(item);
-        }
-        if (StringUtils.isNotBlank(question.getItem_04())) {
-            Map<String, String> item = new HashMap<>();
-            item.put("option", question.getItem_04());
-            items.add(item);
-        }
-        if (StringUtils.isNotBlank(question.getItem_05())) {
-            Map<String, String> item = new HashMap<>();
-            item.put("option", question.getItem_05());
-            items.add(item);
-        }
-        if (StringUtils.isNotBlank(question.getItem_06())) {
-            Map<String, String> item = new HashMap<>();
-            item.put("option", question.getItem_06());
-            items.add(item);
-        }
-        question.setItems(items);
     }
 
     /**
@@ -184,7 +149,7 @@ public class QuestionService {
     public void formatAttachment(Question question) {
         String attachment = question.getAttachment();
         if (attachment != null) {
-            String[] attachmentArray = attachment.split("\\|");
+            String[] attachmentArray = attachment.split(Constant.NORMAL_SPLIT);
             List<String> attachmentList = new ArrayList<>();
             for (int i = 0; i < attachmentArray.length; i++) {
                 attachmentList.add(attachmentArray[i]);
