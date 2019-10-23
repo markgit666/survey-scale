@@ -23,6 +23,11 @@ public class JudgeInfoService {
         judgeInfo.setJudgeId(RedisUtil.getSequenceId("JG"));
         String doctorId = doctorInfoService.getLoginDoctorId();
         judgeInfo.setCheckUser(doctorId);
+        JudgeInfo queryResult = judgeInfoMapper.selectJudgeInfo(judgeInfo);
+        if (queryResult != null) {
+            judgeInfoMapper.updateJudgeInfo(judgeInfo);
+            return;
+        }
         judgeInfoMapper.insertJudgeInfo(judgeInfo);
     }
 

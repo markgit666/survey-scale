@@ -10,4 +10,6 @@ public interface JudgeInfoMapper {
     int insertJudgeInfo(JudgeInfo judgeInfo);
 
     JudgeInfo selectJudgeInfo(JudgeInfo judgeInfo);
+
+    int updateJudgeInfo(JudgeInfo judgeInfo);
 }
