@@ -7,7 +7,6 @@ import com.yinxt.surveyscale.dto.ListDataReqDTO;
 import com.yinxt.surveyscale.service.ExaminationPaperService;
 import com.yinxt.surveyscale.common.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

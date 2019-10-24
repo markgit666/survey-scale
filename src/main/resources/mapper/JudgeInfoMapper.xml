@@ -30,5 +30,6 @@
         check_user = #{checkUser,jdbcType=VARCHAR},
         total_score = #{totalScore,jdbcType=VARCHAR},
         update_time = now()
+        where examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
     </update>
 </mapper>
