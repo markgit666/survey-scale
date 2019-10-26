@@ -29,7 +29,7 @@ public class PatientInfo {
      * 生日
      */
 //    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd")//, timezone = "GMT+8"
 //    @JSONField(format = "yyyy-MM-dd")
     private Date birthday;
     /**

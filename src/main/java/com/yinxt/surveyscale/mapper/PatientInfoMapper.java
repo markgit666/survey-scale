@@ -15,7 +15,7 @@ public interface PatientInfoMapper {
 
     PatientInfo selectPatientInfoByPatientId(@Param("patientId") String patientId);
 
-    List<PatientInfo> selectPatientInfoList(@Param("dto") PatientInfo patientInfo);
+    List<PatientInfo> selectPatientInfoList(PatientInfo patientInfo);
 
     int updatePatientInfo(PatientInfo patientInfo);
 

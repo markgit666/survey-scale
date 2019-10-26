@@ -1,6 +1,7 @@
 package com.yinxt.surveyscale.service;
 
 import com.yinxt.surveyscale.common.constant.Constant;
+import com.yinxt.surveyscale.common.util.RSAUtil;
 import com.yinxt.surveyscale.dto.FindBackPasswordReqDTO;
 import com.yinxt.surveyscale.dto.LoginReqDTO;
 import com.yinxt.surveyscale.dto.RegisterReqDTO;
@@ -25,7 +26,10 @@ import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import javax.validation.Valid;
 
 /**
  * 医生service
@@ -39,6 +43,11 @@ public class DoctorInfoService {
     private CaptchaService captchaService;
     @Autowired
     private SendEmailService sendEmailService;
+    /**
+     * 私钥
+     */
+    @Value("${rsa.key.private}")
+    private String privateKey;
 
     /**
      * 通过登录名和密码查询医生信息
@@ -74,6 +83,11 @@ public class DoctorInfoService {
             return result;
         }
         //验证账号和密码
+        try {
+            loginReqDTO.setPassword(RSAUtil.decrypt(loginReqDTO.getPassword(), privateKey));
+        } catch (Exception e) {
+            log.error("解密失败：", e);
+        }
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginReqDTO.getLoginName(), loginReqDTO.getPassword());
         Subject subject = SecurityUtils.getSubject();
         try {
@@ -118,7 +132,7 @@ public class DoctorInfoService {
         try {
             String code = sendEmailService.sendVerifyCodeEmail(emailAddress);
             //将验证码缓存入redis
-            RedisUtil.setKey( Constant.REDIS_REGISTER_PREFIX + emailAddress, code, 600);
+            RedisUtil.setKey(Constant.REDIS_REGISTER_PREFIX + emailAddress, code, 600);
         } catch (Exception e) {
             log.error("邮件发送失败：", e);
             throw new LogicException("验证码发送失败，请检查邮件是否填写无误");
@@ -139,6 +153,12 @@ public class DoctorInfoService {
         if (StringUtils.isBlank(cacheValue) || !StringUtils.equals(cacheValue, registerReqDTO.getVerifyCode())) {
             return Result.error(ResultEnum.VERIFY_CODE_NOT_CORRECT);
         }
+        try {
+            registerReqDTO.setPassword(RSAUtil.decrypt(registerReqDTO.getPassword(), privateKey));
+            registerReqDTO.setConfirmPassword(RSAUtil.decrypt(registerReqDTO.getConfirmPassword(), privateKey));
+        } catch (Exception e) {
+            log.error("解密失败：", e);
+        }
         //校验密码是否相等
         if (!registerReqDTO.getPassword().equals(registerReqDTO.getConfirmPassword())) {
             return Result.error(ResultEnum.PASSWORD_NOT_EQUAL);
@@ -153,8 +173,7 @@ public class DoctorInfoService {
         doctorAuthInfo.setDoctorId(RedisUtil.getSequenceId(Constant.DOCTOR_PREFIX));
         String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
         doctorAuthInfo.setSalt(salt);
-        String password = doctorAuthInfo.getPassword();
-        String md5Password = new Md5Hash(password, salt, 3).toString();
+        String md5Password = new Md5Hash(doctorAuthInfo.getPassword(), salt, 3).toString();
         doctorAuthInfo.setPassword(md5Password);
         doctorInfoMapper.insertDoctorInfo(doctorAuthInfo);
         //删除缓存
@@ -170,6 +189,11 @@ public class DoctorInfoService {
      */
     public Result modifyPassword(ModifyPasswordReqDTO modifyPasswordReqDTO) {
         //校验验证码
+        try {
+            modifyPasswordReqDTO.setNewPassword(RSAUtil.decrypt(modifyPasswordReqDTO.getNewPassword(), privateKey));
+        } catch (Exception e) {
+            log.error("解密失败", e);
+        }
         String emailAddress = modifyPasswordReqDTO.getEmailAddress();
         String redisVerifyCode = (String) RedisUtil.getKey(Constant.REDIS_MODIFY_PASSWORD_PREFIX + emailAddress);
         String verifyCode = modifyPasswordReqDTO.getVerifyCode();

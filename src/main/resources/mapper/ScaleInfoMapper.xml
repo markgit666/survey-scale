@@ -8,6 +8,7 @@
         <result column="scale_name" jdbcType="VARCHAR" property="scaleName"/>
         <result column="question_sort" jdbcType="VARCHAR" property="questionSort"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
 
     <insert id="insertScaleInfo" parameterType="com.yinxt.surveyscale.pojo.ScaleInfo">
