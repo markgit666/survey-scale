@@ -24,8 +24,7 @@ public class ExaminationPaperJudgeReqDTO {
     /**
      * 总分
      */
-    @NotBlank(message = "总分不能为空")
-    private int totalScore;
+    private Integer totalScore;
     /**
      * 答案评定信息
      */
