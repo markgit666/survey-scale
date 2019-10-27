@@ -6,7 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.yinxt.surveyscale.common.enums.StatusEnum;
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
 import com.yinxt.surveyscale.mapper.PatientInfoMapper;
-import com.yinxt.surveyscale.pojo.PatientInfo;
+import com.yinxt.surveyscale.entity.PatientInfo;
 import com.yinxt.surveyscale.common.page.PageBean;
 import com.yinxt.surveyscale.common.redis.RedisUtil;
 import com.yinxt.surveyscale.common.result.Result;

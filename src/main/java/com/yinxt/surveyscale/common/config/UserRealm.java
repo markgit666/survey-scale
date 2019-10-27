@@ -1,6 +1,6 @@
 package com.yinxt.surveyscale.common.config;
 
-import com.yinxt.surveyscale.pojo.DoctorAuthInfo;
+import com.yinxt.surveyscale.entity.DoctorAuthInfo;
 import com.yinxt.surveyscale.service.DoctorInfoService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.realm.AuthenticatingRealm;

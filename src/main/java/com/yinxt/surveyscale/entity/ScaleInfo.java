@@ -1,4 +1,4 @@
-package com.yinxt.surveyscale.pojo;
+package com.yinxt.surveyscale.entity;
 
 import lombok.Data;
 
@@ -26,6 +26,10 @@ public class ScaleInfo {
      * 题目顺序
      */
     private String questionSort;
+    /**
+     * 真实题目数量
+     */
+    private Integer questionCount;
     /**
      * 状态
      */

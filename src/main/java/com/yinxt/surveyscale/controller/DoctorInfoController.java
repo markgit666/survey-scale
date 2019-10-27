@@ -4,13 +4,11 @@ import com.yinxt.surveyscale.dto.FindBackPasswordReqDTO;
 import com.yinxt.surveyscale.dto.LoginReqDTO;
 import com.yinxt.surveyscale.dto.RegisterReqDTO;
 import com.yinxt.surveyscale.dto.VerifyCodeReqDTO;
-import com.yinxt.surveyscale.pojo.ModifyPasswordReqDTO;
+import com.yinxt.surveyscale.dto.ModifyPasswordReqDTO;
 import com.yinxt.surveyscale.service.CaptchaService;
 import com.yinxt.surveyscale.service.DoctorInfoService;
-import com.yinxt.surveyscale.common.email.service.SendEmailService;
 import com.yinxt.surveyscale.common.result.Result;
 import com.yinxt.surveyscale.common.result.ResultEnum;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

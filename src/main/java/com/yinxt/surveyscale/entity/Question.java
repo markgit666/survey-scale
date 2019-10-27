@@ -1,9 +1,8 @@
-package com.yinxt.surveyscale.pojo;
+package com.yinxt.surveyscale.entity;
 
 import lombok.Data;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

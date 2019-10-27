@@ -1,6 +1,6 @@
 package com.yinxt.surveyscale.mapper;
 
-import com.yinxt.surveyscale.pojo.Question;
+import com.yinxt.surveyscale.entity.Question;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 

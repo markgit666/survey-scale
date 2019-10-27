@@ -4,7 +4,7 @@ package com.yinxt.surveyscale.common.result;
  * 消息返回状态枚举
  */
 public enum ResultEnum {
-    SYSTEM_ERROR("100000", "系统错误"),
+    SYSTEM_ERROR("100000", "网络异常，请稍后重试"),
     SUCCESS("000000", "成功"),
     AUTHC("000001", "认证成功"),
     REGISTER_SUCCESS("000002", "注册成功"),

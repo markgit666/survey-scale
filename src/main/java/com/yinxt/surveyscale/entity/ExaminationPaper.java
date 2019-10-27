@@ -1,4 +1,4 @@
-package com.yinxt.surveyscale.pojo;
+package com.yinxt.surveyscale.entity;
 
 import lombok.Data;
 
@@ -37,6 +37,10 @@ public class ExaminationPaper {
      * 答题时间
      */
     private int useTime;
+    /**
+     * 评分状态
+     */
+    private String judgeStatus;
     /**
      * 创建时间
      */

@@ -1,8 +1,7 @@
-package com.yinxt.surveyscale.pojo;
+package com.yinxt.surveyscale.dto;
 
 import lombok.Data;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 /**

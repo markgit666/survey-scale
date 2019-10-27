@@ -1,12 +1,11 @@
 package com.yinxt.surveyscale.controller;
 
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
-import com.yinxt.surveyscale.pojo.PatientInfo;
+import com.yinxt.surveyscale.entity.PatientInfo;
 import com.yinxt.surveyscale.service.PatientInfoService;
 import com.yinxt.surveyscale.common.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

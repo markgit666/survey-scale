@@ -5,10 +5,10 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
 /**
- * 提交试卷信息dto
+ * 空白试卷请求dto
  */
 @Data
-public class ExaminationPaperReqDTO {
+public class BlankExaminationPaperReqDTO {
     /**
      * 量表ID
      */

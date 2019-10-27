@@ -1,9 +1,8 @@
 package com.yinxt.surveyscale.dto;
 
-import com.yinxt.surveyscale.pojo.Question;
+import com.yinxt.surveyscale.entity.Question;
 import lombok.Data;
 
-import java.util.Date;
 import java.util.List;
 
 /**

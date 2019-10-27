@@ -1,6 +1,6 @@
 package com.yinxt.surveyscale.mapper;
 
-import com.yinxt.surveyscale.pojo.DoctorAuthInfo;
+import com.yinxt.surveyscale.entity.DoctorAuthInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 

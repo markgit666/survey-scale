@@ -1,6 +1,6 @@
 package com.yinxt.surveyscale.mapper;
 
-import com.yinxt.surveyscale.pojo.ScaleInfo;
+import com.yinxt.surveyscale.entity.ScaleInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

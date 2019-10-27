@@ -1,4 +1,4 @@
-package com.yinxt.surveyscale.pojo;
+package com.yinxt.surveyscale.entity;
 
 import lombok.Data;
 

@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.yinxt.surveyscale.common.constant.Constant;
 import com.yinxt.surveyscale.common.enums.StatusEnum;
 import com.yinxt.surveyscale.mapper.QuestionMapper;
-import com.yinxt.surveyscale.pojo.Question;
+import com.yinxt.surveyscale.entity.Question;
 import com.yinxt.surveyscale.common.redis.RedisUtil;
 import com.yinxt.surveyscale.common.result.Result;
 import com.yinxt.surveyscale.common.result.ResultEnum;

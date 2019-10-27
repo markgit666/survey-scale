@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yinxt.surveyscale.mapper.FileInfoMapper">
 
-    <resultMap id="FileInfoResultMap" type="com.yinxt.surveyscale.pojo.FileInfo">
+    <resultMap id="FileInfoResultMap" type="com.yinxt.surveyscale.entity.FileInfo">
         <result column="file_no" property="fileNo"/>
         <result column="file_name" property="fileName"/>
         <result column="file_type" property="fileType"/>
@@ -10,7 +10,7 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
-    <insert id="insertFileInfo" parameterType="com.yinxt.surveyscale.pojo.FileInfo">
+    <insert id="insertFileInfo" parameterType="com.yinxt.surveyscale.entity.FileInfo">
         insert into tb_file_info(file_no, file_name, file_type, create_time)
         values (#{fileNo,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{fileType,jdbcType=VARCHAR}, now())
     </insert>

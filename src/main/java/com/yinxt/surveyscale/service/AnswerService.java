@@ -1,7 +1,7 @@
 package com.yinxt.surveyscale.service;
 
 import com.yinxt.surveyscale.mapper.AnswerMapper;
-import com.yinxt.surveyscale.pojo.Answer;
+import com.yinxt.surveyscale.entity.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

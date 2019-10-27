@@ -1,6 +1,6 @@
 package com.yinxt.surveyscale.mapper;
 
-import com.yinxt.surveyscale.pojo.JudgeInfo;
+import com.yinxt.surveyscale.entity.JudgeInfo;
 
 /**
  * 评定信息mapper

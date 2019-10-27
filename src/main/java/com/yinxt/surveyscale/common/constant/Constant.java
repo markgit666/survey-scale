@@ -36,4 +36,24 @@ public class Constant {
      * redis缓存图片验证码前缀
      */
     public static final String REDIS_CAPTCHA_PREFIX = "captcha_";
+    /**
+     * 单选题类型
+     */
+    public static final String radio_type = "radio";
+    /**
+     * 多选题类型
+     */
+    public static final String checkBox_type = "checkBook";
+    /**
+     * 问答题类型
+     */
+    public static final String QandA_type = "QandA";
+    /**
+     * 画图题类型
+     */
+    public static final String draw_type = "draw";
+    /**
+     * 图片题类型
+     */
+    public static final String picture_type = "picture";
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yinxt.surveyscale.mapper.JudgeInfoMapper">
 
-    <resultMap id="JudgeInfoResultMap" type="com.yinxt.surveyscale.pojo.JudgeInfo">
+    <resultMap id="JudgeInfoResultMap" type="com.yinxt.surveyscale.entity.JudgeInfo">
         <result column="judge_id" property="judgeId"/>
         <result column="examination_paper_id" property="examinationPaperId"/>
         <result column="check_user" property="checkUser"/>
@@ -11,18 +11,18 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
-    <insert id="insertJudgeInfo" parameterType="com.yinxt.surveyscale.pojo.JudgeInfo">
+    <insert id="insertJudgeInfo" parameterType="com.yinxt.surveyscale.entity.JudgeInfo">
         insert into tb_judge_info(judge_id, examination_paper_id, check_user, check_time, total_score, create_time)
         values (#{judgeId,jdbcType=VARCHAR}, #{examinationPaperId,jdbcType=VARCHAR}, #{checkUser,jdbcType=VARCHAR}, now(), #{totalScore,jdbcType=VARCHAR}, now())
     </insert>
 
 
-    <select id="selectJudgeInfo" parameterType="com.yinxt.surveyscale.pojo.JudgeInfo" resultMap="JudgeInfoResultMap">
+    <select id="selectJudgeInfo" parameterType="com.yinxt.surveyscale.entity.JudgeInfo" resultMap="JudgeInfoResultMap">
         select * from tb_judge_info
         where examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
     </select>
 
-    <update id="updateJudgeInfo" parameterType="com.yinxt.surveyscale.pojo.JudgeInfo">
+    <update id="updateJudgeInfo" parameterType="com.yinxt.surveyscale.entity.JudgeInfo">
         update
         tb_judge_info
         set

@@ -1,7 +1,9 @@
 package com.yinxt.surveyscale.mapper;
 
-import com.yinxt.surveyscale.dto.ExaminationPaperReqDTO;
-import com.yinxt.surveyscale.pojo.ExaminationPaper;
+import com.yinxt.surveyscale.po.ExaminationPaperListQueryPO;
+import com.yinxt.surveyscale.po.ExaminationPaperPO;
+import com.yinxt.surveyscale.entity.ExaminationPaper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,5 +13,9 @@ public interface ExaminationPaperMapper {
 
     int insertExaminationPaper(ExaminationPaper examinationPaper);
 
-    List<ExaminationPaper> selectExaminationPaperList(ExaminationPaperReqDTO examinationPaperReqDTO);
+    int updateJudgeStatus(@Param("examinationPaperId") String examinationPaperId);
+
+    List<ExaminationPaper> selectExaminationPaperList(ExaminationPaperListQueryPO examinationPaperListQueryPO);
+
+    ExaminationPaper selectExaminationPaperInfo(ExaminationPaperPO examinationPaperPO);
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yinxt.surveyscale.mapper.DoctorInfoMapper">
 
-    <resultMap id="DoctorInfoResultMap" type="com.yinxt.surveyscale.pojo.DoctorAuthInfo">
+    <resultMap id="DoctorInfoResultMap" type="com.yinxt.surveyscale.entity.DoctorAuthInfo">
         <result column="doctor_id" property="doctorId"/>
         <result column="doctor_name" property="doctorName"/>
         <result column="login_name" property="loginName"/>
@@ -27,7 +27,7 @@
         </where>
     </select>
 
-    <insert id="insertDoctorInfo" parameterType="com.yinxt.surveyscale.pojo.DoctorAuthInfo">
+    <insert id="insertDoctorInfo" parameterType="com.yinxt.surveyscale.entity.DoctorAuthInfo">
         insert into tb_doctor_info(doctor_id, login_name, password, salt, doctor_name, create_time)
         values (#{doctorId,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{doctorName,jdbcType=VARCHAR}, now())
     </insert>

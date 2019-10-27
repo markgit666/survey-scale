@@ -1,6 +1,6 @@
 package com.yinxt.surveyscale.mapper;
 
-import com.yinxt.surveyscale.pojo.Answer;
+import com.yinxt.surveyscale.entity.Answer;
 
 public interface AnswerMapper {
 

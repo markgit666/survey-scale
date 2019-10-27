@@ -2,23 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yinxt.surveyscale.mapper.ScaleInfoMapper">
 
-    <resultMap id="scaleInfoResultMap" type="com.yinxt.surveyscale.pojo.ScaleInfo">
+    <resultMap id="scaleInfoResultMap" type="com.yinxt.surveyscale.entity.ScaleInfo">
         <result column="scale_id" jdbcType="VARCHAR" property="scaleId"/>
         <result column="doctor_id" jdbcType="VARCHAR" property="doctorId"/>
         <result column="scale_name" jdbcType="VARCHAR" property="scaleName"/>
         <result column="question_sort" jdbcType="VARCHAR" property="questionSort"/>
+        <result column="question_count" jdbcType="INTEGER" property="questionCount"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
 
-    <insert id="insertScaleInfo" parameterType="com.yinxt.surveyscale.pojo.ScaleInfo">
+    <insert id="insertScaleInfo" parameterType="com.yinxt.surveyscale.entity.ScaleInfo">
         insert into
         tb_scale_info
-        (scale_id, doctor_id, scale_name, question_sort, create_time)
+        (scale_id, doctor_id, scale_name, question_sort, question_count, create_time)
         VALUES
         (
           #{scaleId,jdbcType=VARCHAR},#{doctorId,jdbcType=VARCHAR},#{scaleName,jdbcType=VARCHAR},
-          #{questionSort,jdbcType=VARCHAR},now()
+          #{questionSort,jdbcType=VARCHAR},#{questionCount,jdbcType=VARCHAR},now()
         )
     </insert>
 
@@ -60,6 +61,9 @@
                 </if>
                 <if test="questionSort != null and questionSort != ''">
                     question_sort=#{questionSort,jdbcType=VARCHAR},
+                </if>
+                <if test="questionCount != null">
+                    question_count=#{questionCount,jdbcType=INTEGER},
                 </if>
                 update_time=now()
             </trim>

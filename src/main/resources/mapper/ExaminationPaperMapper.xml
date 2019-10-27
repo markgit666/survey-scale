@@ -2,33 +2,56 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yinxt.surveyscale.mapper.ExaminationPaperMapper">
 
-    <resultMap id="ExaminationPaperResultMap" type="com.yinxt.surveyscale.pojo.ExaminationPaper">
+    <resultMap id="ExaminationPaperResultMap" type="com.yinxt.surveyscale.entity.ExaminationPaper">
         <result column="examination_paper_id" property="examinationPaperId"/>
         <result column="patient_id" property="patientId"/>
         <result column="scale_id" property="scaleId"/>
         <result column="use_time" property="useTime"/>
+        <result column="judge_status" property="judgeStatus"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
-    <insert id="insertExaminationPaper" parameterType="com.yinxt.surveyscale.pojo.ExaminationPaper">
+    <insert id="insertExaminationPaper" parameterType="com.yinxt.surveyscale.entity.ExaminationPaper">
         insert into tb_examination_paper(examination_paper_id, patient_id, scale_id, use_time, create_time)
         values (#{examinationPaperId,jdbcType=VARCHAR}, #{patientId, jdbcType=VARCHAR}, #{scaleId, jdbcType=VARCHAR},
         #{useTime,jdbcType=VARCHAR}, now())
     </insert>
 
-    <select id="selectExaminationPaperList" parameterType="com.yinxt.surveyscale.dto.ExaminationPaperReqDTO"
+    <update id="updateJudgeStatus" parameterType="string">
+        update tb_examination_paper
+        set judge_status = "1"
+        where examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectExaminationPaperList" parameterType="com.yinxt.surveyscale.po.ExaminationPaperListQueryPO"
             resultMap="ExaminationPaperResultMap">
         select * from tb_examination_paper tep
         left join tb_patient_info tpi on tep.patient_id = tpi.patient_id
+        left join tb_scale_info tsi on tep.scale_id = tsi.scale_id
         <where>
-            <if test="examinationPaperId != null and examinationPaperId != ''.toString()">
-                tep.examination_paper_id=#{examinationPaperId,jdbcType=VARCHAR}
+            <if test="scaleName != null and scaleName != '' ">
+                tsi.scale_name like concat('%', #{scaleName}, '%')
+            </if>
+            <if test="patientName !=null and patientName != '' ">
+                and tpi.patient_name = #{patientName,jdbcType=VARCHAR}
+            </if>
+            <if test="judgeStatus != null and judgeStatus != '' ">
+                and judge_status = #{judgeStatus,jdbcType=VARCHAR}
             </if>
             and tpi.doctor_id = #{doctorId,jdbcType=VARCHAR}
         </where>
         order by tep.create_time desc
     </select>
 
+    <select id="selectExaminationPaperInfo" parameterType="com.yinxt.surveyscale.po.ExaminationPaperPO"
+            resultMap="ExaminationPaperResultMap">
+        select * from tb_examination_paper tep
+        left join tb_patient_info tpi on tep.patient_id = tpi.patient_id
+        <where>
+            and tep.examination_paper_id=#{examinationPaperId,jdbcType=VARCHAR}
+            and tpi.doctor_id = #{doctorId,jdbcType=VARCHAR}
+        </where>
+    </select>
 
 </mapper>

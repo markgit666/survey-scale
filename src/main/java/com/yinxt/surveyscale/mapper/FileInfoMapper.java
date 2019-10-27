@@ -1,6 +1,6 @@
 package com.yinxt.surveyscale.mapper;
 
-import com.yinxt.surveyscale.pojo.FileInfo;
+import com.yinxt.surveyscale.entity.FileInfo;
 import org.apache.ibatis.annotations.Param;
 
 /**

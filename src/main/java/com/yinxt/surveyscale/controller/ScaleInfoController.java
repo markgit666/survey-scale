@@ -1,11 +1,11 @@
 package com.yinxt.surveyscale.controller;
 
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
-import com.yinxt.surveyscale.pojo.ScaleInfo;
+import com.yinxt.surveyscale.dto.ScaleListReqDTO;
+import com.yinxt.surveyscale.entity.ScaleInfo;
 import com.yinxt.surveyscale.service.ScaleInfoService;
 import com.yinxt.surveyscale.common.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +28,7 @@ public class ScaleInfoController {
     }
 
     @RequestMapping(value = "info/getList")
-    public Result getScaleInfoList(@RequestBody @Valid ListDataReqDTO<String> dataReqDTO) {
+    public Result getScaleInfoList(@RequestBody @Valid ListDataReqDTO<ScaleListReqDTO> dataReqDTO) {
         return scaleInfoService.getScaleInfoList(dataReqDTO);
     }
 

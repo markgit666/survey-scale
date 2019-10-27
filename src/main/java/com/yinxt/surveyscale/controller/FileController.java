@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 /**
  * 图片/文件下载和上传controller
@@ -36,7 +37,7 @@ public class FileController {
     }
 
     @RequestMapping(value = "base64/upload")
-    public Result uploadBase64File(@RequestBody ImageBase64ReqDTO imageBase64ReqDTO) {
+    public Result uploadBase64File(@RequestBody @Valid ImageBase64ReqDTO imageBase64ReqDTO) {
         return fileService.uploadBase64File(imageBase64ReqDTO.getBase64Image());
     }
 }

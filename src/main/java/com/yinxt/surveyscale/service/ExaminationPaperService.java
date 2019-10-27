@@ -5,12 +5,15 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yinxt.surveyscale.dto.*;
 import com.yinxt.surveyscale.mapper.ExaminationPaperMapper;
-import com.yinxt.surveyscale.pojo.*;
+import com.yinxt.surveyscale.po.ExaminationPaperListQueryPO;
+import com.yinxt.surveyscale.po.ExaminationPaperPO;
+import com.yinxt.surveyscale.entity.*;
 import com.yinxt.surveyscale.common.exeption.LogicException;
 import com.yinxt.surveyscale.common.page.PageBean;
 import com.yinxt.surveyscale.common.redis.RedisUtil;
 import com.yinxt.surveyscale.common.result.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,13 +43,13 @@ public class ExaminationPaperService {
     /**
      * 获取空试卷
      *
-     * @param examinationPaperReqDTO
+     * @param blankExaminationPaperReqDTO
      * @return
      */
-    public Result getBlankExaminationPaper(ExaminationPaperReqDTO examinationPaperReqDTO) {
+    public Result getBlankExaminationPaper(BlankExaminationPaperReqDTO blankExaminationPaperReqDTO) {
         PatientInfo patientInfo = new PatientInfo();
         //查询病人信息
-        patientInfo.setPatientId(examinationPaperReqDTO.getPatientId());
+        patientInfo.setPatientId(blankExaminationPaperReqDTO.getPatientId());
         patientInfo = (PatientInfo) patientInfoService.getPatientInfo(patientInfo).getData();
         //判断当前病人ID是否存在
         if (patientInfo == null) {
@@ -57,7 +60,7 @@ public class ExaminationPaperService {
             examinationPaper.setPatientInfo(patientInfo);
             ScaleInfo scaleInfo = new ScaleInfo();
             //查询量表信息
-            scaleInfo.setScaleId(examinationPaperReqDTO.getScaleId());
+            scaleInfo.setScaleId(blankExaminationPaperReqDTO.getScaleId());
             scaleInfo = (ScaleInfo) scaleInfoService.getScaleInfo(scaleInfo).getData();
             //赋值量表信息
             examinationPaper.setScaleInfo(scaleInfo);
@@ -151,6 +154,8 @@ public class ExaminationPaperService {
                 answerService.updateAnswer(answer);
             }
         }
+        //更新试卷的评分状态为已评分
+        examinationPaperMapper.updateJudgeStatus(examinationPaperJudgeReqDTO.getExaminationPaperId());
         return Result.success();
     }
 
@@ -160,63 +165,83 @@ public class ExaminationPaperService {
      * @param listDataReqDTO
      * @return
      */
-    public Result getExaminationPaperList(ListDataReqDTO<ExaminationPaperReqDTO> listDataReqDTO) {
+    public Result getExaminationPaperList(ListDataReqDTO<ExaminationPaperListReqDTO> listDataReqDTO) {
         log.info("获取试卷列表参数：{}", JSON.toJSONString(listDataReqDTO));
-        String doctorId = doctorInfoService.getLoginDoctorId();
-        ExaminationPaperReqDTO examinationPaperReqDTO = listDataReqDTO.getData();
-        if (examinationPaperReqDTO == null) {
-            examinationPaperReqDTO = new ExaminationPaperReqDTO();
-        }
-        examinationPaperReqDTO.setDoctorId(doctorId);
+        ExaminationPaperListReqDTO examinationPaperListReqDTO = listDataReqDTO.getData();
+        ExaminationPaperListQueryPO examinationPaperListQueryPO = new ExaminationPaperListQueryPO();
+        BeanUtils.copyProperties(examinationPaperListReqDTO, examinationPaperListQueryPO);
+        examinationPaperListQueryPO.setDoctorId(doctorInfoService.getLoginDoctorId());
         PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
-        List<ExaminationPaper> examinationPaperList = examinationPaperMapper.selectExaminationPaperList(examinationPaperReqDTO);
+        List<ExaminationPaper> examinationPaperList = examinationPaperMapper.selectExaminationPaperList(examinationPaperListQueryPO);
         for (ExaminationPaper examinationPaper : examinationPaperList) {
-            //封装病人信息
-            String patientId = examinationPaper.getPatientId();
-            PatientInfo patientInfo = new PatientInfo();
-            patientInfo.setPatientId(patientId);
-            Result result = patientInfoService.getPatientInfo(patientInfo);
-            patientInfo = (PatientInfo) result.getData();
-            examinationPaper.setPatientInfo(patientInfo);
-
-            //封装量表及题目信息
-            String scaleId = examinationPaper.getScaleId();
-            ScaleInfo scaleInfo = new ScaleInfo();
-            scaleInfo.setScaleId(scaleId);
-            result = scaleInfoService.getScaleInfo(scaleInfo);
-            scaleInfo = (ScaleInfo) result.getData();
-            examinationPaper.setScaleInfo(scaleInfo);
-
-            //封装评定信息
-            String examinationPaperId = examinationPaper.getExaminationPaperId();
-            JudgeInfo judgeInfo = new JudgeInfo();
-            judgeInfo.setExaminationPaperId(examinationPaperId);
-            judgeInfo = judgeInfoService.getJudgeInfo(judgeInfo);
-            examinationPaper.setJudgeInfo(judgeInfo);
-
-            //封装题目答案
-            List<Question> questionList = scaleInfo.getQuestionList();
-            for (Question question : questionList) {
-                Answer answer = new Answer();
-                answer.setExaminationPaperId(examinationPaperId);
-                String questionId = question.getQuestionId();
-                answer.setQuestionId(questionId);
-                answer = answerService.queryAnswer(answer);
-                question.setAnswer(answer);
-
-                if ("checkBox".equals(question.getQuestionType()) && answer != null) {
-                    String answerContent = answer.getContent();
-                    if (answerContent != null) {
-                        String[] answerArray = answerContent.split("\\|");
-                        answer.setChooseAnswerList(Arrays.asList(answerArray));
-                    }
-                }
-            }
-
+            encapsulationExaminationPaper(examinationPaper);
         }
         PageInfo pageInfo = new PageInfo(examinationPaperList);
         PageBean pageBean = new PageBean(pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getPages(), pageInfo.getTotal(), examinationPaperList);
         log.info("获取试卷列表成功：{}", JSON.toJSONString(pageBean));
         return Result.success(pageBean);
+    }
+
+    /**
+     * 获取答卷详细
+     *
+     * @param examinationPaperInfoReqDTO
+     * @return
+     */
+    public Result getExaminationPaperInfo(ExaminationPaperInfoReqDTO examinationPaperInfoReqDTO) {
+        ExaminationPaperPO examinationPaperPO = new ExaminationPaperPO();
+        examinationPaperPO.setExaminationPaperId(examinationPaperInfoReqDTO.getExaminationPaperId());
+        examinationPaperPO.setDoctorId(doctorInfoService.getLoginDoctorId());
+        ExaminationPaper examinationPaper = examinationPaperMapper.selectExaminationPaperInfo(examinationPaperPO);
+        encapsulationExaminationPaper(examinationPaper);
+        return Result.success(examinationPaper);
+    }
+
+    /**
+     * 封装答卷信息
+     *
+     * @param examinationPaper
+     */
+    public void encapsulationExaminationPaper(ExaminationPaper examinationPaper) {
+        String patientId = examinationPaper.getPatientId();
+        PatientInfo patientInfo = new PatientInfo();
+        patientInfo.setPatientId(patientId);
+        Result result = patientInfoService.getPatientInfo(patientInfo);
+        patientInfo = (PatientInfo) result.getData();
+        examinationPaper.setPatientInfo(patientInfo);
+
+        //封装量表及题目信息
+        String scaleId = examinationPaper.getScaleId();
+        ScaleInfo scaleInfo = new ScaleInfo();
+        scaleInfo.setScaleId(scaleId);
+        result = scaleInfoService.getScaleInfo(scaleInfo);
+        scaleInfo = (ScaleInfo) result.getData();
+        examinationPaper.setScaleInfo(scaleInfo);
+
+        //封装评定信息
+        String examinationPaperId = examinationPaper.getExaminationPaperId();
+        JudgeInfo judgeInfo = new JudgeInfo();
+        judgeInfo.setExaminationPaperId(examinationPaperId);
+        judgeInfo = judgeInfoService.getJudgeInfo(judgeInfo);
+        examinationPaper.setJudgeInfo(judgeInfo);
+
+        //封装题目答案
+        List<Question> questionList = scaleInfo.getQuestionList();
+        for (Question question : questionList) {
+            Answer answer = new Answer();
+            answer.setExaminationPaperId(examinationPaperId);
+            String questionId = question.getQuestionId();
+            answer.setQuestionId(questionId);
+            answer = answerService.queryAnswer(answer);
+            question.setAnswer(answer);
+
+            if ("checkBox".equals(question.getQuestionType()) && answer != null) {
+                String answerContent = answer.getContent();
+                if (answerContent != null) {
+                    String[] answerArray = answerContent.split("\\|");
+                    answer.setChooseAnswerList(Arrays.asList(answerArray));
+                }
+            }
+        }
     }
 }

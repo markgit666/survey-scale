@@ -5,9 +5,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yinxt.surveyscale.common.constant.Constant;
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
+import com.yinxt.surveyscale.dto.ScaleListReqDTO;
 import com.yinxt.surveyscale.mapper.ScaleInfoMapper;
-import com.yinxt.surveyscale.pojo.Question;
-import com.yinxt.surveyscale.pojo.ScaleInfo;
+import com.yinxt.surveyscale.entity.Question;
+import com.yinxt.surveyscale.entity.ScaleInfo;
 import com.yinxt.surveyscale.common.enums.StatusEnum;
 import com.yinxt.surveyscale.common.page.PageBean;
 import com.yinxt.surveyscale.common.redis.RedisUtil;
@@ -59,8 +60,16 @@ public class ScaleInfoService {
              */
             StringBuffer stringBuffer = new StringBuffer();
             List<Question> questionList = scaleInfo.getQuestionList();
+            int questionCounts = 0;
             if (questionList != null) {
                 for (Question question : questionList) {
+                    if (Constant.radio_type.equals(question.getQuestionType())
+                            || Constant.checkBox_type.equals(question.getQuestionType())
+                            || Constant.QandA_type.equals(question.getQuestionType())
+                            || Constant.draw_type.equals(question.getQuestionType())
+                            || Constant.picture_type.equals(question.getQuestionType())) {
+                        questionCounts++;
+                    }
                     question.setScaleId(scaleInfo.getScaleId());
                     //保存题目
                     questionService.saveQuestion(question);
@@ -76,6 +85,7 @@ public class ScaleInfoService {
              * 添加量表
              */
             scaleInfo.setQuestionSort(stringBuffer.toString());
+            scaleInfo.setQuestionCount(questionCounts);
             if (result.getData() == null) {
                 scaleInfoMapper.insertScaleInfo(scaleInfo);
             } else {
@@ -95,12 +105,12 @@ public class ScaleInfoService {
      * @param listDataReqDTO
      * @return
      */
-    public Result getScaleInfoList(ListDataReqDTO<String> listDataReqDTO) {
+    public Result getScaleInfoList(ListDataReqDTO<ScaleListReqDTO> listDataReqDTO) {
         try {
             //查找量表
             String doctorId = doctorInfoService.getLoginDoctorId();
             PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
-            List<ScaleInfo> scaleInfos = scaleInfoMapper.selectScaleInfoList(listDataReqDTO.getData(), doctorId);
+            List<ScaleInfo> scaleInfos = scaleInfoMapper.selectScaleInfoList(listDataReqDTO.getData().getScaleName(), doctorId);
             PageInfo pageInfo = new PageInfo(scaleInfos);
             PageBean pageBean = new PageBean(pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getPages(), pageInfo.getTotal(), scaleInfos);
             return Result.success(pageBean);

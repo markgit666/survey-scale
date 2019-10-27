@@ -7,8 +7,8 @@ import com.yinxt.surveyscale.dto.LoginReqDTO;
 import com.yinxt.surveyscale.dto.RegisterReqDTO;
 import com.yinxt.surveyscale.dto.VerifyCodeReqDTO;
 import com.yinxt.surveyscale.mapper.DoctorInfoMapper;
-import com.yinxt.surveyscale.pojo.DoctorAuthInfo;
-import com.yinxt.surveyscale.pojo.ModifyPasswordReqDTO;
+import com.yinxt.surveyscale.entity.DoctorAuthInfo;
+import com.yinxt.surveyscale.dto.ModifyPasswordReqDTO;
 import com.yinxt.surveyscale.common.config.UserHolder;
 import com.yinxt.surveyscale.common.email.service.SendEmailService;
 import com.yinxt.surveyscale.common.exeption.LogicException;
@@ -28,8 +28,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import javax.validation.Valid;
 
 /**
  * 医生service
@@ -209,6 +207,7 @@ public class DoctorInfoService {
 
     /**
      * 找回密码
+     * 校验是否注册，并且发送验证码邮件
      *
      * @param findBackPasswordReqDTO
      * @return

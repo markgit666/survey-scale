@@ -2,7 +2,7 @@ package com.yinxt.surveyscale.service;
 
 import com.alibaba.fastjson.JSON;
 import com.yinxt.surveyscale.mapper.FileInfoMapper;
-import com.yinxt.surveyscale.pojo.FileInfo;
+import com.yinxt.surveyscale.entity.FileInfo;
 import com.yinxt.surveyscale.common.enums.FileTypeEnum;
 import com.yinxt.surveyscale.common.qrcode.MyQrCode;
 import com.yinxt.surveyscale.common.redis.RedisUtil;
