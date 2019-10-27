@@ -5,7 +5,7 @@ create table if not exists tb_answer
 	id int auto_increment
 		primary key,
 	answer_id varchar(45) not null,
-	qeustion_id varchar(45) not null,
+	question_id varchar(45) not null,
 	examination_paper_id varchar(45) not null,
 	content varchar(45) not null,
 	score int null,
