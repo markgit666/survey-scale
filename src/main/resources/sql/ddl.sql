@@ -16,7 +16,7 @@ create table if not exists tb_answer
 );
 
 create index index_question_id
-	on tb_answer (qeustion_id);
+	on tb_answer (question_id);
 
 create table if not exists tb_doctor_info
 (
