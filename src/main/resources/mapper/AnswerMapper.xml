@@ -5,7 +5,7 @@
     <resultMap id="AnswerResultMap" type="com.yinxt.surveyscale.entity.Answer">
         <result column="answer_id" property="answerId"/>
         <result column="question_id" property="questionId"/>
-        <result column="examination_id" property="examinationId"/>
+        <result column="examination_paper_id" property="examinationPaperId"/>
         <result column="content" property="content"/>
         <result column="score" property="score"/>
         <result column="create_time" property="createTime"/>
@@ -13,7 +13,7 @@
     </resultMap>
 
     <insert id="insertAnswer" parameterType="com.yinxt.surveyscale.entity.Answer">
-     insert into tb_answer(answer_id, qeustion_id, examination_paper_id, content, create_time)
+     insert into tb_answer(answer_id, question_id, examination_paper_id, content, create_time)
      values (#{answerId,jdbcType=VARCHAR}, #{questionId,jdbcType=VARCHAR}, #{examinationPaperId,jdbcType=VARCHAR},
      #{content,jdbcType=VARCHAR}, now())
     </insert>
@@ -40,7 +40,7 @@
         select * from tb_answer
         <where>
             <if test="questionId != null and questionId != ''.toString()">
-                qeustion_id = #{questionId,jdbcType=VARCHAR}
+                question_id = #{questionId,jdbcType=VARCHAR}
             </if>
             <if test="examinationPaperId != null and examinationPaperId != ''.toString()">
                 and examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
