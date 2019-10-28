@@ -89,6 +89,14 @@
         order by create_time desc
     </select>
 
+    <select id="selectPatientListByIdArray" resultMap="patientInfoResultMap">
+        select * from tb_patient_info
+        where patient_id in
+        <foreach collection="array" open="(" close=")" separator="," item="patientId">
+            #{patientId,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
     <insert id="insertPatientInfo" parameterType="com.yinxt.surveyscale.entity.PatientInfo">
         insert into tb_patient_info
           (patient_id, doctor_id, patient_name, gender, birthday, telephone_number, family_address, create_time,

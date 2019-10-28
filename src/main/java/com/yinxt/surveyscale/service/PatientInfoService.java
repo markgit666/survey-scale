@@ -111,4 +111,14 @@ public class PatientInfoService {
         return Result.success();
     }
 
+    /**
+     * 通过病人id数组获取病人信息列表
+     *
+     * @param patientIdArray
+     * @return
+     */
+    public List<PatientInfo> getPatientInfoListByIdArray(String[] patientIdArray) {
+        return patientInfoMapper.selectPatientListByIdArray(patientIdArray);
+    }
+
 }
