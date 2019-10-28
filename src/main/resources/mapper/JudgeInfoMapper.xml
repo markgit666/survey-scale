@@ -7,6 +7,7 @@
         <result column="examination_paper_id" property="examinationPaperId"/>
         <result column="check_user" property="checkUser"/>
         <result column="check_time" property="checkTime"/>
+        <result column="total_score" property="totalScore"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
