@@ -36,7 +36,7 @@ public class ExaminationPaper {
     /**
      * 答题时间
      */
-    private int useTime;
+    private Double useTime;
     /**
      * 评分状态
      */

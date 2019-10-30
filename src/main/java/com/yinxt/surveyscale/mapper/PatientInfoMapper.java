@@ -17,8 +17,10 @@ public interface PatientInfoMapper {
 
     List<PatientInfo> selectPatientInfoList(PatientInfo patientInfo);
 
-    List<PatientInfo> selectPatientListByIdArray(String[] patientIdArray);
+    List<PatientInfo> selectPatientListByIdArray(@Param("array") String[] patientIdArray, @Param("doctorId") String doctorId);
 
     int updatePatientInfo(PatientInfo patientInfo);
+
+    List<PatientInfo> selectAllPatientInfo(String doctorId);
 
 }

@@ -117,8 +117,17 @@ public class PatientInfoService {
      * @param patientIdArray
      * @return
      */
-    public List<PatientInfo> getPatientInfoListByIdArray(String[] patientIdArray) {
-        return patientInfoMapper.selectPatientListByIdArray(patientIdArray);
+    public List<PatientInfo> getPatientInfoListByIdArray(String[] patientIdArray, String doctorId) {
+        return patientInfoMapper.selectPatientListByIdArray(patientIdArray, doctorId);
+    }
+
+    /**
+     * 获取医生名下的全部病人信息列表
+     *
+     * @return
+     */
+    public List<PatientInfo> getAllPatientInfo(String doctorId) {
+        return patientInfoMapper.selectAllPatientInfo(doctorId);
     }
 
 }

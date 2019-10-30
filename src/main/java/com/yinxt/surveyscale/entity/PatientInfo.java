@@ -51,7 +51,7 @@ public class PatientInfo {
      */
     private String inServiceJob;
     private String educationLevel;
-    private Integer educationYears;
+    private String educationYears;
     private String familyAddress;
     private String telephoneNumber;
     private String isSnoring;
@@ -62,11 +62,11 @@ public class PatientInfo {
     /**
      * 每天吸烟数量（支）
      */
-    private Integer smokingNumEachDay;
+    private String smokingNumEachDay;
     /**
      * 吸烟年数
      */
-    private Integer smokingYears;
+    private String smokingYears;
     /**
      * 有无精神疾病家族史
      */
@@ -118,7 +118,7 @@ public class PatientInfo {
     /**
      * 喝酒年数
      */
-    private Integer drinkingYears;
+    private String drinkingYears;
     /**
      * 具体认知药物
      */

@@ -23,7 +23,7 @@ public class ExaminationPaperCommitDTO {
     /**
      * 答题时间
      */
-    private int useTime;
+    private Double useTime;
     /**
      * 答案信息
      */

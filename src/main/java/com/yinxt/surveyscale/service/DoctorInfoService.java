@@ -222,7 +222,7 @@ public class DoctorInfoService {
         String emailAddress = findBackPasswordReqDTO.getEmailAddress();
         DoctorAuthInfo doctorAuthInfo = getDoctorInfoByLoginName(emailAddress);
         if (doctorAuthInfo == null) {
-            return Result.error(ResultEnum.EMAIL_NO_REGISER);
+            return Result.error(ResultEnum.EMAIL_NO_REGISTER);
         }
         try {
             //发送验证码邮件

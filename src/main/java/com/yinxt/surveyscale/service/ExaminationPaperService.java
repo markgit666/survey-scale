@@ -12,6 +12,7 @@ import com.yinxt.surveyscale.common.exeption.LogicException;
 import com.yinxt.surveyscale.common.page.PageBean;
 import com.yinxt.surveyscale.common.redis.RedisUtil;
 import com.yinxt.surveyscale.common.result.Result;
+import com.yinxt.surveyscale.vo.ExaminationPaperListRespVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -243,5 +244,24 @@ public class ExaminationPaperService {
                 }
             }
         }
+    }
+
+    /**
+     * 通过答卷编号数组获取列表信息
+     *
+     * @param examinationPaperIdArray
+     * @return
+     */
+    public List<ExaminationPaperListRespVO> getExaminationPaperListByIdArray(String[] examinationPaperIdArray, String doctorId) {
+        return examinationPaperMapper.selectExaminationPaperListByIdArray(examinationPaperIdArray, doctorId);
+    }
+
+    /**
+     * 获取医生名下所有的病人的答卷
+     *
+     * @return
+     */
+    public List<ExaminationPaperListRespVO> getAllExaminationPaper(String doctorId) {
+        return examinationPaperMapper.selectAllExaminationPaper(doctorId);
     }
 }

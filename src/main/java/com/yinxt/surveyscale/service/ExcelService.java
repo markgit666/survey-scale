@@ -2,6 +2,7 @@ package com.yinxt.surveyscale.service;
 
 import com.yinxt.surveyscale.common.util.ExcelUtil;
 import com.yinxt.surveyscale.entity.PatientInfo;
+import com.yinxt.surveyscale.vo.ExaminationPaperListRespVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +29,37 @@ public class ExcelService {
 
     @Autowired
     private PatientInfoService patientInfoService;
+    @Autowired
+    private ExaminationPaperService examinationPaperService;
 
     /**
-     * 通过病人编号获取信息列表
+     * 根据病人编号导出病人信息Excel
      *
      * @param response
      * @param patientIdArray
      */
-    public void getPatientInfoExcel(HttpServletResponse response, String[] patientIdArray) {
-        List<PatientInfo> patientInfoList = patientInfoService.getPatientInfoListByIdArray(patientIdArray);
+    public void getPatientInfoExcelById(HttpServletResponse response, String[] patientIdArray, String doctorId) {
+        List<PatientInfo> patientInfoList = patientInfoService.getPatientInfoListByIdArray(patientIdArray, doctorId);
+        outputPatientInfoExcel(patientInfoList, response);
+    }
+
+    /**
+     * 导出医生名下全部病人信息Excel
+     *
+     * @param response
+     */
+    public void getAllPatientInfoExcel(HttpServletResponse response, String doctorId) {
+        List<PatientInfo> patientInfoList = patientInfoService.getAllPatientInfo(doctorId);
+        outputPatientInfoExcel(patientInfoList, response);
+    }
+
+    /**
+     * 构建导出Excel的参数
+     *
+     * @param patientInfoList
+     * @param response
+     */
+    private void outputPatientInfoExcel(List<PatientInfo> patientInfoList, HttpServletResponse response) {
         String[] header = {"编号", "姓名", "出生日期", "性别", "家庭地址", "联系方式", "利手", "民族", "婚姻",
                 "工作状态", "在职职业", "文化程度", "受教育年数",
                 "是否打呼噜", "居住方式", "既往病史", "其他疾病", "吸烟史",
@@ -45,8 +68,8 @@ public class ExcelService {
                 "现病史（有无记忆下降）", "记忆力下降多久", "体格检查情况",
                 "是否合并使用促认知药物",
                 "具体促认知药物", "具体药物的剂量"};
-        String fileName = "病人信息表-" + new SimpleDateFormat("yyyyMMddHHmmSS").format(new Date()) + ".xlsx";
-        String sheetName = "病人信息表";
+        String fileName = "被试者信息表-" + new SimpleDateFormat("yyyyMMddHHmmSS").format(new Date()) + ".xlsx";
+        String sheetName = "被试者信息表";
         String[][] content = new String[patientInfoList.size()][header.length + 1];
         for (int i = 0; i < patientInfoList.size(); i++) {
             String[] col = content[i];
@@ -55,7 +78,7 @@ public class ExcelService {
             col[0] = patientInfo.getPatientId();
             col[1] = patientInfo.getName();
             col[2] = new SimpleDateFormat("yyyy-MM-dd").format(patientInfo.getBirthday());
-            col[3] = patientInfo.getGender();
+            col[3] = "1".equals(patientInfo.getGender()) ? "男" : "女";
             col[4] = patientInfo.getFamilyAddress();
             col[5] = patientInfo.getTelephoneNumber();
             col[6] = patientInfo.getHand();
@@ -87,6 +110,64 @@ public class ExcelService {
             col[32] = patientInfo.getDrugsType();
             col[33] = patientInfo.getDrugsDosage();
         }
+        outputExcel(response, fileName, sheetName, header, content);
+    }
+
+    /**
+     * 根据答卷id导出答卷信息Excel
+     *
+     * @param response
+     * @param examinationPaperIdArray
+     */
+    public void getExaminationPaperExcelById(HttpServletResponse response, String[] examinationPaperIdArray, String doctorId) {
+        List<ExaminationPaperListRespVO> examinationPaperListRespVOS = examinationPaperService.getExaminationPaperListByIdArray(examinationPaperIdArray, doctorId);
+        outputExaminationPaperExcel(examinationPaperListRespVOS, response);
+    }
+
+    /**
+     * 获取医生名下全部病人答卷信息Excel
+     *
+     * @param response
+     */
+    public void getAllExaminationPaperExcel(HttpServletResponse response, String doctorId) {
+        List<ExaminationPaperListRespVO> examinationPaperListRespVOS = examinationPaperService.getAllExaminationPaper(doctorId);
+        outputExaminationPaperExcel(examinationPaperListRespVOS, response);
+    }
+
+
+    /**
+     * 构建导出答卷excel的参数
+     *
+     * @param examinationPaperListRespVOS
+     * @param response
+     */
+    public void outputExaminationPaperExcel(List<ExaminationPaperListRespVO> examinationPaperListRespVOS, HttpServletResponse response) {
+        String[] header = {"答卷编号", "量表名称", "被试者", "答题时间（分钟）", "评分状态", "总分"};
+        String fileName = "答卷信息表-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) + ".xlsx";
+        String sheetName = "答卷信息表";
+        String[][] content = new String[examinationPaperListRespVOS.size()][header.length + 1];
+        for (int i = 0; i < examinationPaperListRespVOS.size(); i++) {
+            String col[] = content[i];
+            ExaminationPaperListRespVO examinationPaperListRespVO = examinationPaperListRespVOS.get(i);
+            col[0] = examinationPaperListRespVO.getExaminationPaperId();
+            col[1] = examinationPaperListRespVO.getScaleName();
+            col[2] = examinationPaperListRespVO.getPatientName();
+            col[3] = examinationPaperListRespVO.getUseTime();
+            col[4] = "1".equals(examinationPaperListRespVO.getJudgeStatus()) ? "已评分" : "未评分";
+            col[5] = examinationPaperListRespVO.getTotalScore();
+        }
+        outputExcel(response, fileName, sheetName, header, content);
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param response
+     * @param sheetName
+     * @param header
+     * @param content
+     */
+    private void outputExcel(HttpServletResponse response, String fileName, String sheetName, String[] header, String[][] content) {
         XSSFWorkbook xssfWorkbook = ExcelUtil.getWorkbook(sheetName, header, content);
         //声明输出流
         OutputStream outputStream = null;

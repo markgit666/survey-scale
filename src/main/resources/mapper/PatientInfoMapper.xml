@@ -4,7 +4,7 @@
 
     <resultMap id="patientInfoResultMap" type="com.yinxt.surveyscale.entity.PatientInfo">
         <result column="patient_id" property="patientId"/>
-        <result column="doctorId" property="doctorId"/>
+        <result column="doctor_id" property="doctorId"/>
         <result column="patient_name" property="name"/>
         <result column="gender" property="gender"/>
         <result column="birthday" property="birthday"/>
@@ -95,16 +95,31 @@
         <foreach collection="array" open="(" close=")" separator="," item="patientId">
             #{patientId,jdbcType=VARCHAR}
         </foreach>
+        and doctor_id = #{doctorId}
     </select>
 
     <insert id="insertPatientInfo" parameterType="com.yinxt.surveyscale.entity.PatientInfo">
         insert into tb_patient_info
-          (patient_id, doctor_id, patient_name, gender, birthday, telephone_number, family_address, create_time,
-          nation, marriage_status, work_status, in_service_job, education_level, education_years, is_snoring,
-          living_way, medical_history, other_medical_history, smoking_history, smoking_num_eachday, smoking_years,
-          is_mental_disease_family_history, mental_disease_family_history, other_mental_disease_family_history,
-          current_medical_history_memory_loss, memory_loss_time, physical_examination, is_use_cognitive_drugs,
-          drugs_dosage, hand, drinking_history, drinking_type, drinking_num_eachday, drinking_years, drugs_type)
+        (patient_id, doctor_id, patient_name, gender, birthday, telephone_number, family_address, create_time,
+        nation, marriage_status, work_status, in_service_job, education_level,
+        <if test="educationYears != null">
+            education_years,
+        </if>
+        is_snoring,
+        living_way, medical_history, other_medical_history, smoking_history,
+        <if test="smokingNumEachDay != null">
+            smoking_num_eachday,
+        </if>
+        <if test="smokingYears != null">
+            smoking_years,
+        </if>
+        is_mental_disease_family_history, mental_disease_family_history, other_mental_disease_family_history,
+        current_medical_history_memory_loss, memory_loss_time, physical_examination, is_use_cognitive_drugs,
+        drugs_dosage, hand, drinking_history, drinking_type, drinking_num_eachday,
+        <if test="drinkingYears != null">
+            drinking_years,
+        </if>
+        drugs_type)
         values (
         #{patientId,jdbcType=VARCHAR},
         #{doctorId,jdbcType=VARCHAR},
@@ -114,15 +129,28 @@
         #{telephoneNumber,jdbcType=VARCHAR},
         #{familyAddress,jdbcType=VARCHAR},
         now(),
-        #{nation,jdbcType=VARCHAR}, #{marriageStatus,jdbcType=VARCHAR}, #{workStatus,jdbcType=VARCHAR}, #{inServiceJob,jdbcType=VARCHAR}, #{educationLevel,jdbcType=VARCHAR},
-        #{educationYears,jdbcType=VARCHAR},#{isSnoring,jdbcType=VARCHAR},#{livingWay,jdbcType=VARCHAR},#{medicalHistory,jdbcType=VARCHAR},
+        #{nation,jdbcType=VARCHAR}, #{marriageStatus,jdbcType=VARCHAR}, #{workStatus,jdbcType=VARCHAR},
+        #{inServiceJob,jdbcType=VARCHAR}, #{educationLevel,jdbcType=VARCHAR},
+        <if test="educationYears != null">
+            #{educationYears,jdbcType=VARCHAR},
+        </if>
+        #{isSnoring,jdbcType=VARCHAR},#{livingWay,jdbcType=VARCHAR},#{medicalHistory,jdbcType=VARCHAR},
         #{otherMedicalHistory,jdbcType=VARCHAR},#{smokingHistory,jdbcType=VARCHAR},
-        #{smokingNumEachDay,jdbcType=VARCHAR},#{smokingYears,jdbcType=VARCHAR},#{isMentalDiseaseFamilyHistory,jdbcType=VARCHAR},
+        <if test="smokingNumEachDay != null">
+            #{smokingNumEachDay,jdbcType=VARCHAR},
+        </if>
+        <if test="smokingYears != null">
+            #{smokingYears,jdbcType=VARCHAR},
+        </if>
+        #{isMentalDiseaseFamilyHistory,jdbcType=VARCHAR},
         #{mentalDiseaseFamilyHistory,jdbcType=VARCHAR},#{otherMentalDiseaseFamilyHistory,jdbcType=VARCHAR},
         #{currentMedicalHistoryMemoryLoss,jdbcType=VARCHAR},#{memoryLossTime,jdbcType=VARCHAR},#{physicalExamination,jdbcType=VARCHAR},
         #{isUseCognitiveDrugs,jdbcType=VARCHAR},#{drugsDosage,jdbcType=VARCHAR},#{hand,jdbcType=VARCHAR},
         #{drinkingHistory,jdbcType=VARCHAR},#{drinkingType,jdbcType=VARCHAR},#{drinkingNumEachDay,jdbcType=VARCHAR},
-        #{drinkingYears,jdbcType=VARCHAR},#{drugsType,jdbcType=VARCHAR}
+        <if test="drinkingYears != null">
+            #{drinkingYears,jdbcType=VARCHAR},
+        </if>
+        #{drugsType,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -234,5 +262,10 @@
             patient_id=#{patientId,jdbcType=VARCHAR}
         </where>
     </update>
+
+    <select id="selectAllPatientInfo" parameterType="string" resultMap="patientInfoResultMap">
+        select * from tb_patient_info
+        where doctor_id = #{doctorId,jdbcType=VARCHAR};
+    </select>
 
 </mapper>

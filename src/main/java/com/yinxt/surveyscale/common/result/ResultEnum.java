@@ -17,7 +17,7 @@ public enum ResultEnum {
     EMAIL_SEND_EROOR("100006", "邮件发送异常"),
     VERIFY_CODE_SEND_ERROR("100007", "验证码发送失败，请稍后重试"),
     VERIFY_CODE_NOT_CORRECT("100008", "验证码不正确"),
-    EMAIL_NO_REGISER("100009", "邮箱未注册");
+    EMAIL_NO_REGISTER("100009", "邮箱未注册");
 
     private String code;
     private String name;

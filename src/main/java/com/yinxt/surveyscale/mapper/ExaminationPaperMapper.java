@@ -20,5 +20,7 @@ public interface ExaminationPaperMapper {
 
     ExaminationPaper selectExaminationPaperInfo(ExaminationPaperPO examinationPaperPO);
 
-    List<ExaminationPaperListRespVO> selectExaminationPaperListByIdArray(String[] examinationPaperIdArray, String doctorId);
+    List<ExaminationPaperListRespVO> selectExaminationPaperListByIdArray(@Param("array") String[] examinationPaperIdArray, String doctorId);
+
+    List<ExaminationPaperListRespVO> selectAllExaminationPaper(@Param("doctorId") String doctorId);
 }

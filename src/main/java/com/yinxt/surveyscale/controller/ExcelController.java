@@ -21,7 +21,23 @@ public class ExcelController {
     private ExcelService excelService;
 
     @RequestMapping(value = "export/patient/info")
-    public void exportExcel(@RequestParam("patientIdArray") String[] patientIdArray, HttpServletResponse response) {
-        excelService.getPatientInfoExcel(response, patientIdArray);
+    public void exportPatientInfoExcel(@RequestParam("patientIdArray") String[] patientIdArray, @RequestParam("doctorId") String doctorId, HttpServletResponse response) {
+        excelService.getPatientInfoExcelById(response, patientIdArray, doctorId);
     }
+
+    @RequestMapping(value = "export/all/patient/info")
+    public void exportAllPatientInfoExcel(HttpServletResponse response, @RequestParam("doctorId") String doctorId) {
+        excelService.getAllPatientInfoExcel(response, doctorId);
+    }
+
+    @RequestMapping(value = "export/examinationPaper/info")
+    public void exportExaminationPaperExcel(@RequestParam("examinationPaperIdArray") String[] examinationPaperArray, @RequestParam("doctorId") String doctorId, HttpServletResponse response) {
+        excelService.getExaminationPaperExcelById(response, examinationPaperArray, doctorId);
+    }
+
+    @RequestMapping(value = "export/all/examinationPaper/info")
+    public void exportAllExaminationPaperExcel(HttpServletResponse response, @RequestParam("doctorId") String doctorId) {
+        excelService.getAllExaminationPaperExcel(response, doctorId);
+    }
+
 }

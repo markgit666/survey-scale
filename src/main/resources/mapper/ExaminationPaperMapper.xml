@@ -54,18 +54,29 @@
         </where>
     </select>
 
-    <select id="selectExaminationPaperListByIdArray" resultMap="ExaminationPaperResultMap">
-        select tep.examination_paper_id, tsi.scale_name, tpi.patient_name, tep.use_time, tep.judge_status,
-        tji.total_score
+    <select id="selectExaminationPaperListByIdArray" resultType="com.yinxt.surveyscale.vo.ExaminationPaperListRespVO">
+        select tep.examination_paper_id as examinationPaperId, tsi.scale_name as scaleName, tpi.patient_name as
+        patientName,tep.use_time as useTime, tep.judge_status as judgeStatus,tji.total_score as totalScore
         from tb_examination_paper tep
         left join tb_patient_info tpi on tep.patient_id = tpi.patient_id
         left join tb_scale_info tsi on tep.scale_id = tsi.scale_id
         left join tb_judge_info tji on tep.examination_paper_id = tji.examination_paper_id
-        where examination_paper_id in
+        where tep.examination_paper_id in
         <foreach collection="array" open="(" close=")" separator="," item="examinationPaperId">
             #{examinationPaperId,jdbcType=VARCHAR}
         </foreach>
-        and doctor_id=#{doctorId,jdbcType=VARCHAR}
+        and tpi.doctor_id=#{doctorId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectAllExaminationPaper" resultType="com.yinxt.surveyscale.vo.ExaminationPaperListRespVO">
+        select tep.examination_paper_id as examinationPaperId, tsi.scale_name as scaleName, tpi.patient_name as
+        patientName,tep.use_time as useTime, tep.judge_status as judgeStatus,tji.total_score as totalScore
+        from tb_examination_paper tep
+        left join tb_patient_info tpi on tep.patient_id = tpi.patient_id
+        left join tb_scale_info tsi on tep.scale_id = tsi.scale_id
+        left join tb_judge_info tji on tep.examination_paper_id = tji.examination_paper_id
+        where
+        tpi.doctor_id=#{doctorId,jdbcType=VARCHAR}
     </select>
 
 </mapper>
