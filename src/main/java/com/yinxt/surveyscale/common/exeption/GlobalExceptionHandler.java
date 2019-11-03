@@ -10,8 +10,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Slf4j
@@ -26,10 +28,20 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseBody
-    @ExceptionHandler(value = LogException.class)
+    @ExceptionHandler(value = LogicException.class)
     public Result logicExceptionHandler(HttpServletRequest request, LogicException e) {
         logError(request, e);
-        return Result.error(e.getCode(), e.getMessage());
+        if (e.getCode() != null) {
+            return Result.error(e.getCode(), e.getMessage());
+        }
+        return Result.error(e.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(value = MultipartException.class)
+    public Result multipartException(HttpServletRequest request, MultipartException e) {
+        logError(request, e);
+        return Result.error(ResultEnum.FILE_TOO_BIG);
     }
 
     @ResponseBody
@@ -52,7 +64,7 @@ public class GlobalExceptionHandler {
     }
 
     private void logError(HttpServletRequest request, Exception e) {
-        log.info("url={} | error={}", request.getRequestURI(), e);
+        log.info("url={} | error{}", request.getRequestURI(), e);
     }
 
 }

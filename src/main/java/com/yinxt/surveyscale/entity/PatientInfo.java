@@ -50,14 +50,41 @@ public class PatientInfo {
      *
      */
     private String inServiceJob;
+    /**
+     * 受教育程度
+     */
     private String educationLevel;
+    /**
+     * 教育年数
+     */
     private String educationYears;
+    /**
+     * 家庭地址
+     */
     private String familyAddress;
+    /**
+     * 电话
+     */
     private String telephoneNumber;
+    /**
+     * 是否打鼾
+     */
     private String isSnoring;
+    /**
+     * 居住方式
+     */
     private String livingWay;
+    /**
+     * 用药史
+     */
     private String medicalHistory;
+    /**
+     * 其他用药史
+     */
     private String otherMedicalHistory;
+    /**
+     * 抽烟史
+     */
     private String smokingHistory;
     /**
      * 每天吸烟数量（支）

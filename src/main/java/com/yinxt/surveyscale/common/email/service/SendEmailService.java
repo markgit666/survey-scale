@@ -6,6 +6,7 @@ import com.yinxt.surveyscale.common.exeption.LogicException;
 import com.yinxt.surveyscale.common.result.ResultEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
@@ -19,6 +20,8 @@ public class SendEmailService {
 
     @Autowired
     private EmailUtil emailUtil;
+    @Value("${mail.content}")
+    private String content;
 
     /**
      * 发送验证码邮件
@@ -30,13 +33,13 @@ public class SendEmailService {
         EmailInfo emailInfo = new EmailInfo();
         emailInfo.setSendTo(sendTo);
         emailInfo.setTitle("验证码");
-        String content = "<p>【医用量表调查网】尊敬的用户您好，您的验证码为" + code + "，如非本人操作，请检查账号安全，" +
-                "该验证码将在10分钟后失效，谢谢！</p>";
+        content = content.replace("code", code);
+        log.info("邮件内容：{}", content);
         emailInfo.setContent(content);
         try {
             emailUtil.send(emailInfo);//发送邮件
         } catch (Exception e) {
-            log.error("邮件发送异常：", e);
+            log.error("验证码发送异常：", e);
             throw new LogicException(ResultEnum.VERIFY_CODE_SEND_ERROR);
         }
         return code;

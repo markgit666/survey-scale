@@ -45,7 +45,7 @@ public class ScaleInfoService {
      */
     @Transactional
     public Result saveScaleInfo(ScaleInfo scaleInfo) {
-        log.info("保存量表：请求参数：{}", JSON.toJSONString(scaleInfo));
+        log.info("[saveScaleInfo]请求参数：{}", JSON.toJSONString(scaleInfo));
         try {
             Result result = getScaleInfo(scaleInfo);
             if (result.getData() == null) {
@@ -91,7 +91,7 @@ public class ScaleInfoService {
             } else {
                 scaleInfoMapper.updateScaleInfo(scaleInfo);
             }
-            log.info("保存量表成功");
+            log.info("[saveScaleInfo]保存量表成功");
         } catch (Exception e) {
             log.info("保存量表异常：{}", e);
             throw new RuntimeException("保存量表异常");
@@ -110,7 +110,11 @@ public class ScaleInfoService {
             //查找量表
             String doctorId = doctorInfoService.getLoginDoctorId();
             PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
-            List<ScaleInfo> scaleInfos = scaleInfoMapper.selectScaleInfoList(listDataReqDTO.getData().getScaleName(), doctorId);
+            String scaleName = "";
+            if (listDataReqDTO.getData() != null) {
+                scaleName = listDataReqDTO.getData().getScaleName();
+            }
+            List<ScaleInfo> scaleInfos = scaleInfoMapper.selectScaleInfoList(scaleName, doctorId);
             PageInfo pageInfo = new PageInfo(scaleInfos);
             PageBean pageBean = new PageBean(pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getPages(), pageInfo.getTotal(), scaleInfos);
             return Result.success(pageBean);
@@ -126,8 +130,8 @@ public class ScaleInfoService {
      * @param scaleInfo
      * @return
      */
-    @Transactional
     public Result getScaleInfo(ScaleInfo scaleInfo) {
+        log.info("[getScaleInfo]查询参数：{}", JSON.toJSONString(scaleInfo));
         ScaleInfo info = scaleInfoMapper.selectScaleInfo(scaleInfo.getScaleId());
         //若找不到量表信息
         if (info == null) {
@@ -153,7 +157,7 @@ public class ScaleInfoService {
             }
             info.setQuestionList(questionSortList);
         }
-        log.info("返回量表信息：{}", JSON.toJSONString(info));
+        log.info("[getScaleInfo]查询结果：{}", JSON.toJSONString(info));
         return Result.success(info);
     }
 
@@ -164,7 +168,7 @@ public class ScaleInfoService {
      * @return
      */
     public Result removeScaleInfo(ScaleInfo scaleInfo) {
-        log.info("删除量表，请求参数：{}", JSON.toJSONString(scaleInfo));
+        log.info("[removeScaleInfo]请求参数：{}", JSON.toJSONString(scaleInfo));
 
         try {
             if (scaleInfo != null && StringUtils.isNotBlank(scaleInfo.getScaleId())) {
@@ -183,7 +187,7 @@ public class ScaleInfoService {
             log.error("删除量表异常：", e);
             return Result.error();
         }
-        log.info("删除量表成功");
+        log.info("[removeScaleInfo]量表删除成功");
         return Result.success();
     }
 

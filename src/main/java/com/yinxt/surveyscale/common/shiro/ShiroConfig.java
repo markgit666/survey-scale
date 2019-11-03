@@ -1,6 +1,5 @@
-package com.yinxt.surveyscale.common.config;
+package com.yinxt.surveyscale.common.shiro;
 
-import com.yinxt.surveyscale.common.filter.UserAuthenticationFilter;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
@@ -47,7 +46,7 @@ public class ShiroConfig {
         sessionManager.setSessionIdCookie(simpleCookie);
         sessionManager.setDeleteInvalidSessions(true);
         sessionManager.setSessionValidationSchedulerEnabled(true);
-        sessionManager.setGlobalSessionTimeout(1800000);
+        sessionManager.setGlobalSessionTimeout(3600000);
         return sessionManager;
     }
 
@@ -55,7 +54,7 @@ public class ShiroConfig {
     public CacheManager cacheManager() {
         RedisCacheManager redisCacheManager = new RedisCacheManager();
         redisCacheManager.setRedisManager(redisManager());
-        redisCacheManager.setKeyPrefix("SPRINGBOOT_CACHE_");
+        redisCacheManager.setKeyPrefix("SHIRO_CACHE_");
         return new MemoryConstrainedCacheManager();
     }
 
@@ -70,7 +69,7 @@ public class ShiroConfig {
     public RedisSessionDAO redisSessionDAO() {
         RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
         redisSessionDAO.setRedisManager(redisManager());
-        redisSessionDAO.setKeyPrefix("SPRINGBOOT_SESSION_");
+        redisSessionDAO.setKeyPrefix("SHIRO_SESSION_");
         return redisSessionDAO;
     }
 

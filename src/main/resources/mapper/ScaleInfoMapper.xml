@@ -15,11 +15,11 @@
     <insert id="insertScaleInfo" parameterType="com.yinxt.surveyscale.entity.ScaleInfo">
         insert into
         tb_scale_info
-        (scale_id, doctor_id, scale_name, question_sort, question_count, create_time)
+        (scale_id, doctor_id, scale_name, question_sort, question_count, create_time, update_time)
         VALUES
         (
           #{scaleId,jdbcType=VARCHAR},#{doctorId,jdbcType=VARCHAR},#{scaleName,jdbcType=VARCHAR},
-          #{questionSort,jdbcType=VARCHAR},#{questionCount,jdbcType=VARCHAR},now()
+          #{questionSort,jdbcType=VARCHAR},#{questionCount,jdbcType=VARCHAR},now(),now()
         )
     </insert>
 
@@ -29,7 +29,7 @@
         from tb_scale_info
         <where>
             and status='1'
-            <if test="scaleName != null and scaleName != ''">
+            <if test="scaleName != null and scaleName != '' ">
                 and scale_name like concat('%', #{scaleName}, '%')
             </if>
             and doctor_id = #{doctorId,jdbcType=VARCHAR}

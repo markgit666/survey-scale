@@ -1,4 +1,4 @@
-package com.yinxt.surveyscale.common.config;
+package com.yinxt.surveyscale.common.shiro;
 
 import com.yinxt.surveyscale.entity.DoctorAuthInfo;
 import com.yinxt.surveyscale.service.DoctorInfoService;

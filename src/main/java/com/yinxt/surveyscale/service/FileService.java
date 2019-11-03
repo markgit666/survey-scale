@@ -1,6 +1,8 @@
 package com.yinxt.surveyscale.service;
 
 import com.alibaba.fastjson.JSON;
+import com.yinxt.surveyscale.common.exeption.LogicException;
+import com.yinxt.surveyscale.common.result.ResultEnum;
 import com.yinxt.surveyscale.mapper.FileInfoMapper;
 import com.yinxt.surveyscale.entity.FileInfo;
 import com.yinxt.surveyscale.common.enums.FileTypeEnum;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Slf4j
@@ -26,23 +29,22 @@ public class FileService {
     private String imageRootPath;
     @Autowired
     private FileInfoMapper fileInfoMapper;
-
-    private static final String FRONT_URL = "http://192.168.43.205:8080/";
+    @Value("${scale-survey-front.url}")
+    private String scaleSurveyFrontUrl;
 
     public void downloadQrCodeImage(HttpServletRequest request, HttpServletResponse response) {
-        String addr = request.getLocalAddr();
-        int port = request.getRemotePort();
         log.info("端口localPost:{},remotePort:{},serverPort:{}", request.getLocalPort(), request.getRemotePort(), request.getServerPort());
         String scaleId = request.getParameter("scaleId");
         String url = request.getParameter("url");
         StringBuilder urlContentBuilder = new StringBuilder();
-        urlContentBuilder.append(FRONT_URL).append(url).append("?").append("scaleId=").append(scaleId);
-        log.info("二维码内容：{}", urlContentBuilder.toString());
+        urlContentBuilder.append(scaleSurveyFrontUrl).append(url).append("?").append("scaleId=").append(scaleId);
         String urlContent = urlContentBuilder.toString();
+        log.info("二维码内容：{}", urlContent);
         try {
-            MyQrCode.qrCodeImage(urlContent, response);
+            MyQrCode.getQrCodeImage(urlContent, response);
         } catch (Exception e) {
-            log.error("获取二维码异常：{}", e);
+            log.error("获取二维码异常：", e);
+            throw new LogicException("获取二维码失败");
         }
     }
 
@@ -52,10 +54,12 @@ public class FileService {
      * @param multipartFiles
      */
     public Result uploadImage(MultipartFile[] multipartFiles) {
-        log.info("上传图片：{}", JSON.toJSONString(multipartFiles.toString()));
+        if (multipartFiles.length > 20) {
+            return Result.error(ResultEnum.FILE_NUM_TOO_MUCH);
+        }
         String imageFullPath = "";
         String fileName;
-        String fileNo = "";
+        String fileNo;
         List<String> fileNoList = new ArrayList<>();
         try {
             for (MultipartFile multipartFile : multipartFiles) {
@@ -63,21 +67,18 @@ public class FileService {
                 String originName = multipartFile.getOriginalFilename();
                 fileNo = RedisUtil.getSequenceId("IMG");
                 fileName = fileNo + originName.substring(originName.lastIndexOf("."));
-                imageFullPath = imageRootPath + File.separator + fileName;
+                imageFullPath = imageRootPath + File.separator + new SimpleDateFormat("yyyyMMdd").format(new Date());
+                String fullFileName = imageFullPath + File.separator + fileName;
                 File file = new File(imageFullPath);
                 if (!file.exists()) {
                     file.mkdirs();
                 }
-                multipartFile.transferTo(file);
+                multipartFile.transferTo(new File(fullFileName));
 
                 /**
-                 * 保存文件信息
+                 * 保存图片信息
                  */
-                FileInfo fileInfo = new FileInfo();
-                fileInfo.setFileNo(fileNo);
-                fileInfo.setFileName(fileName);
-                fileInfo.setFileType(FileTypeEnum.IMAGE.getCode());
-                saveFileInfo(fileInfo);
+                saveFileInfo(fileName, fileNo);
                 fileNoList.add(fileNo);
             }
         } catch (IOException e) {
@@ -91,9 +92,14 @@ public class FileService {
     /**
      * 保存文件信息
      *
-     * @param fileInfo
+     * @param fileName
+     * @param fileNo
      */
-    public void saveFileInfo(FileInfo fileInfo) {
+    public void saveFileInfo(String fileName, String fileNo) {
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setFileNo(fileNo);
+        fileInfo.setFileName(fileName);
+        fileInfo.setFileType(FileTypeEnum.IMAGE.getCode());
         fileInfoMapper.insertFileInfo(fileInfo);
     }
 
@@ -102,18 +108,22 @@ public class FileService {
      *
      * @param base64Image
      */
-    public Result uploadBase64File(String base64Image) {
+    public Result uploadBase64Image(String base64Image) {
 
         Base64.Decoder decoder = Base64.getDecoder();
         byte[] decodeByte = decoder.decode(base64Image);
         String fileNo = RedisUtil.getSequenceId("IMG");
         String fileName = fileNo + ".png";
-        String fullName = imageRootPath + File.separator + fileName;
-        File file = new File(fullName);
+        String imagePath = imageRootPath + File.separator + new SimpleDateFormat("yyyyMMdd").format(new Date());
+        String fullName = imagePath + File.separator + fileName;
+        File file = new File(imagePath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
         FileOutputStream fileOutputStream = null;
         BufferedOutputStream bufferedOutputStream = null;
         try {
-            fileOutputStream = new FileOutputStream(file);
+            fileOutputStream = new FileOutputStream(fullName);
             bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
             bufferedOutputStream.write(decodeByte);
             bufferedOutputStream.flush();
@@ -121,11 +131,7 @@ public class FileService {
             /**
              * 保存文件信息
              */
-            FileInfo fileInfo = new FileInfo();
-            fileInfo.setFileNo(fileNo);
-            fileInfo.setFileName(fileName);
-            fileInfo.setFileType(FileTypeEnum.IMAGE.getCode());
-            saveFileInfo(fileInfo);
+            saveFileInfo(fileName, fileNo);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -154,7 +160,7 @@ public class FileService {
             InputStream inputStream = null;
             BufferedInputStream bufferedInputStream = null;
             BufferedOutputStream bufferedOutputStream = null;
-            String filePath = imageRootPath + File.separator + fileName;
+            String filePath = imageRootPath + File.separator + fileNo.substring(3, 11) + File.separator + fileName;
             File file = new File(filePath);
             try {
                 inputStream = new FileInputStream(file);
@@ -176,7 +182,7 @@ public class FileService {
                     bufferedInputStream.close();
                     bufferedOutputStream.close();
                 } catch (IOException e) {
-                    log.error("资源关闭异常", e);
+                    log.error("资源关闭异常：", e);
                 }
             }
         }

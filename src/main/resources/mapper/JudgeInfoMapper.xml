@@ -13,8 +13,8 @@
     </resultMap>
 
     <insert id="insertJudgeInfo" parameterType="com.yinxt.surveyscale.entity.JudgeInfo">
-        insert into tb_judge_info(judge_id, examination_paper_id, check_user, check_time, total_score, create_time)
-        values (#{judgeId,jdbcType=VARCHAR}, #{examinationPaperId,jdbcType=VARCHAR}, #{checkUser,jdbcType=VARCHAR}, now(), #{totalScore,jdbcType=VARCHAR}, now())
+        insert into tb_judge_info(judge_id, examination_paper_id, check_user, check_time, total_score, create_time, update_time)
+        values (#{judgeId,jdbcType=VARCHAR}, #{examinationPaperId,jdbcType=VARCHAR}, #{checkUser,jdbcType=VARCHAR}, now(), #{totalScore,jdbcType=VARCHAR}, now(), now())
     </insert>
 
 

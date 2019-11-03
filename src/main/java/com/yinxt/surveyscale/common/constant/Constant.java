@@ -13,7 +13,7 @@ public class Constant {
      */
     public static final String NORMAL_SPLIT = "%";
     /**
-     * 选择题选项分隔符
+     * 选择题选项/多选题答案分隔符
      */
     public static final String ITEMS_SPLIT = "@-@";
     /**
@@ -43,7 +43,7 @@ public class Constant {
     /**
      * 多选题类型
      */
-    public static final String checkBox_type = "checkBook";
+    public static final String checkBox_type = "checkBox";
     /**
      * 问答题类型
      */
@@ -56,4 +56,16 @@ public class Constant {
      * 图片题类型
      */
     public static final String picture_type = "picture";
+    /**
+     * 是
+     */
+    public static final String YES = "1";
+    /**
+     * 否
+     */
+    public static final String NO = "0";
+    /**
+     * 加盐
+     */
+    public static final int salt = 3;
 }

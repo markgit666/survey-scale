@@ -1,5 +1,6 @@
 package com.yinxt.surveyscale.service;
 
+import com.alibaba.fastjson.JSON;
 import com.yinxt.surveyscale.common.constant.Constant;
 import com.yinxt.surveyscale.common.util.RSAUtil;
 import com.yinxt.surveyscale.dto.FindBackPasswordReqDTO;
@@ -9,7 +10,7 @@ import com.yinxt.surveyscale.dto.VerifyCodeReqDTO;
 import com.yinxt.surveyscale.mapper.DoctorInfoMapper;
 import com.yinxt.surveyscale.entity.DoctorAuthInfo;
 import com.yinxt.surveyscale.dto.ModifyPasswordReqDTO;
-import com.yinxt.surveyscale.common.config.UserHolder;
+import com.yinxt.surveyscale.common.util.UserHolder;
 import com.yinxt.surveyscale.common.email.service.SendEmailService;
 import com.yinxt.surveyscale.common.exeption.LogicException;
 import com.yinxt.surveyscale.common.redis.RedisUtil;
@@ -46,6 +47,8 @@ public class DoctorInfoService {
      */
     @Value("${rsa.key.private}")
     private String privateKey;
+
+    private static final long TIME = 600;
 
     /**
      * 通过登录名和密码查询医生信息
@@ -95,8 +98,6 @@ public class DoctorInfoService {
         }
         if (subject.isAuthenticated()) {
             String sessionId = subject.getSession().getId().toString();
-            DoctorAuthInfo doctorAuthInfo = getDoctorInfoByLoginName(loginReqDTO.getLoginName());
-            RedisUtil.setKey("identity_" + sessionId, doctorAuthInfo.getDoctorId(), 600);
             return Result.success(ResultEnum.AUTHC, sessionId);
         } else {
             return Result.error(ResultEnum.AUTHC_ERROR);
@@ -130,10 +131,10 @@ public class DoctorInfoService {
         try {
             String code = sendEmailService.sendVerifyCodeEmail(emailAddress);
             //将验证码缓存入redis
-            RedisUtil.setKey(Constant.REDIS_REGISTER_PREFIX + emailAddress, code, 600);
+            RedisUtil.setKey(Constant.REDIS_REGISTER_PREFIX + emailAddress, code, TIME);
         } catch (Exception e) {
             log.error("邮件发送失败：", e);
-            throw new LogicException("验证码发送失败，请检查邮件是否填写无误");
+            throw new LogicException(e.getMessage());
         }
         return Result.success(ResultEnum.VERIFY_CODE_SEND_SUCCESS);
     }
@@ -171,7 +172,7 @@ public class DoctorInfoService {
         doctorAuthInfo.setDoctorId(RedisUtil.getSequenceId(Constant.DOCTOR_PREFIX));
         String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
         doctorAuthInfo.setSalt(salt);
-        String md5Password = new Md5Hash(doctorAuthInfo.getPassword(), salt, 3).toString();
+        String md5Password = new Md5Hash(doctorAuthInfo.getPassword(), salt, Constant.salt).toString();
         doctorAuthInfo.setPassword(md5Password);
         doctorInfoMapper.insertDoctorInfo(doctorAuthInfo);
         //删除缓存
@@ -187,11 +188,6 @@ public class DoctorInfoService {
      */
     public Result modifyPassword(ModifyPasswordReqDTO modifyPasswordReqDTO) {
         //校验验证码
-        try {
-            modifyPasswordReqDTO.setNewPassword(RSAUtil.decrypt(modifyPasswordReqDTO.getNewPassword(), privateKey));
-        } catch (Exception e) {
-            log.error("解密失败", e);
-        }
         String emailAddress = modifyPasswordReqDTO.getEmailAddress();
         String redisVerifyCode = (String) RedisUtil.getKey(Constant.REDIS_MODIFY_PASSWORD_PREFIX + emailAddress);
         String verifyCode = modifyPasswordReqDTO.getVerifyCode();
@@ -199,15 +195,20 @@ public class DoctorInfoService {
             return Result.error(ResultEnum.VERIFY_CODE_NOT_CORRECT);
         }
         //修改密码
+        try {
+            modifyPasswordReqDTO.setNewPassword(RSAUtil.decrypt(modifyPasswordReqDTO.getNewPassword(), privateKey));
+        } catch (Exception e) {
+            log.error("解密失败", e);
+        }
         String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
-        String md5Password = new Md5Hash(modifyPasswordReqDTO.getNewPassword(), salt, 3).toString();
+        String md5Password = new Md5Hash(modifyPasswordReqDTO.getNewPassword(), salt, Constant.salt).toString();
         doctorInfoMapper.updatePassword(modifyPasswordReqDTO.getEmailAddress(), md5Password, salt);
         return Result.success();
     }
 
     /**
      * 找回密码
-     * 校验是否注册，并且发送验证码邮件
+     * 校验图片验证码，校验是否注册，并且发送验证码邮件
      *
      * @param findBackPasswordReqDTO
      * @return
@@ -227,10 +228,10 @@ public class DoctorInfoService {
         try {
             //发送验证码邮件
             String code = sendEmailService.sendVerifyCodeEmail(emailAddress);
-            RedisUtil.setKey(Constant.REDIS_MODIFY_PASSWORD_PREFIX + emailAddress, code, 600);
+            RedisUtil.setKey(Constant.REDIS_MODIFY_PASSWORD_PREFIX + emailAddress, code, TIME);
         } catch (Exception e) {
             log.error("邮件发送失败：", e);
-            throw new LogicException("验证码发送失败，请检查邮件是否填写无误");
+            throw new LogicException(e.getMessage());
         }
         return Result.success(ResultEnum.VERIFY_CODE_SEND_SUCCESS);
     }

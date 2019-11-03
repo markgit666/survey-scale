@@ -1,4 +1,4 @@
-package com.yinxt.surveyscale.common.config;
+package com.yinxt.surveyscale.common.util;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;

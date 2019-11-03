@@ -2,12 +2,14 @@ package com.yinxt.surveyscale.mapper;
 
 import com.yinxt.surveyscale.entity.ScaleInfo;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * 量表mapper
  */
+@Component
 public interface ScaleInfoMapper {
 
     int insertScaleInfo(ScaleInfo scaleInfo);

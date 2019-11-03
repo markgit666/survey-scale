@@ -36,6 +36,7 @@ public class RedisUtil {
     public static String getGenericId(Class clazz, String prefix) {
         String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
         long i = redisTemplate.opsForValue().increment(clazz.getSimpleName() + date);
+        redisTemplate.expire(prefix + date, 1, TimeUnit.DAYS);
         return prefix + date + new DecimalFormat("0000").format(i);
     }
 
@@ -48,6 +49,7 @@ public class RedisUtil {
     public static String getSequenceId(String prefix) {
         String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
         long i = redisTemplate.opsForValue().increment(prefix + date);
+        redisTemplate.expire(prefix + date, 1, TimeUnit.DAYS);
         return prefix + date + new DecimalFormat("0000").format(i);
     }
 

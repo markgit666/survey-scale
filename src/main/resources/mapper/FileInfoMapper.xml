@@ -11,8 +11,8 @@
     </resultMap>
 
     <insert id="insertFileInfo" parameterType="com.yinxt.surveyscale.entity.FileInfo">
-        insert into tb_file_info(file_no, file_name, file_type, create_time)
-        values (#{fileNo,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{fileType,jdbcType=VARCHAR}, now())
+        insert into tb_file_info(file_no, file_name, file_type, create_time, update_time)
+        values (#{fileNo,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{fileType,jdbcType=VARCHAR}, now(), now())
     </insert>
 
     <select id="selectFileInfo" parameterType="string" resultMap="FileInfoResultMap">

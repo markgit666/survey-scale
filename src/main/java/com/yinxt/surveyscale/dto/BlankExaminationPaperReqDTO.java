@@ -19,13 +19,5 @@ public class BlankExaminationPaperReqDTO {
      */
     @NotBlank(message = "被试者id不能为空")
     private String patientId;
-    /**
-     * 医生ID
-     */
-    private String doctorId;
-    /**
-     * 答卷ID
-     */
-    private String examinationPaperId;
 
 }

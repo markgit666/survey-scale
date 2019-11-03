@@ -38,6 +38,6 @@ public class FileController {
 
     @RequestMapping(value = "base64/upload")
     public Result uploadBase64File(@RequestBody @Valid ImageBase64ReqDTO imageBase64ReqDTO) {
-        return fileService.uploadBase64File(imageBase64ReqDTO.getBase64Image());
+        return fileService.uploadBase64Image(imageBase64ReqDTO.getBase64Image());
     }
 }

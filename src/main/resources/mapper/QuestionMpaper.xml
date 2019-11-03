@@ -29,11 +29,11 @@
         insert into
         tb_question
         (question_id, scale_id, question_type, title, items, attachment,
-        create_time)
+        create_time, update_time)
         values (
         #{questionId,jdbcType=VARCHAR}, #{scaleId,jdbcType=VARCHAR},#{questionType,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},
         #{itemStr,jdbcType=VARCHAR}, #{attachment,jdbcType=VARCHAR},
-        now()
+        now(), now()
         )
     </insert>
 

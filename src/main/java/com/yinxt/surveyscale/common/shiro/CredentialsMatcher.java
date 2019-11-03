@@ -1,5 +1,6 @@
-package com.yinxt.surveyscale.common.config;
+package com.yinxt.surveyscale.common.shiro;
 
+import com.yinxt.surveyscale.common.constant.Constant;
 import com.yinxt.surveyscale.mapper.DoctorInfoMapper;
 import com.yinxt.surveyscale.entity.DoctorAuthInfo;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -26,7 +27,7 @@ public class CredentialsMatcher extends SimpleCredentialsMatcher {
         if (doctorAuthInfo == null) {
             return false;
         }
-        String md5Password = new Md5Hash(userPassword, doctorAuthInfo.getSalt(), 3).toString();
+        String md5Password = new Md5Hash(userPassword, doctorAuthInfo.getSalt(), Constant.salt).toString();
         return this.equals(md5Password, password);
     }
 }

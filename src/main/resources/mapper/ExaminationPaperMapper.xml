@@ -13,9 +13,9 @@
     </resultMap>
 
     <insert id="insertExaminationPaper" parameterType="com.yinxt.surveyscale.entity.ExaminationPaper">
-        insert into tb_examination_paper(examination_paper_id, patient_id, scale_id, use_time, create_time)
+        insert into tb_examination_paper(examination_paper_id, patient_id, scale_id, use_time, judge_status, create_time, update_time)
         values (#{examinationPaperId,jdbcType=VARCHAR}, #{patientId, jdbcType=VARCHAR}, #{scaleId, jdbcType=VARCHAR},
-        #{useTime,jdbcType=VARCHAR}, now())
+        #{useTime,jdbcType=VARCHAR}, #{judgeStatus,jdbcType=VARCHAR}, now(), now())
     </insert>
 
     <update id="updateJudgeStatus" parameterType="string">

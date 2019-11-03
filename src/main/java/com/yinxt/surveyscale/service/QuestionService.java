@@ -41,13 +41,13 @@ public class QuestionService {
             if (checkQuestion == null) {
                 questionId = RedisUtil.getSequenceId("QT");
                 question.setQuestionId(questionId);
-                log.info("添加题目：{}", JSON.toJSONString(question));
+                log.info("[saveQuestion]新增题目：{}", JSON.toJSONString(question));
                 questionMapper.insertQuestion(question);
-                log.info("添加题目成功");
+                log.info("[saveQuestion]题目新增成功");
             } else {
-                log.info("修改题目：{}", JSON.toJSONString(question));
+                log.info("[saveQuestion]修改题目：{}", JSON.toJSONString(question));
                 questionMapper.updateQuestion(question);
-                log.info("修改题目成功");
+                log.info("[saveQuestion]题目修改成功");
             }
         } catch (Exception e) {
             log.info("保存题目异常：{}", e);

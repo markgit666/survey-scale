@@ -101,25 +101,13 @@
     <insert id="insertPatientInfo" parameterType="com.yinxt.surveyscale.entity.PatientInfo">
         insert into tb_patient_info
         (patient_id, doctor_id, patient_name, gender, birthday, telephone_number, family_address, create_time,
-        nation, marriage_status, work_status, in_service_job, education_level,
-        <if test="educationYears != null">
-            education_years,
-        </if>
-        is_snoring,
-        living_way, medical_history, other_medical_history, smoking_history,
-        <if test="smokingNumEachDay != null">
-            smoking_num_eachday,
-        </if>
-        <if test="smokingYears != null">
-            smoking_years,
-        </if>
-        is_mental_disease_family_history, mental_disease_family_history, other_mental_disease_family_history,
-        current_medical_history_memory_loss, memory_loss_time, physical_examination, is_use_cognitive_drugs,
-        drugs_dosage, hand, drinking_history, drinking_type, drinking_num_eachday,
-        <if test="drinkingYears != null">
-            drinking_years,
-        </if>
-        drugs_type)
+        update_time, nation, marriage_status, work_status, in_service_job, education_level,
+        education_years,is_snoring, living_way, medical_history, other_medical_history, smoking_history,
+        smoking_num_eachday, smoking_years, is_mental_disease_family_history, mental_disease_family_history,
+        other_mental_disease_family_history, current_medical_history_memory_loss, memory_loss_time, physical_examination,
+        is_use_cognitive_drugs, drugs_dosage, hand, drinking_history, drinking_type, drinking_num_eachday,
+        drinking_years, drugs_type
+        )
         values (
         #{patientId,jdbcType=VARCHAR},
         #{doctorId,jdbcType=VARCHAR},
@@ -128,28 +116,19 @@
         #{birthday, jdbcType=DATE},
         #{telephoneNumber,jdbcType=VARCHAR},
         #{familyAddress,jdbcType=VARCHAR},
-        now(),
+        now(),now(),
         #{nation,jdbcType=VARCHAR}, #{marriageStatus,jdbcType=VARCHAR}, #{workStatus,jdbcType=VARCHAR},
         #{inServiceJob,jdbcType=VARCHAR}, #{educationLevel,jdbcType=VARCHAR},
-        <if test="educationYears != null">
-            #{educationYears,jdbcType=VARCHAR},
-        </if>
+        #{educationYears,jdbcType=VARCHAR},
         #{isSnoring,jdbcType=VARCHAR},#{livingWay,jdbcType=VARCHAR},#{medicalHistory,jdbcType=VARCHAR},
         #{otherMedicalHistory,jdbcType=VARCHAR},#{smokingHistory,jdbcType=VARCHAR},
-        <if test="smokingNumEachDay != null">
-            #{smokingNumEachDay,jdbcType=VARCHAR},
-        </if>
-        <if test="smokingYears != null">
-            #{smokingYears,jdbcType=VARCHAR},
-        </if>
+        #{smokingNumEachDay,jdbcType=VARCHAR},#{smokingYears,jdbcType=VARCHAR},
         #{isMentalDiseaseFamilyHistory,jdbcType=VARCHAR},
         #{mentalDiseaseFamilyHistory,jdbcType=VARCHAR},#{otherMentalDiseaseFamilyHistory,jdbcType=VARCHAR},
         #{currentMedicalHistoryMemoryLoss,jdbcType=VARCHAR},#{memoryLossTime,jdbcType=VARCHAR},#{physicalExamination,jdbcType=VARCHAR},
         #{isUseCognitiveDrugs,jdbcType=VARCHAR},#{drugsDosage,jdbcType=VARCHAR},#{hand,jdbcType=VARCHAR},
         #{drinkingHistory,jdbcType=VARCHAR},#{drinkingType,jdbcType=VARCHAR},#{drinkingNumEachDay,jdbcType=VARCHAR},
-        <if test="drinkingYears != null">
-            #{drinkingYears,jdbcType=VARCHAR},
-        </if>
+        #{drinkingYears,jdbcType=VARCHAR},
         #{drugsType,jdbcType=VARCHAR}
         )
     </insert>

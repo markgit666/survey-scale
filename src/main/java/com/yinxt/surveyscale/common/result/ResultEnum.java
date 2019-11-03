@@ -17,7 +17,9 @@ public enum ResultEnum {
     EMAIL_SEND_EROOR("100006", "邮件发送异常"),
     VERIFY_CODE_SEND_ERROR("100007", "验证码发送失败，请稍后重试"),
     VERIFY_CODE_NOT_CORRECT("100008", "验证码不正确"),
-    EMAIL_NO_REGISTER("100009", "邮箱未注册");
+    EMAIL_NO_REGISTER("100009", "邮箱未注册"),
+    FILE_NUM_TOO_MUCH("100010", "文件数量过多"),
+    FILE_TOO_BIG("100011", "文件过大，请调整文件大小后重试");
 
     private String code;
     private String name;

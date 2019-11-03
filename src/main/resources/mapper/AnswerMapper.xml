@@ -13,9 +13,9 @@
     </resultMap>
 
     <insert id="insertAnswer" parameterType="com.yinxt.surveyscale.entity.Answer">
-     insert into tb_answer(answer_id, question_id, examination_paper_id, content, create_time)
+     insert into tb_answer(answer_id, question_id, examination_paper_id, content, create_time, update_time)
      values (#{answerId,jdbcType=VARCHAR}, #{questionId,jdbcType=VARCHAR}, #{examinationPaperId,jdbcType=VARCHAR},
-     #{content,jdbcType=VARCHAR}, now())
+     #{content,jdbcType=VARCHAR}, now(), now())
     </insert>
 
     <update id="updateAnswer">

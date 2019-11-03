@@ -11,8 +11,6 @@ public class JudgeInfoService {
 
     @Autowired
     private JudgeInfoMapper judgeInfoMapper;
-    @Autowired
-    private DoctorInfoService doctorInfoService;
 
     /**
      * 保存评定信息
@@ -21,8 +19,6 @@ public class JudgeInfoService {
      */
     public void saveJudgeInfo(JudgeInfo judgeInfo) {
         judgeInfo.setJudgeId(RedisUtil.getSequenceId("JG"));
-        String doctorId = doctorInfoService.getLoginDoctorId();
-        judgeInfo.setCheckUser(judgeInfo.getCheckUser());
         JudgeInfo queryResult = judgeInfoMapper.selectJudgeInfo(judgeInfo);
         if (queryResult != null) {
             judgeInfoMapper.updateJudgeInfo(judgeInfo);

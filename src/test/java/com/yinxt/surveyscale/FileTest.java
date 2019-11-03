@@ -1,5 +1,6 @@
 package com.yinxt.surveyscale;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -7,6 +8,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.*;
 
+@Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = SurveyScaleApplicationTests.class)
 public class FileTest {
@@ -45,4 +47,18 @@ public class FileTest {
 
         }
     }
+
+    @Test
+    public void testSubstring() {
+        String fileNo = "IMG201910300055";
+        log.info("截取fileNo:{}", fileNo.substring(3, 11));
+    }
+
+    @Test
+    public void testReplace() {
+        String content = "<p>【量表小助手】尊敬的用户您好，您的验证码为code，如非本人操作，请检查账号安全，该验证码将在10分钟后失效，谢谢！</p>";
+        content = content.replace("code", "123456");
+        log.info("content:{}", content);
+    }
+
 }

@@ -16,7 +16,6 @@ public class InterceptorHandler implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        log.info("拦截器:preHandle，允许跨域设置");
         response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
         response.setHeader("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type,token,x-requested-with");
@@ -26,7 +25,6 @@ public class InterceptorHandler implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) {
-        log.info("拦截器:postHandle");
     }
 
 }

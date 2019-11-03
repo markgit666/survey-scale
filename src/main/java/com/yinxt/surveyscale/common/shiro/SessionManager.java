@@ -1,4 +1,4 @@
-package com.yinxt.surveyscale.common.config;
+package com.yinxt.surveyscale.common.shiro;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.web.servlet.ShiroHttpServletRequest;

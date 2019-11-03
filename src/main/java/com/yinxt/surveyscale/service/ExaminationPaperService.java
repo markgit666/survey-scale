@@ -3,6 +3,7 @@ package com.yinxt.surveyscale.service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.yinxt.surveyscale.common.constant.Constant;
 import com.yinxt.surveyscale.dto.*;
 import com.yinxt.surveyscale.mapper.ExaminationPaperMapper;
 import com.yinxt.surveyscale.po.ExaminationPaperListQueryPO;
@@ -84,6 +85,7 @@ public class ExaminationPaperService {
         examinationPaper.setScaleId(examinationPaperCommitDTO.getScaleId());
         examinationPaper.setPatientId(examinationPaperCommitDTO.getPatientId());
         examinationPaper.setUseTime(examinationPaperCommitDTO.getUseTime());
+        examinationPaper.setJudgeStatus(Constant.NO);
         examinationPaper.setExaminationPaperId(RedisUtil.getSequenceId("EX"));
         //保存答题记录
         examinationPaperMapper.insertExaminationPaper(examinationPaper);
@@ -123,7 +125,7 @@ public class ExaminationPaperService {
                 if (stringBuilder.length() == 0) {
                     stringBuilder.append(chooseAnswer);
                 } else {
-                    stringBuilder.append("|").append(chooseAnswer);
+                    stringBuilder.append(Constant.ITEMS_SPLIT).append(chooseAnswer);
                 }
             }
             commitAnswerReqDTO.setContent(stringBuilder.toString());
@@ -170,7 +172,9 @@ public class ExaminationPaperService {
         log.info("获取试卷列表参数：{}", JSON.toJSONString(listDataReqDTO));
         ExaminationPaperListReqDTO examinationPaperListReqDTO = listDataReqDTO.getData();
         ExaminationPaperListQueryPO examinationPaperListQueryPO = new ExaminationPaperListQueryPO();
-        BeanUtils.copyProperties(examinationPaperListReqDTO, examinationPaperListQueryPO);
+        if (examinationPaperListReqDTO != null) {
+            BeanUtils.copyProperties(examinationPaperListReqDTO, examinationPaperListQueryPO);
+        }
         examinationPaperListQueryPO.setDoctorId(doctorInfoService.getLoginDoctorId());
         PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
         List<ExaminationPaper> examinationPaperList = examinationPaperMapper.selectExaminationPaperList(examinationPaperListQueryPO);
@@ -239,7 +243,7 @@ public class ExaminationPaperService {
             if ("checkBox".equals(question.getQuestionType()) && answer != null) {
                 String answerContent = answer.getContent();
                 if (answerContent != null) {
-                    String[] answerArray = answerContent.split("\\|");
+                    String[] answerArray = answerContent.split(Constant.ITEMS_SPLIT);
                     answer.setChooseAnswerList(Arrays.asList(answerArray));
                 }
             }

@@ -28,8 +28,8 @@
     </select>
 
     <insert id="insertDoctorInfo" parameterType="com.yinxt.surveyscale.entity.DoctorAuthInfo">
-        insert into tb_doctor_info(doctor_id, login_name, password, salt, doctor_name, create_time)
-        values (#{doctorId,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{doctorName,jdbcType=VARCHAR}, now())
+        insert into tb_doctor_info(doctor_id, login_name, password, salt, doctor_name, create_time, update_time)
+        values (#{doctorId,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{doctorName,jdbcType=VARCHAR}, now(), now())
     </insert>
 
     <update id="updatePassword">

@@ -68,8 +68,8 @@ public class ExcelService {
                 "现病史（有无记忆下降）", "记忆力下降多久", "体格检查情况",
                 "是否合并使用促认知药物",
                 "具体促认知药物", "具体药物的剂量"};
-        String fileName = "被试者信息表-" + new SimpleDateFormat("yyyyMMddHHmmSS").format(new Date()) + ".xlsx";
-        String sheetName = "被试者信息表";
+        String fileName = "被试者信息表-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) + ".xlsx";
+        String sheetName = "被试者信息";
         String[][] content = new String[patientInfoList.size()][header.length + 1];
         for (int i = 0; i < patientInfoList.size(); i++) {
             String[] col = content[i];
@@ -144,7 +144,7 @@ public class ExcelService {
     public void outputExaminationPaperExcel(List<ExaminationPaperListRespVO> examinationPaperListRespVOS, HttpServletResponse response) {
         String[] header = {"答卷编号", "量表名称", "被试者", "答题时间（分钟）", "评分状态", "总分"};
         String fileName = "答卷信息表-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) + ".xlsx";
-        String sheetName = "答卷信息表";
+        String sheetName = "答卷信息";
         String[][] content = new String[examinationPaperListRespVOS.size()][header.length + 1];
         for (int i = 0; i < examinationPaperListRespVOS.size(); i++) {
             String col[] = content[i];

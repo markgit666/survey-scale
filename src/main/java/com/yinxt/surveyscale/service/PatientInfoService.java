@@ -34,7 +34,7 @@ public class PatientInfoService {
      */
     public Result savePatientInfo(PatientInfo patientInfo) {
         try {
-            log.info("[savePatientInfo]请求信息：{}", JSON.toJSONString(patientInfo));
+            log.info("[savePatientInfo]请求参数：{}", JSON.toJSONString(patientInfo));
             PatientInfo checkPatientInfo = patientInfoMapper.selectPatientInfoByPatientId(patientInfo.getPatientId());
             if (checkPatientInfo == null) {
                 String patientId = RedisUtil.getSequenceId("PT");
@@ -60,10 +60,10 @@ public class PatientInfoService {
      * @return
      */
     public Result getPatientInfo(PatientInfo patientInfo) {
-        log.info("获取病人信息，请求参数：{}", JSON.toJSONString(patientInfo));
+        log.info("[getPatientInfo]查询参数：{}", JSON.toJSONString(patientInfo));
         try {
             PatientInfo patientInfo1 = patientInfoMapper.selectPatientInfo(patientInfo);
-            log.info("病人信息查询结果：{}", JSON.toJSONString(patientInfo1));
+            log.info("[getPatientInfo]查询结果：{}", JSON.toJSONString(patientInfo1));
             return Result.success(patientInfo1);
         } catch (Exception e) {
             log.info("获取病人信息异常：{}", e.getMessage());
@@ -78,7 +78,7 @@ public class PatientInfoService {
      */
     public Result getPatientInfoList(ListDataReqDTO<PatientInfo> listDataReqDTO) {
         try {
-            log.info("病人信息列表查询参数：{}", JSON.toJSONString(listDataReqDTO));
+            log.info("[getPatientInfoList]查询参数：{}", JSON.toJSONString(listDataReqDTO));
             PatientInfo patientInfo = listDataReqDTO.getData();
             if (patientInfo == null) {
                 patientInfo = new PatientInfo();
@@ -88,7 +88,7 @@ public class PatientInfoService {
             PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
             List<PatientInfo> patientInfos = patientInfoMapper.selectPatientInfoList(patientInfo);
             PageInfo pageInfo = new PageInfo(patientInfos);
-            log.info("返回病人信息列表：{}", JSON.toJSONString(patientInfos));
+            log.info("[getPatientInfoList]查询结果：{}", JSON.toJSONString(patientInfos));
             PageBean pageBean = new PageBean(pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getPages(), pageInfo.getTotal(), patientInfos);
             return Result.success(pageBean);
         } catch (Exception e) {
@@ -98,7 +98,7 @@ public class PatientInfoService {
     }
 
     public Result removePatientInfo(PatientInfo patientInfo) {
-        log.info("删除病人信息，请求参数：", JSON.toJSONString(patientInfo));
+        log.info("【removePatientInfo]请求参数：", JSON.toJSONString(patientInfo));
         try {
             if (patientInfo != null && StringUtils.isNotBlank(patientInfo.getPatientId())) {
                 patientInfo.setStatus(StatusEnum.NO.getCode());
@@ -108,6 +108,7 @@ public class PatientInfoService {
             log.error("删除病人信息异常：", e);
             return Result.error();
         }
+        log.info("[removePatientInfo]删除成功");
         return Result.success();
     }
 

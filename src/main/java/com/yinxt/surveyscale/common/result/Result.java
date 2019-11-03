@@ -85,4 +85,8 @@ public class Result<T> {
     public static Result paramError(String errorMsg) {
         return new Result(ResultEnum.PARAM_NOT_READ_ERROR.getCode(), errorMsg);
     }
+
+    public static Result error(String errorMsg) {
+        return new Result(ResultEnum.SYSTEM_ERROR.getCode(), errorMsg);
+    }
 }
