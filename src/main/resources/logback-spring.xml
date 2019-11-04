@@ -7,7 +7,7 @@
         <!-- <file>${logPath}/survey-scale/survey-scale_${HOST_NAME}.log</file> -->
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${logPath}/survey-scale/survey-scale_%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+            <fileNamePattern>${logPath}/survey-scale_%d{yyyy-MM-dd}_%i.log</fileNamePattern>
             <!-- 设置保存天数9999天（永久）-->
             <maxHistory>9999</maxHistory>logPath
             <timeBasedFileNamingAndTriggeringPolicy

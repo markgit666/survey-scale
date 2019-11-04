@@ -33,9 +33,9 @@ public class SendEmailService {
         EmailInfo emailInfo = new EmailInfo();
         emailInfo.setSendTo(sendTo);
         emailInfo.setTitle("验证码");
-        content = content.replace("code", code);
-        log.info("邮件内容：{}", content);
-        emailInfo.setContent(content);
+        String emailContent = content.replace("code", code);
+        log.info("邮件内容：{}", emailContent);
+        emailInfo.setContent(emailContent);
         try {
             emailUtil.send(emailInfo);//发送邮件
         } catch (Exception e) {

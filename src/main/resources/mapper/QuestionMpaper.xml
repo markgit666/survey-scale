@@ -41,19 +41,19 @@
         update tb_question
         <set>
             <trim suffixOverrides=",">
-                <if test="questionType != null">
+                <if test="questionType != null and questionType != '' ">
                     question_type=#{questionType,jdbcType=VARCHAR},
                 </if>
-                <if test="title != null">
+                <if test="title != null and title != '' ">
                     title=#{title,jdbcType=VARCHAR},
                 </if>
-                <if test="itemStr != null">
+                <if test="itemStr != null and itemStr != '' ">
                     items=#{itemStr,jdbcType=VARCHAR},
                 </if>
-                <if test="attachment != null">
+                <if test="attachment != null and attachment != '' ">
                     attachment=#{attachment,jdbcType=VARCHAR},
                 </if>
-                <if test="status != null">
+                <if test="status != null and status != '' ">
                     status=#{status,jdbcType=VARCHAR},
                 </if>
                 update_time=now(),

@@ -24,7 +24,7 @@ public class JudgeInfo {
     /**
      * 评分时间
      */
-    private Date checkTime;
+    private String checkTime;
     /**
      * 总分
      */
@@ -32,9 +32,9 @@ public class JudgeInfo {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private String createTime;
     /**
      * 修改时间
      */
-    private Date updateTime;
+    private String updateTime;
 }

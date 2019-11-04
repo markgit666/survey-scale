@@ -22,7 +22,7 @@
         update tb_answer
         <set>
             <trim suffixOverrides=",">
-                <if test="content != null">
+                <if test="content != null and content != '' ">
                     content=#{content,jdbcType=VARCHAR},
                 </if>
                 <if test="score != null">

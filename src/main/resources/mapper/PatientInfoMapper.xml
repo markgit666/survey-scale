@@ -72,7 +72,7 @@
             <if test="name != null and name != '' ">
                 and patient_name = #{name,jdbcType=VARCHAR}
             </if>
-            <if test="birthday != null">
+            <if test="birthday != null and birthday != '' ">
                 and birthday = #{birthday,jdbcType=DATE}
             </if>
             <if test="gender != null and gender != '' ">
@@ -154,85 +154,85 @@
             <if test="status != null and status != ''">
                 status = #{status, jdbcType=VARCHAR},
             </if>
-            <if test="nation != null">
+            <if test="nation != null and nation != '' ">
                 nation = #{nation, jdbcType=VARCHAR},
             </if>
-            <if test="marriageStatus != null">
+            <if test="marriageStatus != null and marriageStatus != '' ">
                 marriage_status = #{marriageStatus, jdbcType=VARCHAR},
             </if>
-            <if test="workStatus != null">
+            <if test="workStatus != null and workStatus != '' ">
                 work_status = #{workStatus,jdbcType=VARCHAR},
             </if>
-            <if test="inServiceJob != null">
+            <if test="inServiceJob != null and inServiceJob != '' ">
                 in_service_job = #{inServiceJob,jdbcType=VARCHAR},
             </if>
-            <if test="educationLevel != null">
+            <if test="educationLevel != null and educationLevel != '' ">
                 education_level = #{educationLevel,jdbcType=VARCHAR},
             </if>
-            <if test="educationYears != null">
+            <if test="educationYears != null and educationYears != '' ">
                 education_years = #{educationYears,jdbcType=VARCHAR},
             </if>
-            <if test="isSnoring != null">
+            <if test="isSnoring != null and isSnoring != '' ">
                 is_snoring = #{isSnoring,jdbcType=VARCHAR},
             </if>
-            <if test="livingWay != null">
+            <if test="livingWay != null and livingWay != '' ">
                 living_way = #{livingWay,jdbcType=VARCHAR},
             </if>
-            <if test="medicalHistory != null">
+            <if test="medicalHistory != null and medicalHistory != '' ">
                 medical_history = #{medicalHistory,jdbcType=VARCHAR},
             </if>
-            <if test="otherMedicalHistory != null">
+            <if test="otherMedicalHistory != null and otherMedicalHistory != '' ">
                 other_medical_history = #{otherMedicalHistory,jdbcType=VARCHAR},
             </if>
-            <if test="smokingHistory != null">
+            <if test="smokingHistory != null and smokingHistory != '' ">
                 smoking_history = #{smokingHistory,jdbcType=VARCHAR},
             </if>
-            <if test="smokingYears != null">
+            <if test="smokingYears != null and smokingYears != '' ">
                 smoking_years = #{smokingYears,jdbcType=VARCHAR},
             </if>
-            <if test="smokingNumEachDay != null">
+            <if test="smokingNumEachDay != null and smokingNumEachDay != ''">
                 smoking_num_eachday = #{smokingNumEachDay,jdbcType=VARCHAR},
             </if>
-            <if test="isMentalDiseaseFamilyHistory!=null">
+            <if test="isMentalDiseaseFamilyHistory!=null and isMentalDiseaseFamilyHistory!='' ">
                 is_mental_disease_family_history=#{isMentalDiseaseFamilyHistory,jdbcType=VARCHAR},
             </if>
-            <if test="mentalDiseaseFamilyHistory!=null">
+            <if test="mentalDiseaseFamilyHistory!=null and mentalDiseaseFamilyHistory!='' ">
                 mental_disease_family_history=#{mentalDiseaseFamilyHistory,jdbcType=VARCHAR},
             </if>
-            <if test="otherMentalDiseaseFamilyHistory!=null">
+            <if test="otherMentalDiseaseFamilyHistory!=null and otherMentalDiseaseFamilyHistory!='' ">
                 other_mental_disease_family_history=#{otherMentalDiseaseFamilyHistory,jdbcType=VARCHAR},
             </if>
-            <if test="currentMedicalHistoryMemoryLoss!=null">
+            <if test="currentMedicalHistoryMemoryLoss!=null and currentMedicalHistoryMemoryLoss!='' ">
                 current_medical_history_memory_loss=#{currentMedicalHistoryMemoryLoss,jdbcType=VARCHAR},
             </if>
-            <if test="memoryLossTime!=null">
+            <if test="memoryLossTime!=null and memoryLossTime!='' ">
                 memory_loss_time=#{memoryLossTime,jdbcType=VARCHAR},
             </if>
-            <if test="physicalExamination!=null">
+            <if test="physicalExamination!=null and physicalExamination!='' ">
                 physical_examination=#{physicalExamination,jdbcType=VARCHAR},
             </if>
-            <if test="isUseCognitiveDrugs!=null">
+            <if test="isUseCognitiveDrugs!=null and isUseCognitiveDrugs!='' ">
                 is_use_cognitive_drugs=#{isUseCognitiveDrugs,jdbcType=VARCHAR},
             </if>
-            <if test="drugsDosage!=null">
+            <if test="drugsDosage!=null and drugsDosage!='' ">
                 drugs_dosage=#{drugsDosage,jdbcType=VARCHAR},
             </if>
-            <if test="hand!=null">
+            <if test="hand!=null and hand!=''">
                 hand=#{hand,jdbcType=VARCHAR},
             </if>
-            <if test="drinkingHistory!=null">
+            <if test="drinkingHistory!=null and drinkingHistory!='' ">
                 drinking_history=#{drinkingHistory,jdbcType=VARCHAR},
             </if>
-            <if test="drinkingType!=null">
+            <if test="drinkingType!=null and drinkingType!='' ">
                 drinking_type=#{drinkingType,jdbcType=VARCHAR},
             </if>
-            <if test="drinkingNumEachDay!=null">
+            <if test="drinkingNumEachDay!=null and drinkingNumEachDay!='' ">
                 drinking_num_eachday=#{drinkingNumEachDay,jdbcType=VARCHAR},
             </if>
-            <if test="drinkingYears!=null">
+            <if test="drinkingYears!=null and drinkingYears!= '' ">
                 drinking_years=#{drinkingYears,jdbcType=VARCHAR},
             </if>
-            <if test="drugsType!=null">
+            <if test="drugsType!=null and drugsType!='' ">
                 drugs_type=#{drugsType,jdbcType=VARCHAR},
             </if>
             update_time = now()

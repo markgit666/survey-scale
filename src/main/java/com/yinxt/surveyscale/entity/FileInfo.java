@@ -12,6 +12,6 @@ public class FileInfo {
     private String fileNo;
     private String fileName;
     private String fileType;
-    private Date createTime;
-    private Date updateTime;
+    private String createTime;
+    private String updateTime;
 }
