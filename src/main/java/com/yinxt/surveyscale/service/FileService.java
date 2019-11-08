@@ -3,6 +3,7 @@ package com.yinxt.surveyscale.service;
 import com.alibaba.fastjson.JSON;
 import com.yinxt.surveyscale.common.exeption.LogicException;
 import com.yinxt.surveyscale.common.result.ResultEnum;
+import com.yinxt.surveyscale.common.util.RSAUtil;
 import com.yinxt.surveyscale.mapper.FileInfoMapper;
 import com.yinxt.surveyscale.entity.FileInfo;
 import com.yinxt.surveyscale.common.enums.FileTypeEnum;
@@ -31,16 +32,19 @@ public class FileService {
     private FileInfoMapper fileInfoMapper;
     @Value("${scale-survey-front.url}")
     private String scaleSurveyFrontUrl;
+    @Value("${rsa.key.public}")
+    private String publicKey;
 
     public void downloadQrCodeImage(HttpServletRequest request, HttpServletResponse response) {
         log.info("端口localPost:{},remotePort:{},serverPort:{}", request.getLocalPort(), request.getRemotePort(), request.getServerPort());
         String scaleId = request.getParameter("scaleId");
         String url = request.getParameter("url");
-        StringBuilder urlContentBuilder = new StringBuilder();
-        urlContentBuilder.append(scaleSurveyFrontUrl).append(url).append("?").append("scaleId=").append(scaleId);
-        String urlContent = urlContentBuilder.toString();
-        log.info("二维码内容：{}", urlContent);
         try {
+            String encryptScaleId = RSAUtil.encrypt(scaleId, publicKey);
+            StringBuilder urlContentBuilder = new StringBuilder();
+            urlContentBuilder.append(scaleSurveyFrontUrl).append(url).append("?").append("scaleId=").append(encryptScaleId);
+            String urlContent = urlContentBuilder.toString();
+            log.info("二维码内容：{}", urlContent);
             MyQrCode.getQrCodeImage(urlContent, response);
         } catch (Exception e) {
             log.error("获取二维码异常：", e);

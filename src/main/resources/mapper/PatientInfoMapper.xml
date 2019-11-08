@@ -46,11 +46,12 @@
         select *
         from tb_patient_info
         <where>
+            status = '1'
             <if test="patientId != null and patientId != ''">
-                patient_id=#{patientId,jdbcType=VARCHAR}
+                and patient_id=#{patientId,jdbcType=VARCHAR}
             </if>
-            <if test="name != null and name != ''">
-                and patient_name=#{name,jdbcType=VARCHAR}
+            <if test="doctorId != null and doctorId != ''">
+                and doctor_id=#{doctorId,jdbcType=VARCHAR}
             </if>
         </where>
     </select>
@@ -59,6 +60,7 @@
         select *
         from tb_patient_info
         <where>
+            status = '1'
             patient_id=#{patientId,jdbcType=VARCHAR}
         </where>
     </select>
@@ -96,6 +98,15 @@
             #{patientId,jdbcType=VARCHAR}
         </foreach>
         and doctor_id = #{doctorId}
+    </select>
+
+    <select id="selectPatientByScaleIdAndPatientId" resultMap="patientInfoResultMap">
+        select * from tb_patient_info tpi, tb_scale_info tsi
+        where
+        tpi.status = '1'
+        and tpi.patient_id = #{patientId,jdbcType=VARCHAR}
+        and tsi.scale_id = #{scaleId,jdbcType=VARCHAR}
+        and tsi.doctor_id = tpi.doctor_id
     </select>
 
     <insert id="insertPatientInfo" parameterType="com.yinxt.surveyscale.entity.PatientInfo">

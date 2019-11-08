@@ -31,7 +31,7 @@ public class RSAUtil {
     public static String encrypt(String target, String publicKey) throws Exception {
         Base64.Decoder decoder = Base64.getDecoder();
         byte[] publicKeyByte = decoder.decode(publicKey);
-        RSAPublicKey rsaPublicKey = (RSAPublicKey) KeyFactory.getInstance(CIPHER_TYPE).generatePrivate(new X509EncodedKeySpec(publicKeyByte));
+        RSAPublicKey rsaPublicKey = (RSAPublicKey) KeyFactory.getInstance(CIPHER_TYPE).generatePublic(new X509EncodedKeySpec(publicKeyByte));
         Cipher cipher = Cipher.getInstance(CIPHER_TYPE);
         cipher.init(Cipher.ENCRYPT_MODE, rsaPublicKey);
         Base64.Encoder encoder = Base64.getEncoder();

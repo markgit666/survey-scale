@@ -4,22 +4,25 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yinxt.surveyscale.common.constant.Constant;
-import com.yinxt.surveyscale.dto.*;
-import com.yinxt.surveyscale.mapper.ExaminationPaperMapper;
-import com.yinxt.surveyscale.po.ExaminationPaperListQueryPO;
-import com.yinxt.surveyscale.po.ExaminationPaperPO;
-import com.yinxt.surveyscale.entity.*;
 import com.yinxt.surveyscale.common.exeption.LogicException;
 import com.yinxt.surveyscale.common.page.PageBean;
 import com.yinxt.surveyscale.common.redis.RedisUtil;
 import com.yinxt.surveyscale.common.result.Result;
+import com.yinxt.surveyscale.common.util.RSAUtil;
+import com.yinxt.surveyscale.dto.*;
+import com.yinxt.surveyscale.entity.*;
+import com.yinxt.surveyscale.mapper.ExaminationPaperMapper;
+import com.yinxt.surveyscale.po.ExaminationPaperListQueryPO;
+import com.yinxt.surveyscale.po.ExaminationPaperPO;
 import com.yinxt.surveyscale.vo.ExaminationPaperListRespVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,6 +44,8 @@ public class ExaminationPaperService {
     private JudgeInfoService judgeInfoService;
     @Autowired
     private DoctorInfoService doctorInfoService;
+    @Value("${rsa.key.private}")
+    private String privateKey;
 
     /**
      * 获取空试卷
@@ -49,21 +54,29 @@ public class ExaminationPaperService {
      * @return
      */
     public Result getBlankExaminationPaper(BlankExaminationPaperReqDTO blankExaminationPaperReqDTO) {
-        PatientInfo patientInfo = new PatientInfo();
+        String scaleId;
+        try {
+            String encryptedScale = URLDecoder.decode(blankExaminationPaperReqDTO.getScaleId(), "utf-8");
+            String target = encryptedScale.replace(" ", "+");
+            scaleId = RSAUtil.decrypt(target, privateKey);
+        } catch (Exception e) {
+            log.error("解密失败：", e);
+            throw new LogicException("量表不存在");
+        }
+        if (scaleInfoService.getScaleInfoById(scaleId) == null) {
+            throw new LogicException("量表不存在");
+        }
         //查询病人信息
-        patientInfo.setPatientId(blankExaminationPaperReqDTO.getPatientId());
-        patientInfo = (PatientInfo) patientInfoService.getPatientInfo(patientInfo).getData();
+        PatientInfo patientInfo = patientInfoService.checkPatientId(scaleId, blankExaminationPaperReqDTO.getPatientId());
         //判断当前病人ID是否存在
         if (patientInfo == null) {
-            throw new LogicException("输入的病人ID不存在");
+            throw new LogicException("输入的被试者id不存在");
         } else {
             ExaminationPaper examinationPaper = new ExaminationPaper();
             //赋值病人信息
             examinationPaper.setPatientInfo(patientInfo);
-            ScaleInfo scaleInfo = new ScaleInfo();
             //查询量表信息
-            scaleInfo.setScaleId(blankExaminationPaperReqDTO.getScaleId());
-            scaleInfo = (ScaleInfo) scaleInfoService.getScaleInfo(scaleInfo).getData();
+            ScaleInfo scaleInfo = scaleInfoService.getFormatScaleInfo(scaleId);
             //赋值量表信息
             examinationPaper.setScaleInfo(scaleInfo);
             return Result.success(examinationPaper);
@@ -81,8 +94,17 @@ public class ExaminationPaperService {
         /**
          * 封装试卷作答记录
          */
+        String scaleId;
+        try {
+            String decryptScaleId = URLDecoder.decode(examinationPaperCommitDTO.getScaleId(), "UTF-8");
+            String target = decryptScaleId.replace(" ", "+");
+            scaleId = RSAUtil.decrypt(target, privateKey);
+        } catch (Exception e) {
+            log.error("解密失败：{}", e);
+            throw new LogicException("答卷保存失败");
+        }
         ExaminationPaper examinationPaper = new ExaminationPaper();
-        examinationPaper.setScaleId(examinationPaperCommitDTO.getScaleId());
+        examinationPaper.setScaleId(scaleId);
         examinationPaper.setPatientId(examinationPaperCommitDTO.getPatientId());
         examinationPaper.setUseTime(examinationPaperCommitDTO.getUseTime());
         examinationPaper.setJudgeStatus(Constant.NO);
@@ -217,10 +239,7 @@ public class ExaminationPaperService {
 
         //封装量表及题目信息
         String scaleId = examinationPaper.getScaleId();
-        ScaleInfo scaleInfo = new ScaleInfo();
-        scaleInfo.setScaleId(scaleId);
-        result = scaleInfoService.getScaleInfo(scaleInfo);
-        scaleInfo = (ScaleInfo) result.getData();
+        ScaleInfo scaleInfo = scaleInfoService.getFormatScaleInfo(scaleId);
         examinationPaper.setScaleInfo(scaleInfo);
 
         //封装评定信息

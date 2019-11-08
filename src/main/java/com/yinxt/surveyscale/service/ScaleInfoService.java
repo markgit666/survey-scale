@@ -47,8 +47,8 @@ public class ScaleInfoService {
     public Result saveScaleInfo(ScaleInfo scaleInfo) {
         log.info("[saveScaleInfo]请求参数：{}", JSON.toJSONString(scaleInfo));
         try {
-            Result result = getScaleInfo(scaleInfo);
-            if (result.getData() == null) {
+            ScaleInfo info = getScaleInfoById(scaleInfo.getScaleId());
+            if (info == null) {
                 String scaleId = RedisUtil.getSequenceId(Constant.SCALE_PREFIX);
                 scaleInfo.setScaleId(scaleId);
             }
@@ -86,7 +86,7 @@ public class ScaleInfoService {
              */
             scaleInfo.setQuestionSort(stringBuffer.toString());
             scaleInfo.setQuestionCount(questionCounts);
-            if (result.getData() == null) {
+            if (info == null) {
                 scaleInfoMapper.insertScaleInfo(scaleInfo);
             } else {
                 scaleInfoMapper.updateScaleInfo(scaleInfo);
@@ -124,19 +124,32 @@ public class ScaleInfoService {
         }
     }
 
+
     /**
      * 获取量表详细信息
      *
      * @param scaleInfo
      * @return
      */
-    public Result getScaleInfo(ScaleInfo scaleInfo) {
-        log.info("[getScaleInfo]查询参数：{}", JSON.toJSONString(scaleInfo));
-        ScaleInfo info = scaleInfoMapper.selectScaleInfo(scaleInfo.getScaleId());
+    public Result getScaleDetailInfo(ScaleInfo scaleInfo) {
+        log.info("[getScaleInfo]查询参数：{}", JSON.toJSONString(scaleInfo.getScaleId()));
+        ScaleInfo info = getFormatScaleInfo(scaleInfo.getScaleId());
         //若找不到量表信息
         if (info == null) {
             return Result.error();
         }
+        log.info("[getScaleInfo]查询结果：{}", JSON.toJSONString(info));
+        return Result.success(info);
+    }
+
+    /**
+     * 获取处理后的量表
+     *
+     * @param scaleId
+     * @return
+     */
+    public ScaleInfo getFormatScaleInfo(String scaleId) {
+        ScaleInfo scaleInfo = getScaleInfoById(scaleId);
         /**
          * 查找每张量表的题目
          */
@@ -144,7 +157,7 @@ public class ScaleInfoService {
 
         //题目顺序列表
         List<Question> questionSortList = new ArrayList<>();
-        String[] questionIdSortArray = info.getQuestionSort().split(Constant.NORMAL_SPLIT);
+        String[] questionIdSortArray = scaleInfo.getQuestionSort().split(Constant.NORMAL_SPLIT);
         //如果题目顺序列表不为空则对题目进行排序
         if (questionIdSortArray.length > 0) {
             for (int i = 0; i < questionIdSortArray.length; i++) {
@@ -155,10 +168,19 @@ public class ScaleInfoService {
                     }
                 }
             }
-            info.setQuestionList(questionSortList);
+            scaleInfo.setQuestionList(questionSortList);
         }
-        log.info("[getScaleInfo]查询结果：{}", JSON.toJSONString(info));
-        return Result.success(info);
+        return scaleInfo;
+    }
+
+    /**
+     * 通过量表id查询量表信息
+     *
+     * @param scaleId
+     * @return
+     */
+    public ScaleInfo getScaleInfoById(String scaleId) {
+        return scaleInfoMapper.selectScaleInfo(scaleId, doctorInfoService.getLoginDoctorId());
     }
 
     /**

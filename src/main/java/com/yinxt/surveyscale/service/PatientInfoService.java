@@ -62,6 +62,7 @@ public class PatientInfoService {
     public Result getPatientInfo(PatientInfo patientInfo) {
         log.info("[getPatientInfo]查询参数：{}", JSON.toJSONString(patientInfo));
         try {
+            patientInfo.setDoctorId(doctorInfoService.getLoginDoctorId());
             PatientInfo patientInfo1 = patientInfoMapper.selectPatientInfo(patientInfo);
             log.info("[getPatientInfo]查询结果：{}", JSON.toJSONString(patientInfo1));
             return Result.success(patientInfo1);
@@ -70,6 +71,17 @@ public class PatientInfoService {
             return Result.error();
         }
     }
+
+    /**
+     * 通过量表ID和病人ID校验病人是否存在
+     *
+     * @param scaleId
+     * @param patientId
+     */
+    public PatientInfo checkPatientId(String scaleId, String patientId) {
+        return patientInfoMapper.selectPatientByScaleIdAndPatientId(patientId, scaleId);
+    }
+
 
     /**
      * 查询病人列表
