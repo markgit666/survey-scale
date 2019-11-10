@@ -46,7 +46,9 @@
         from tb_scale_info
         <where>
             scale_id=#{scaleId,jdbcType=VARCHAR}
-            and doctor_id=#{doctorId,jdbcType=VARCHAR}
+            <if test="doctorId != null">
+                and doctor_id=#{doctorId,jdbcType=VARCHAR}
+            </if>
         </where>
     </select>
 

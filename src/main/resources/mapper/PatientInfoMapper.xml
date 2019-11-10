@@ -61,7 +61,7 @@
         from tb_patient_info
         <where>
             status = '1'
-            patient_id=#{patientId,jdbcType=VARCHAR}
+            and patient_id=#{patientId,jdbcType=VARCHAR}
         </where>
     </select>
 

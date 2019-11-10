@@ -1,6 +1,5 @@
 package com.yinxt.surveyscale.service;
 
-import com.alibaba.fastjson.JSON;
 import com.yinxt.surveyscale.common.constant.Constant;
 import com.yinxt.surveyscale.common.util.RSAUtil;
 import com.yinxt.surveyscale.dto.FindBackPasswordReqDTO;
@@ -247,7 +246,10 @@ public class DoctorInfoService {
         //通过登录名获取账户信息
         DoctorAuthInfo doctorAuthInfo = getDoctorInfoByLoginName(loginName);
         //返回医生ID
-        return doctorAuthInfo.getDoctorId();
+        if (doctorAuthInfo != null) {
+            return doctorAuthInfo.getDoctorId();
+        }
+        return null;
     }
 
 }
