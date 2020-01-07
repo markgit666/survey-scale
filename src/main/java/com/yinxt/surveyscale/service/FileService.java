@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -42,7 +43,7 @@ public class FileService {
         try {
             String encryptScaleId = RSAUtil.encrypt(scaleId, publicKey);
             StringBuilder urlContentBuilder = new StringBuilder();
-            urlContentBuilder.append(scaleSurveyFrontUrl).append(url).append("?").append("scaleId=").append(encryptScaleId);
+            urlContentBuilder.append(scaleSurveyFrontUrl).append(url).append("?").append("scaleId=").append(URLEncoder.encode(encryptScaleId, "utf-8"));
             String urlContent = urlContentBuilder.toString();
             log.info("二维码内容：{}", urlContent);
             MyQrCode.getQrCodeImage(urlContent, response);

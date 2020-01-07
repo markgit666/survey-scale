@@ -56,9 +56,7 @@ public class ExaminationPaperService {
     public Result getBlankExaminationPaper(BlankExaminationPaperReqDTO blankExaminationPaperReqDTO) {
         String scaleId;
         try {
-            String encryptedScale = URLDecoder.decode(blankExaminationPaperReqDTO.getScaleId(), "utf-8");
-            String target = encryptedScale.replace(" ", "+");
-            scaleId = RSAUtil.decrypt(target, privateKey);
+            scaleId = RSAUtil.decrypt(blankExaminationPaperReqDTO.getScaleId(), privateKey);
         } catch (Exception e) {
             log.error("解密失败：", e);
             throw new LogicException("量表不存在");

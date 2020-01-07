@@ -61,11 +61,11 @@ public class ExcelService {
      */
     private void outputPatientInfoExcel(List<PatientInfo> patientInfoList, HttpServletResponse response) {
         String[] header = {"编号", "姓名", "出生日期", "性别", "家庭地址", "联系方式", "利手", "民族", "婚姻",
-                "工作状态", "在职职业", "文化程度", "受教育年数",
+                "工作状态", "在职职业", "文化程度", "受教育年数（年）",
                 "是否打呼噜", "居住方式", "既往病史", "其他疾病", "吸烟史",
-                "一天抽几支", "吸烟年数", "饮酒史", "饮酒类型", "一天几两", "喝酒年数",
+                "一天抽几支（支）", "吸烟年数（年）", "饮酒史", "饮酒类型", "一天几两（两）", "喝酒年数（年）",
                 "有无精神疾病家族史", "精神疾病家族史", "其他精神病史",
-                "现病史（有无记忆下降）", "记忆力下降多久", "体格检查情况",
+                "现病史（有无记忆下降）", "记忆力下降多久（年）", "体格检查情况",
                 "是否合并使用促认知药物",
                 "具体促认知药物", "具体药物的剂量"};
         String fileName = "被试者信息表-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) + ".xlsx";
@@ -74,7 +74,6 @@ public class ExcelService {
         for (int i = 0; i < patientInfoList.size(); i++) {
             String[] col = content[i];
             PatientInfo patientInfo = patientInfoList.get(i);
-
             col[0] = patientInfo.getPatientId();
             col[1] = patientInfo.getName();
             col[2] = patientInfo.getBirthday();
