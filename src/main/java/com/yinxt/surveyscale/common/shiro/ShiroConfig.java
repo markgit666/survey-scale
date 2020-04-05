@@ -96,14 +96,25 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setFilters(filterMap);
 
         Map<String, String> filterChainDefinitionMap = new HashMap<>();
+        /**
+         * 开发用
+         */
+        filterChainDefinitionMap.put("/report/**", "anon");
+        filterChainDefinitionMap.put("/patient/**", "anon");
+        filterChainDefinitionMap.put("/eligible/**", "anon");
+
         filterChainDefinitionMap.put("/common/**", "anon");
         filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/authc/**", "anon");
         filterChainDefinitionMap.put("/file/**", "anon");
-        filterChainDefinitionMap.put("/paper/blank/get", "anon");
-        filterChainDefinitionMap.put("/paper/answer/commit", "anon");
+        filterChainDefinitionMap.put("/paper/patient/**", "anon");
+//        filterChainDefinitionMap.put("/paper/report/patient/status/check", "anon");
+//        filterChainDefinitionMap.put("/paper/blank/get", "anon");
+//        filterChainDefinitionMap.put("/paper/scale/get", "anon");
+//        filterChainDefinitionMap.put("/paper/answer/commit", "anon");
         filterChainDefinitionMap.put("/excel/**", "anon");
         filterChainDefinitionMap.put("/**", "authc");
+
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         return shiroFilterFactoryBean;

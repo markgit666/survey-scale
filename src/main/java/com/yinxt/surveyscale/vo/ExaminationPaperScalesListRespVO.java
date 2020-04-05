@@ -1,5 +1,6 @@
 package com.yinxt.surveyscale.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
@@ -10,29 +11,50 @@ import lombok.Data;
  * @date 2019-10-29 00:01
  */
 @Data
-public class ExaminationPaperListRespVO {
+public class ExaminationPaperScalesListRespVO {
     /**
-     * 答卷编号
+     * 报告表答卷编号
      */
     private String examinationPaperId;
+    /**
+     * 报告表名称
+     */
+    private String reportName;
+    /**
+     * 量表答卷编号
+     */
+    private String scalePaperId;
     /**
      * 量表名称
      */
     private String scaleName;
     /**
-     * 病人名称
+     * 被试者姓名
      */
     private String patientName;
+    /**
+     * 题目数量
+     */
+    private int questionCount;
     /**
      * 用时
      */
     private String useTime;
     /**
+     * 答题日期
+     */
+    private String examinationDate;
+    /**
      * 评分状态
      */
     private String judgeStatus;
     /**
+     * 评定人
+     */
+    private String checkUser;
+    /**
      * 总分
      */
     private String totalScore;
+
 }

@@ -17,6 +17,10 @@ public class Constant {
      */
     public static final String ITEMS_SPLIT = "@-@";
     /**
+     * 单选内容和分数分隔符
+     */
+    public static final String SCORE_SPLIT = "&-&";
+    /**
      * 量表id前缀
      */
     public static final String SCALE_PREFIX = "SL";

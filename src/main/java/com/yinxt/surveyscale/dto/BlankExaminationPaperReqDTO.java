@@ -12,12 +12,12 @@ public class BlankExaminationPaperReqDTO {
     /**
      * 量表ID
      */
-    @NotBlank(message = "量表id不能为空")
-    private String scaleId;
+    @NotBlank(message = "报告表id不能为空")
+    private String reportId;
     /**
      * 病人ID
      */
-    @NotBlank(message = "被试者id不能为空")
+    @NotBlank(message = "被试者编号不能为空")
     private String patientId;
 
 }

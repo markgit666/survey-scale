@@ -24,6 +24,10 @@ public class PatientInfo {
      */
     private String name;
     /**
+     * 身份证号
+     */
+    private String idCard;
+    /**
      * 生日
      */
 //    @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -163,5 +167,9 @@ public class PatientInfo {
      * 更新时间
      */
     private String updateTime;
+    /**
+     * 签约状态
+     */
+    private String signStatus;
 
 }

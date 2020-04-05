@@ -2,6 +2,7 @@ package com.yinxt.surveyscale.dto;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 /**
@@ -12,11 +13,17 @@ public class CommitAnswerReqDTO {
     /**
      * 题目ID
      */
+    @NotBlank(message = "问题编号不能为空")
     private String questionId;
     /**
-     * 内容ID
+     * 内容
      */
+//    @NotBlank(message = "答案内容不能为空")
     private String content;
+    /**
+     * 得分
+     */
+    private double score;
     /**
      * 选择题答案列表
      */

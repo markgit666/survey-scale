@@ -12,17 +12,13 @@ import lombok.Data;
 @Data
 public class ExaminationPaperListQueryPO {
     /**
-     * 量表名称
+     * 报告表名称
      */
-    private String scaleName;
+    private String reportName;
     /**
      * 病人姓名
      */
     private String patientName;
-    /**
-     * 评分状态
-     */
-    private String judgeStatus;
     /**
      * 医生id
      */

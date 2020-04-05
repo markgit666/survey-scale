@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author yinxt
@@ -31,7 +32,7 @@ public class ExcelController {
     }
 
     @RequestMapping(value = "export/examinationPaper/info")
-    public void exportExaminationPaperExcel(@RequestParam("examinationPaperIdArray") String[] examinationPaperArray, @RequestParam("doctorId") String doctorId, HttpServletResponse response) {
+    public void exportExaminationPaperExcel(@RequestParam("examinationPaperIdArray") List<String> examinationPaperArray, @RequestParam("doctorId") String doctorId, HttpServletResponse response) {
         excelService.getExaminationPaperExcelById(response, examinationPaperArray, doctorId);
     }
 

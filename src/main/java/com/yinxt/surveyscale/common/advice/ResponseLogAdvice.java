@@ -23,7 +23,7 @@ public class ResponseLogAdvice implements ResponseBodyAdvice {
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType mediaType, Class aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
         Method method = returnType.getMethod();
-        log.info("{}.{}:{}：", method.getDeclaringClass().getSimpleName(), method.getName(), JSON.toJSONString(body));
+        log.info("{}.{}:{}", method.getDeclaringClass().getSimpleName(), method.getName(), JSON.toJSONString(body));
         return body;
     }
 

@@ -9,9 +9,13 @@ public class AnswerJudgeDTO {
      */
     private String answerId;
     /**
+     * 问题编号
+     */
+    private String questionId;
+    /**
      * 分数
      */
-    private int score;
+    private double score;
 
 }
 

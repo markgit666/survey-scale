@@ -4,7 +4,7 @@
 
     <resultMap id="JudgeInfoResultMap" type="com.yinxt.surveyscale.entity.JudgeInfo">
         <result column="judge_id" property="judgeId"/>
-        <result column="examination_paper_id" property="examinationPaperId"/>
+        <result column="examination_paper_id" property="scalePaperId"/>
         <result column="check_user" property="checkUser"/>
         <result column="check_time" property="checkTime"/>
         <result column="total_score" property="totalScore"/>
@@ -13,24 +13,24 @@
     </resultMap>
 
     <insert id="insertJudgeInfo" parameterType="com.yinxt.surveyscale.entity.JudgeInfo">
-        insert into tb_judge_info(judge_id, examination_paper_id, check_user, check_time, total_score, create_time, update_time)
-        values (#{judgeId,jdbcType=VARCHAR}, #{examinationPaperId,jdbcType=VARCHAR}, #{checkUser,jdbcType=VARCHAR}, now(), #{totalScore,jdbcType=VARCHAR}, now(), now())
+        insert into tb_judge(judge_id, scale_paper_id, check_user, check_time, total_score, create_time, update_time)
+        values (#{judgeId,jdbcType=VARCHAR}, #{scalePaperId,jdbcType=VARCHAR}, #{checkUser,jdbcType=VARCHAR}, now(), #{totalScore,jdbcType=VARCHAR}, now(), now())
     </insert>
 
 
     <select id="selectJudgeInfo" parameterType="com.yinxt.surveyscale.entity.JudgeInfo" resultMap="JudgeInfoResultMap">
-        select * from tb_judge_info
-        where examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
+        select * from tb_judge
+        where scale_paper_id = #{scalePaperId,jdbcType=VARCHAR}
     </select>
 
     <update id="updateJudgeInfo" parameterType="com.yinxt.surveyscale.entity.JudgeInfo">
         update
-        tb_judge_info
+        tb_judge
         set
         check_time = now(),
         check_user = #{checkUser,jdbcType=VARCHAR},
         total_score = #{totalScore,jdbcType=VARCHAR},
         update_time = now()
-        where examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
+        where scale_paper = #{examinationPaperId,jdbcType=VARCHAR}
     </update>
 </mapper>

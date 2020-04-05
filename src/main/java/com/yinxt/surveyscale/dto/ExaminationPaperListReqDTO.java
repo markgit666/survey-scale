@@ -12,15 +12,12 @@ import lombok.Data;
 @Data
 public class ExaminationPaperListReqDTO {
     /**
-     * 量表名称
+     * 报告表名称
      */
-    private String scaleName;
+    private String reportName;
     /**
      * 病人姓名
      */
     private String patientName;
-    /**
-     * 评分状态（已评分：1；未评分：0）
-     */
-    private String judgeStatus;
+
 }

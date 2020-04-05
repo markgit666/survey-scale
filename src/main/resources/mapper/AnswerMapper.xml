@@ -4,8 +4,8 @@
 
     <resultMap id="AnswerResultMap" type="com.yinxt.surveyscale.entity.Answer">
         <result column="answer_id" property="answerId"/>
+        <result column="examination_paper_id" property="scalePaperId"/>
         <result column="question_id" property="questionId"/>
-        <result column="examination_paper_id" property="examinationPaperId"/>
         <result column="content" property="content"/>
         <result column="score" property="score"/>
         <result column="create_time" property="createTime"/>
@@ -13,9 +13,9 @@
     </resultMap>
 
     <insert id="insertAnswer" parameterType="com.yinxt.surveyscale.entity.Answer">
-     insert into tb_answer(answer_id, question_id, examination_paper_id, content, create_time, update_time)
-     values (#{answerId,jdbcType=VARCHAR}, #{questionId,jdbcType=VARCHAR}, #{examinationPaperId,jdbcType=VARCHAR},
-     #{content,jdbcType=VARCHAR}, now(), now())
+     insert into tb_answer(answer_id, scale_paper_id, question_id, score, content, create_time, update_time)
+     values (#{answerId,jdbcType=VARCHAR}, #{scalePaperId,jdbcType=VARCHAR}, #{questionId,jdbcType=VARCHAR},
+     #{score,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, now(), now())
     </insert>
 
     <update id="updateAnswer">

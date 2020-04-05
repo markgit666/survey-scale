@@ -21,9 +21,9 @@ public class FileController {
     @Autowired
     private FileService fileService;
 
-    @RequestMapping(value = "qrCode/image/download")
+    @RequestMapping(value = "report/qrCode/image/download")
     public void downloadQrCodeImage(HttpServletRequest request, HttpServletResponse response) {
-        fileService.downloadQrCodeImage(request, response);
+        fileService.downloadReportQrCodeImage(request, response);
     }
 
     @RequestMapping(value = "upload")

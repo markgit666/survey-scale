@@ -2,8 +2,6 @@ package com.yinxt.surveyscale.entity;
 
 import lombok.Data;
 
-import java.util.Date;
-
 /**
  * 评定pojo
  */
@@ -14,9 +12,9 @@ public class JudgeInfo {
      */
     private String judgeId;
     /**
-     * 试卷ID
+     * 量表试卷ID
      */
-    private String examinationPaperId;
+    private String scalePaperId;
     /**
      * 评分人
      */
@@ -28,7 +26,7 @@ public class JudgeInfo {
     /**
      * 总分
      */
-    private int totalScore;
+    private double totalScore;
     /**
      * 创建时间
      */

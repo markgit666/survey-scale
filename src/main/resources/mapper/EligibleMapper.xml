@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinxt.surveyscale.mapper.EligibleMapper">
+
+    <insert id="insertPatientEligibleInfo" parameterType="com.yinxt.surveyscale.dto.PatientEligibleDTO">
+        insert into tb_eligible_patient(eligible_id, patient_id, answer, remarks, create_time)
+        values (#{eligibleId,jdbcType=VARCHAR}, #{patientId,jdbcType=VARCHAR}, #{answer,jdbcType=VARCHAR},
+        #{remarks,jdbcType=VARCHAR}, now())
+    </insert>
+
+    <update id="updatePatientEligibleInfo" parameterType="com.yinxt.surveyscale.dto.PatientEligibleDTO">
+        update tb_eligible_patient
+        set
+        <if test="answer != null and answer！= '' ">
+            answer = #{answer,jdbcType=VARCHAR},
+        </if>
+        <if test="remarks != null and remarks != '' ">
+            remarks = #{remarks,jdbcType=VARCHAR},
+        </if>
+        update_time = now()
+        <where>
+            eligible_id = #{eligibleId,jdbcType=VARCHAR}
+        </where>
+    </update>
+
+    <select id="selectPatientEligibleInfo" resultType="com.yinxt.surveyscale.entity.PatientEligible">
+        select eligible_id as eligibleId,
+        group_name as groupName,
+        type as type,
+        content as content,
+        default_answer as answer,
+        default_answer as defaultAnswer,
+        create_time as createTime,
+        update_time as updateTime
+        from tb_eligible
+        limit 50;
+    </select>
+
+</mapper>

@@ -1,6 +1,5 @@
 package com.yinxt.surveyscale.service;
 
-import com.alibaba.fastjson.JSON;
 import com.yinxt.surveyscale.common.exeption.LogicException;
 import com.yinxt.surveyscale.common.result.ResultEnum;
 import com.yinxt.surveyscale.common.util.RSAUtil;
@@ -11,6 +10,7 @@ import com.yinxt.surveyscale.common.qrcode.MyQrCode;
 import com.yinxt.surveyscale.common.redis.RedisUtil;
 import com.yinxt.surveyscale.common.result.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,6 +26,8 @@ import java.util.*;
 @Slf4j
 @Service
 public class FileService {
+    @Autowired
+    private DoctorInfoService doctorInfoService;
 
     @Value("${image.path}")
     private String imageRootPath;
@@ -36,20 +38,35 @@ public class FileService {
     @Value("${rsa.key.public}")
     private String publicKey;
 
-    public void downloadQrCodeImage(HttpServletRequest request, HttpServletResponse response) {
+    /**
+     * 获取报告表二维码
+     *
+     * @param request
+     * @param response
+     */
+    public void downloadReportQrCodeImage(HttpServletRequest request, HttpServletResponse response) {
         log.info("端口localPost:{},remotePort:{},serverPort:{}", request.getLocalPort(), request.getRemotePort(), request.getServerPort());
-        String scaleId = request.getParameter("scaleId");
+        log.info("remoteHost:{}, remoteAddr:{}", request.getRemoteHost(), request.getRemoteAddr());
+        //报告表编号
+        String reportId = request.getParameter("reportId");
+        String doctorId = request.getParameter("doctorId");
+        if (StringUtils.isBlank(reportId)) {
+            throw new LogicException("报告表编号不能为空");
+        }
+        //前端答题页面路径
         String url = request.getParameter("url");
+        //生成报告表二维码
         try {
-            String encryptScaleId = RSAUtil.encrypt(scaleId, publicKey);
+            String encryptReportId = RSAUtil.encrypt(reportId, publicKey);
+            String encryptDoctorId = RSAUtil.encrypt(doctorId, publicKey);
             StringBuilder urlContentBuilder = new StringBuilder();
-            urlContentBuilder.append(scaleSurveyFrontUrl).append(url).append("?").append("scaleId=").append(URLEncoder.encode(encryptScaleId, "utf-8"));
+            urlContentBuilder.append(scaleSurveyFrontUrl).append(url).append("?").append("reportId=").append(URLEncoder.encode(encryptReportId, "utf-8")).append("&doctorId=").append(URLEncoder.encode(encryptDoctorId, "utf-8"));
             String urlContent = urlContentBuilder.toString();
             log.info("二维码内容：{}", urlContent);
             MyQrCode.getQrCodeImage(urlContent, response);
         } catch (Exception e) {
-            log.error("获取二维码异常：", e);
-            throw new LogicException("获取二维码失败");
+            log.error("获取报告表二维码异常：", e);
+            throw new LogicException("获取报告表二维码失败");
         }
     }
 

@@ -2,7 +2,6 @@ package com.yinxt.surveyscale.entity;
 
 import lombok.Data;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,7 +20,7 @@ public class Answer {
     /**
      * 答卷ID
      */
-    private String examinationPaperId;
+    private String scalePaperId;
     /**
      * 答案内容
      */
@@ -33,7 +32,7 @@ public class Answer {
     /**
      * 每道题的分数
      */
-    private int score;
+    private double score;
     /**
      * 创建时间
      */

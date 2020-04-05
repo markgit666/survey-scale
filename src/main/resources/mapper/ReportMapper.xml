@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinxt.surveyscale.mapper.ReportMapper">
+
+    <resultMap id="reportResultMap" type="com.yinxt.surveyscale.entity.Report">
+        <result column="report_id" property="reportId" jdbcType="VARCHAR"/>
+        <result column="report_name" property="reportName" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="getDoctorPersonReportList" parameterType="string" resultType="com.yinxt.surveyscale.vo.ReportListVO">
+        select tdr.report_id as reportId,
+        tr.report_name as reportName,
+        td.doctor_id as doctorId,
+        td.doctor_name as doctorName
+        from tb_doctor_report tdr
+        left join tb_report tr on tdr.report_id = tr.report_id
+        left join tb_doctor td on tdr.doctor_id = td.doctor_id
+        where tdr.doctor_id = #{doctorId, jdbcType=VARCHAR}
+        <if test="reportName != null and reportName != ''.toString() ">
+            and tr.report_name like concat('%', #{reportName,jdbcType=VARCHAR}, '%')
+        </if>
+    </select>
+
+    <select id="getReportScaleNum" parameterType="string" resultType="int">
+        select count(trs.scale_id)
+        from tb_report_scale trs
+        where report_id = #{reportId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getReportById" parameterType="string" resultMap="reportResultMap">
+        select tr.report_id,
+        tr.report_name,
+        tr.create_time,
+        tr.update_time
+        from tb_report tr
+        where tr.report_id = #{reportId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getReportScaleIdListById" parameterType="string" resultType="string">
+        select trs.scale_id
+        from tb_report_scale trs
+        where trs.report_id = #{reportId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectScaleNumByReportId" parameterType="string" resultType="int">
+        select count(*)
+        from tb_report_scale
+        where report_id = #{reportId,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

@@ -9,13 +9,13 @@ import java.util.List;
  * 答卷评定信息请求dto
  */
 @Data
-public class ExaminationPaperJudgeReqDTO {
+public class ScalePaperJudgeReqDTO {
 
     /**
-     * 答卷ID
+     * 量表答卷ID
      */
-    @NotBlank(message = "答卷id不能为空")
-    private String examinationPaperId;
+    @NotBlank(message = "量表答卷id不能为空")
+    private String scalePaperId;
     /**
      * 评定人
      */

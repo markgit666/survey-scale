@@ -4,18 +4,27 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yinxt.surveyscale.common.enums.StatusEnum;
+import com.yinxt.surveyscale.common.exeption.LogicException;
+import com.yinxt.surveyscale.common.util.RSAUtil;
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
+import com.yinxt.surveyscale.dto.PatientEligibleDTO;
+import com.yinxt.surveyscale.dto.PatientInfoCommitReqDTO;
+import com.yinxt.surveyscale.dto.PatientRelationInfoDTO;
 import com.yinxt.surveyscale.mapper.PatientInfoMapper;
 import com.yinxt.surveyscale.entity.PatientInfo;
 import com.yinxt.surveyscale.common.page.PageBean;
 import com.yinxt.surveyscale.common.redis.RedisUtil;
 import com.yinxt.surveyscale.common.result.Result;
-import com.yinxt.surveyscale.common.result.ResultEnum;
+import com.yinxt.surveyscale.vo.PatientIdVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URLDecoder;
 import java.util.List;
 
 @Slf4j
@@ -26,31 +35,69 @@ public class PatientInfoService {
     private PatientInfoMapper patientInfoMapper;
     @Autowired
     private DoctorInfoService doctorInfoService;
+    @Autowired
+    private EligibleService eligibleService;
+    @Value("${rsa.key.private}")
+    private String privateKey;
+
+    /**
+     * 保存病人相关信息
+     *
+     * @param patientRelationInfoDTO
+     */
+    @Transactional
+    public PatientIdVO savePatientRelationInfo(PatientRelationInfoDTO patientRelationInfoDTO) {
+        try {
+            //1、保存病人信息
+            String patientId = savePatientInfo(patientRelationInfoDTO.getPatientInfo());
+            PatientIdVO patientIdVO = new PatientIdVO();
+            patientIdVO.setPatientId(patientId);
+            //2、保存实验条件的答案
+            List<PatientEligibleDTO> patientEligibleDTOList = patientRelationInfoDTO.getPatientEligibleList();
+            for (PatientEligibleDTO patientEligibleDTO : patientEligibleDTOList) {
+                patientEligibleDTO.setPatientId(patientId);
+                eligibleService.savePatientEligibleInfo(patientEligibleDTO);
+            }
+            return patientIdVO;
+        } catch (Exception e) {
+            log.info("保存病人相关信息失败", e);
+            throw new LogicException("病人相关信息保存失败");
+        }
+    }
 
     /**
      * 添加病人基本信息
      *
-     * @param patientInfo
+     * @param patientInfoCommitReqDTO
      */
-    public Result savePatientInfo(PatientInfo patientInfo) {
+    public String savePatientInfo(PatientInfoCommitReqDTO patientInfoCommitReqDTO) {
+        //解密doctorId
+        String encryptDoctorId = patientInfoCommitReqDTO.getDoctorId();
+        try {
+            patientInfoCommitReqDTO.setDoctorId(RSAUtil.decrypt(URLDecoder.decode(encryptDoctorId, "UTF-8").replace(" ", "+"), privateKey));
+        } catch (Exception e) {
+            log.info("医生编号解密失败");
+            throw new LogicException("错误的医生编号");
+        }
+        PatientInfo patientInfo = new PatientInfo();
+        BeanUtils.copyProperties(patientInfoCommitReqDTO, patientInfo);
+        String patientId = patientInfo.getPatientId();
         try {
             log.info("[savePatientInfo]请求参数：{}", JSON.toJSONString(patientInfo));
             PatientInfo checkPatientInfo = patientInfoMapper.selectPatientInfoByPatientId(patientInfo.getPatientId());
             if (checkPatientInfo == null) {
-                String patientId = RedisUtil.getSequenceId("PT");
+                patientId = RedisUtil.getSequenceId("PT");
                 patientInfo.setPatientId(patientId);
-                String doctorId = doctorInfoService.getLoginDoctorId();
-                patientInfo.setDoctorId(doctorId);
                 patientInfoMapper.insertPatientInfo(patientInfo);
             } else {
                 patientInfoMapper.updatePatientInfo(patientInfo);
             }
             log.info("[savePatientInfo]数据保存成功");
-            return new Result(ResultEnum.SUCCESS);
         } catch (Exception e) {
             log.info("保存病人信息异常：{}", e);
-            return new Result().error();
+            throw new LogicException("保存病人信息异常");
         }
+        return patientId;
     }
 
     /**
@@ -59,27 +106,38 @@ public class PatientInfoService {
      * @param patientInfo
      * @return
      */
-    public Result getPatientInfo(PatientInfo patientInfo) {
+    public PatientInfo getPatientInfo(PatientInfo patientInfo) {
         log.info("[getPatientInfo]查询参数：{}", JSON.toJSONString(patientInfo));
-        try {
-            patientInfo.setDoctorId(doctorInfoService.getLoginDoctorId());
-            PatientInfo patientInfo1 = patientInfoMapper.selectPatientInfo(patientInfo);
-            log.info("[getPatientInfo]查询结果：{}", JSON.toJSONString(patientInfo1));
-            return Result.success(patientInfo1);
-        } catch (Exception e) {
-            log.info("获取病人信息异常：{}", e.getMessage());
-            return Result.error();
-        }
+        patientInfo.setDoctorId(doctorInfoService.getLoginDoctorId());
+        PatientInfo patient = patientInfoMapper.selectPatientInfo(patientInfo);
+        log.info("[getPatientInfo]查询结果：{}", JSON.toJSONString(patient));
+        return patient;
     }
 
     /**
-     * 通过量表ID和病人ID校验病人是否存在
+     * 通过量表ID和病人ID校验当前医生名下该病人是否存在
      *
      * @param scaleId
      * @param patientId
      */
     public PatientInfo checkPatientId(String scaleId, String patientId) {
         return patientInfoMapper.selectPatientByScaleIdAndPatientId(patientId, scaleId);
+    }
+
+    /**
+     * 通过报告表ID和身份证号查询当前医生名下病人是否存在
+     *
+     * @param reportId
+     * @param idCard
+     * @return
+     */
+    public PatientInfo getPatientInfoByReportIdAndIdCard(String reportId, String idCard) {
+        PatientInfo patientInfo = patientInfoMapper.selectPatientByReportIdAndIdCard(reportId, idCard);
+        return patientInfo;
+    }
+
+    public PatientInfo getPatientInfoByReportIdAndPatientId(String reportId, String patientId) {
+        return patientInfoMapper.selectPatientByReportIdAndPatientId(reportId, patientId);
     }
 
 

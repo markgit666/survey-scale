@@ -3,6 +3,7 @@ package com.yinxt.surveyscale.service;
 import com.alibaba.fastjson.JSON;
 import com.yinxt.surveyscale.common.constant.Constant;
 import com.yinxt.surveyscale.common.enums.StatusEnum;
+import com.yinxt.surveyscale.dto.OptionInfoDTO;
 import com.yinxt.surveyscale.mapper.QuestionMapper;
 import com.yinxt.surveyscale.entity.Question;
 import com.yinxt.surveyscale.common.redis.RedisUtil;
@@ -64,13 +65,26 @@ public class QuestionService {
     public void questionItemFormat(Question question) {
         if (question.getItems() != null) {
             StringBuilder stringBuilder = new StringBuilder();
-            for (Map<String, String> itemMap : question.getItems()) {
-                if (stringBuilder.length() > 0) {
-                    stringBuilder.append(Constant.ITEMS_SPLIT).append(itemMap.get("option"));
-                } else {
-                    stringBuilder.append(itemMap.get("option"));
+            if (Constant.radio_type.equals(question.getQuestionType()) || Constant.checkBox_type.equals(question.getQuestionType())) {
+                //处理单选题
+                for (OptionInfoDTO optionInfoDTO : question.getItems()) {
+                    if (stringBuilder.length() > 0) {
+                        stringBuilder.append(Constant.ITEMS_SPLIT).append(optionInfoDTO.getOption()).append(Constant.SCORE_SPLIT).append(optionInfoDTO.getOptionScore());
+                    } else {
+                        stringBuilder.append(optionInfoDTO.getOption()).append(Constant.SCORE_SPLIT).append(optionInfoDTO.getOptionScore());
+                    }
                 }
             }
+//            else {
+//                //处理多选题
+//                for (OptionInfoDTO optionInfoDTO : question.getItems()) {
+//                    if (stringBuilder.length() > 0) {
+//                        stringBuilder.append(Constant.ITEMS_SPLIT).append(optionInfoDTO.getOption());
+//                    } else {
+//                        stringBuilder.append(optionInfoDTO.getOption());
+//                    }
+//                }
+//            }
             question.setItemStr(stringBuilder.toString());
         }
     }
@@ -131,13 +145,19 @@ public class QuestionService {
         String itemStr = question.getItemStr();
         if (StringUtils.isNotBlank(itemStr)) {
             String[] itemArray = itemStr.split(Constant.ITEMS_SPLIT);
-            List<Map<String, String>> items = new ArrayList<>();
+            List<OptionInfoDTO> items = new ArrayList<>();
             for (String item : itemArray) {
-                Map<String, String> itemMap = new HashMap<>();
-                itemMap.put("option", item);
-                items.add(itemMap);
+                String[] optionArray = item.split(Constant.SCORE_SPLIT);
+                OptionInfoDTO optionInfoDTO = new OptionInfoDTO();
+                optionInfoDTO.setOption(optionArray[0]);
+                if ((Constant.radio_type.equals(question.getQuestionType()) || Constant.checkBox_type.equals(question.getQuestionType())) && optionArray.length > 1) {
+                    optionInfoDTO.setOptionScore(Double.valueOf(optionArray[1]));
+                }
+                items.add(optionInfoDTO);
             }
             question.setItems(items);
+            //将itemStr设置为null
+            question.setItemStr(null);
         }
     }
 

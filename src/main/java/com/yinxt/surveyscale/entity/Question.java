@@ -1,5 +1,6 @@
 package com.yinxt.surveyscale.entity;
 
+import com.yinxt.surveyscale.dto.OptionInfoDTO;
 import lombok.Data;
 
 import java.util.Date;
@@ -34,7 +35,7 @@ public class Question {
     /**
      * 选项列表
      */
-    private List<Map<String, String>> items;
+    private List<OptionInfoDTO> items;
     /**
      * 附件
      */
@@ -51,6 +52,22 @@ public class Question {
      * 状态
      */
     private String status;
+    /**
+     * 是否计入总分
+     */
+    private boolean recordScore;
+    /**
+     * 分组类别
+     */
+    private String groupType;
+    /**
+     * 是否展示
+     */
+    private String display;
+    /**
+     * 插入内容
+     */
+    private String insertContent;
     /**
      * 创建时间
      */

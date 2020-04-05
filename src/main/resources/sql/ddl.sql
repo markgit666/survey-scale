@@ -22,7 +22,7 @@ create index idx_examination_paper_id
 create index idx_question_id
   on tb_answer (question_id);
 
-create table if not exists tb_doctor_info
+create table if not exists tb_doctor
 (
   id          int auto_increment
     primary key,
@@ -38,7 +38,7 @@ create table if not exists tb_doctor_info
 );
 
 create index idx_login_name
-  on tb_doctor_info (login_name);
+  on tb_doctor (login_name);
 
 create table if not exists tb_examination_paper
 (
@@ -55,7 +55,7 @@ create table if not exists tb_examination_paper
     unique (examination_paper_id)
 );
 
-create table if not exists tb_file_info
+create table if not exists tb_file
 (
   id          int auto_increment
     primary key,
@@ -68,7 +68,7 @@ create table if not exists tb_file_info
     unique (file_no)
 );
 
-create table if not exists tb_judge_info
+create table if not exists tb_judge
 (
   id                   int auto_increment
     primary key,
@@ -85,7 +85,7 @@ create table if not exists tb_judge_info
     unique (judge_id)
 );
 
-create table if not exists tb_patient_info
+create table if not exists tb_patient
 (
   id                                  int auto_increment comment '自增主键'
     primary key,
@@ -131,7 +131,7 @@ create table if not exists tb_patient_info
 );
 
 create index idx_doctor_id
-  on tb_patient_info (doctor_id);
+  on tb_patient (doctor_id);
 
 create table if not exists tb_question
 (
@@ -153,7 +153,7 @@ create table if not exists tb_question
 create index idx_scale_id
   on tb_question (scale_id);
 
-create table if not exists tb_scale_info
+create table if not exists tb_scale
 (
   id             int auto_increment
     primary key,
@@ -170,8 +170,8 @@ create table if not exists tb_scale_info
 );
 
 create index idx_doctor_id
-  on tb_scale_info (doctor_id);
+  on tb_scale (doctor_id);
 
 create index idx_scale_name
-  on tb_scale_info (scale_name);
+  on tb_scale (scale_name);
 

@@ -19,7 +19,7 @@ public class JudgeInfoService {
      */
     public void saveJudgeInfo(JudgeInfo judgeInfo) {
         judgeInfo.setJudgeId(RedisUtil.getSequenceId("JG"));
-        JudgeInfo queryResult = judgeInfoMapper.selectJudgeInfo(judgeInfo);
+        JudgeInfo queryResult = judgeInfoMapper.selectJudgeInfo(judgeInfo.getScalePaperId());
         if (queryResult != null) {
             judgeInfoMapper.updateJudgeInfo(judgeInfo);
             return;
@@ -30,10 +30,10 @@ public class JudgeInfoService {
     /**
      * 查询评定信息
      *
-     * @param judgeInfo
+     * @param scalePaperId
      * @return
      */
-    public JudgeInfo getJudgeInfo(JudgeInfo judgeInfo) {
-        return judgeInfoMapper.selectJudgeInfo(judgeInfo);
+    public JudgeInfo getJudgeInfo(String scalePaperId) {
+        return judgeInfoMapper.selectJudgeInfo(scalePaperId);
     }
 }

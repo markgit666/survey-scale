@@ -19,7 +19,11 @@ public interface PatientInfoMapper {
 
     List<PatientInfo> selectPatientListByIdArray(@Param("array") String[] patientIdArray, @Param("doctorId") String doctorId);
 
-    PatientInfo selectPatientByScaleIdAndPatientId(@Param("patientId") String patientId, @Param("scaleId") String scaleId);
+    PatientInfo selectPatientByScaleIdAndPatientId(@Param("scaleId") String scaleId, @Param("patientId") String patientId);
+
+    PatientInfo selectPatientByReportIdAndIdCard(@Param("reportId") String reportId, @Param("idCard") String idCard);
+
+    PatientInfo selectPatientByReportIdAndPatientId(@Param("reportId") String reportId, @Param("patientId") String patientId);
 
     int updatePatientInfo(PatientInfo patientInfo);
 

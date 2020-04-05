@@ -2,12 +2,14 @@ package com.yinxt.surveyscale.service;
 
 import com.yinxt.surveyscale.common.util.ExcelUtil;
 import com.yinxt.surveyscale.entity.PatientInfo;
-import com.yinxt.surveyscale.vo.ExaminationPaperListRespVO;
+import com.yinxt.surveyscale.vo.ExaminationPaperScalesListRespVO;
+import com.yinxt.surveyscale.vo.ScalePaperQuestionListRespVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -116,44 +118,111 @@ public class ExcelService {
      * 根据答卷id导出答卷信息Excel
      *
      * @param response
-     * @param examinationPaperIdArray
+     * @param examinationPaperIdList
      */
-    public void getExaminationPaperExcelById(HttpServletResponse response, String[] examinationPaperIdArray, String doctorId) {
-        List<ExaminationPaperListRespVO> examinationPaperListRespVOS = examinationPaperService.getExaminationPaperListByIdArray(examinationPaperIdArray, doctorId);
-        outputExaminationPaperExcel(examinationPaperListRespVOS, response);
+    public void getExaminationPaperExcelById(HttpServletResponse response, List<String> examinationPaperIdList, String doctorId) {
+        outputExaminationPaperList(response, examinationPaperIdList, doctorId);
     }
 
     /**
-     * 获取医生名下全部病人答卷信息Excel
+     * 获取医生名下全部病人的答卷信息Excel
      *
      * @param response
      */
     public void getAllExaminationPaperExcel(HttpServletResponse response, String doctorId) {
-        List<ExaminationPaperListRespVO> examinationPaperListRespVOS = examinationPaperService.getAllExaminationPaper(doctorId);
-        outputExaminationPaperExcel(examinationPaperListRespVOS, response);
+        List<String> examinationPaperIdList = examinationPaperService.getAllExaminationPaperIdList(doctorId);
+        outputExaminationPaperList(response, examinationPaperIdList, doctorId);
+    }
+
+    /**
+     * 导出答卷列表信息Excel
+     *
+     * @param response
+     * @param list
+     * @param doctorId
+     */
+    public void outputExaminationPaperList(HttpServletResponse response, List<String> list, String doctorId) {
+        for (String examinationPaperId : list) {
+            List<ExaminationPaperScalesListRespVO> examinationPaperScalesListRespVOS = examinationPaperService.getExaminationPaperScaleListById(examinationPaperId, doctorId);
+            if (examinationPaperScalesListRespVOS.size() >= 1) {
+                String excelName = examinationPaperService.getReportNameByPaperId(examinationPaperId);
+                outputExaminationPaperExcel(excelName, examinationPaperScalesListRespVOS, response);
+            }
+        }
     }
 
 
     /**
      * 构建导出答卷excel的参数
      *
-     * @param examinationPaperListRespVOS
+     * @param examinationPaperScalesListRespVOS
      * @param response
      */
-    public void outputExaminationPaperExcel(List<ExaminationPaperListRespVO> examinationPaperListRespVOS, HttpServletResponse response) {
-        String[] header = {"答卷编号", "量表名称", "被试者", "答题时间（分钟）", "评分状态", "总分"};
-        String fileName = "答卷信息表-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) + ".xlsx";
-        String sheetName = "答卷信息";
-        String[][] content = new String[examinationPaperListRespVOS.size()][header.length + 1];
-        for (int i = 0; i < examinationPaperListRespVOS.size(); i++) {
+    public void outputExaminationPaperExcel(String excelName, List<ExaminationPaperScalesListRespVO> examinationPaperScalesListRespVOS, HttpServletResponse response) {
+        String[] header = {"答卷编号", "量表答卷编号", "量表名称", "被试者姓名", "题目数量", "用时", "答题日期", "评分状态", "评定人", "总分"};
+        String fileName = excelName + "-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) + ".xlsx";
+        String sheetName = "报告表答卷信息";
+        String[][] content = new String[examinationPaperScalesListRespVOS.size()][header.length + 1];
+        for (int i = 0; i < examinationPaperScalesListRespVOS.size(); i++) {
             String col[] = content[i];
-            ExaminationPaperListRespVO examinationPaperListRespVO = examinationPaperListRespVOS.get(i);
-            col[0] = examinationPaperListRespVO.getExaminationPaperId();
-            col[1] = examinationPaperListRespVO.getScaleName();
-            col[2] = examinationPaperListRespVO.getPatientName();
-            col[3] = examinationPaperListRespVO.getUseTime();
-            col[4] = "1".equals(examinationPaperListRespVO.getJudgeStatus()) ? "已评分" : "未评分";
-            col[5] = examinationPaperListRespVO.getTotalScore();
+            ExaminationPaperScalesListRespVO examinationPaperScalesListRespVO = examinationPaperScalesListRespVOS.get(i);
+            col[0] = examinationPaperScalesListRespVO.getExaminationPaperId();
+            col[1] = examinationPaperScalesListRespVO.getScalePaperId();
+            col[2] = examinationPaperScalesListRespVO.getScaleName();
+            col[3] = examinationPaperScalesListRespVO.getPatientName();
+            col[4] = String.valueOf(examinationPaperScalesListRespVO.getQuestionCount());
+            col[5] = examinationPaperScalesListRespVO.getUseTime();
+            col[6] = examinationPaperScalesListRespVO.getExaminationDate();
+            col[7] = "1".equals(examinationPaperScalesListRespVO.getJudgeStatus()) ? "已评分" : "未评分";
+            col[8] = examinationPaperScalesListRespVO.getCheckUser();
+            col[9] = examinationPaperScalesListRespVO.getTotalScore();
+        }
+        outputExcel(response, fileName, sheetName, header, content);
+    }
+
+    /**
+     * 获取量表答卷信息Excel
+     *
+     * @param response
+     * @param scalePaperIdList
+     * @param doctorId
+     */
+    public void getScalePaperExcelById(HttpServletResponse response, List<String> scalePaperIdList) {
+        for (String scalePaperId : scalePaperIdList) {
+            List<ScalePaperQuestionListRespVO> scalePaperQuestionListRespVOList = examinationPaperService.getScalePaperQuestionListById(scalePaperId);
+            if (scalePaperQuestionListRespVOList.size() > 0) {
+                outputScalePaperExcel(response, scalePaperQuestionListRespVOList);
+            }
+        }
+    }
+
+    /**
+     * 导出量表答卷到Excel
+     *
+     * @param response
+     * @param scalePaperQuestionListRespVOList
+     */
+    public void outputScalePaperExcel(HttpServletResponse response, List<ScalePaperQuestionListRespVO> scalePaperQuestionListRespVOList) {
+        String header[] = {"量表答卷编号", "量表编号", "量表名称", "题目编号", "题目标题", "单选/多选）选项", "附件", "是否记分", "分组名称", "显示", "答案", "得分"};
+        String scaleName = scalePaperQuestionListRespVOList.get(0).getScaleName();
+        String fileName = scaleName + "-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) + ".xlsx";
+        String sheetName = "量表答卷信息";
+        String[][] content = new String[scalePaperQuestionListRespVOList.size()][header.length + 1];
+        for (int i = 0; i < scalePaperQuestionListRespVOList.size(); i++) {
+            String[] col = content[i];
+            ScalePaperQuestionListRespVO scalePaperQuestionListRespVO = scalePaperQuestionListRespVOList.get(0);
+            col[0] = scalePaperQuestionListRespVO.getScalePaperId();
+            col[1] = scalePaperQuestionListRespVO.getScaleId();
+            col[2] = scalePaperQuestionListRespVO.getScaleName();
+            col[3] = scalePaperQuestionListRespVO.getQuestionId();
+            col[4] = scalePaperQuestionListRespVO.getTitle();
+            col[5] = scalePaperQuestionListRespVO.getItems();
+            col[6] = scalePaperQuestionListRespVO.getAttachment();
+            col[7] = scalePaperQuestionListRespVO.isRecordScore() ? "是" : "否";
+            col[8] = scalePaperQuestionListRespVO.getGroupType();
+            col[9] = scalePaperQuestionListRespVO.isDisplay() ? "是" : "否";
+            col[10] = scalePaperQuestionListRespVO.getContent();
+            col[11] = String.valueOf(scalePaperQuestionListRespVO.getScore());
         }
         outputExcel(response, fileName, sheetName, header, content);
     }

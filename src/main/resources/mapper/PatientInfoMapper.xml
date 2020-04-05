@@ -44,7 +44,7 @@
     <select id="selectPatientInfo" parameterType="com.yinxt.surveyscale.entity.PatientInfo"
             resultMap="patientInfoResultMap">
         select *
-        from tb_patient_info
+        from tb_patient
         <where>
             status = '1'
             <if test="patientId != null and patientId != ''">
@@ -58,7 +58,7 @@
 
     <select id="selectPatientInfoByPatientId" resultMap="patientInfoResultMap">
         select *
-        from tb_patient_info
+        from tb_patient
         <where>
             status = '1'
             and patient_id=#{patientId,jdbcType=VARCHAR}
@@ -68,7 +68,7 @@
     <select id="selectPatientInfoList" parameterType="com.yinxt.surveyscale.entity.PatientInfo"
             resultMap="patientInfoResultMap">
         select *
-        from tb_patient_info
+        from tb_patient
         <where>
             status = '1'
             <if test="name != null and name != '' ">
@@ -92,7 +92,7 @@
     </select>
 
     <select id="selectPatientListByIdArray" resultMap="patientInfoResultMap">
-        select * from tb_patient_info
+        select * from tb_patient
         where patient_id in
         <foreach collection="array" open="(" close=")" separator="," item="patientId">
             #{patientId,jdbcType=VARCHAR}
@@ -101,17 +101,37 @@
     </select>
 
     <select id="selectPatientByScaleIdAndPatientId" resultMap="patientInfoResultMap">
-        select * from tb_patient_info tpi, tb_scale_info tsi
+        select * from tb_patient tpi, tb_scale tsi
         where
         tpi.status = '1'
+        and tsi.doctor_id = tpi.doctor_id
         and tpi.patient_id = #{patientId,jdbcType=VARCHAR}
         and tsi.scale_id = #{scaleId,jdbcType=VARCHAR}
-        and tsi.doctor_id = tpi.doctor_id
+    </select>
+
+    <select id="selectPatientByReportIdAndIdCard" resultMap="patientInfoResultMap">
+        select *
+        from tb_patient tp, tb_doctor_report tdr
+        where
+        tp.status = '1'
+        and tp.doctor_id = tdr.doctor_id
+        and tp.id_card = #{idCard,jdbcType=VARCHAR}
+        and tdr.report_id = #{reportId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectPatientByReportIdAndPatientId" resultMap="patientInfoResultMap">
+        select *
+        from tb_patient tp, tb_doctor_report tdr
+        where
+        tp.status = '1'
+        and tp.doctor_id = tdr.doctor_id
+        and tp.patient_id = #{patientId,jdbcType=VARCHAR}
+        and tdr.report_id = #{reportId,jdbcType=VARCHAR}
     </select>
 
     <insert id="insertPatientInfo" parameterType="com.yinxt.surveyscale.entity.PatientInfo">
-        insert into tb_patient_info
-        (patient_id, doctor_id, patient_name, gender, birthday, telephone_number, family_address, create_time,
+        insert into tb_patient
+        (patient_id, doctor_id, patient_name, id_card, gender, birthday, telephone_number, family_address, create_time,
         update_time, nation, marriage_status, work_status, in_service_job, education_level,
         education_years,is_snoring, living_way, medical_history, other_medical_history, smoking_history,
         smoking_num_eachday, smoking_years, is_mental_disease_family_history, mental_disease_family_history,
@@ -123,6 +143,7 @@
         #{patientId,jdbcType=VARCHAR},
         #{doctorId,jdbcType=VARCHAR},
         #{name,jdbcType=VARCHAR},
+        #{idCard,jdbcType=VARCHAR},
         #{gender,jdbcType=INTEGER},
         #{birthday, jdbcType=DATE},
         #{telephoneNumber,jdbcType=VARCHAR},
@@ -145,10 +166,13 @@
     </insert>
 
     <update id="updatePatientInfo" parameterType="com.yinxt.surveyscale.entity.PatientInfo">
-        update tb_patient_info
+        update tb_patient
         <set>
             <if test="name != null and name != ''">
                 patient_name=#{name,jdbcType=VARCHAR},
+            </if>
+            <if test="idCard != null and idCard != ''">
+                id_card=#{idCard,jdbcType=VARCHAR},
             </if>
             <if test="gender != null and gender != ''">
                 gender=#{gender,jdbcType=VARCHAR},
@@ -246,6 +270,9 @@
             <if test="drugsType!=null and drugsType!='' ">
                 drugs_type=#{drugsType,jdbcType=VARCHAR},
             </if>
+            <if test="signStatus !=null and signStatus != ''">
+                sign_status=#{signStatus,jdbcType=VARCHAR}
+            </if>
             update_time = now()
         </set>
         <where>
@@ -254,7 +281,7 @@
     </update>
 
     <select id="selectAllPatientInfo" parameterType="string" resultMap="patientInfoResultMap">
-        select * from tb_patient_info
+        select * from tb_patient
         where doctor_id = #{doctorId,jdbcType=VARCHAR};
     </select>
 

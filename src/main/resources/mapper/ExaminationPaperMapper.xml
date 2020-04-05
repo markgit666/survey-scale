@@ -2,21 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yinxt.surveyscale.mapper.ExaminationPaperMapper">
 
-    <resultMap id="ExaminationPaperResultMap" type="com.yinxt.surveyscale.entity.ExaminationPaper">
-        <result column="examination_paper_id" property="examinationPaperId"/>
-        <result column="patient_id" property="patientId"/>
-        <result column="scale_id" property="scaleId"/>
-        <result column="use_time" property="useTime"/>
-        <result column="judge_status" property="judgeStatus"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_time" property="updateTime"/>
-    </resultMap>
-
-    <insert id="insertExaminationPaper" parameterType="com.yinxt.surveyscale.entity.ExaminationPaper">
-        insert into tb_examination_paper(examination_paper_id, patient_id, scale_id, use_time, judge_status, create_time, update_time)
-        values (#{examinationPaperId,jdbcType=VARCHAR}, #{patientId, jdbcType=VARCHAR}, #{scaleId, jdbcType=VARCHAR},
-        #{useTime,jdbcType=VARCHAR}, #{judgeStatus,jdbcType=VARCHAR}, now(), now())
+    <insert id="insertExaminationPaper" parameterType="com.yinxt.surveyscale.entity.Examination">
+        insert into tb_examination_paper(examination_paper_id, patient_id, report_id, create_time, update_time)
+        values (#{examinationPaperId,jdbcType=VARCHAR}, #{patientId, jdbcType=VARCHAR}, #{reportId, jdbcType=VARCHAR}, now(), now())
     </insert>
+
+    <select id="selectCountByExaminationPaper" parameterType="string" resultType="int">
+        select count(0) from tb_examination_paper where examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
+    </select>
 
     <update id="updateJudgeStatus" parameterType="string">
         update tb_examination_paper
@@ -25,19 +18,19 @@
     </update>
 
     <select id="selectExaminationPaperList" parameterType="com.yinxt.surveyscale.po.ExaminationPaperListQueryPO"
-            resultMap="ExaminationPaperResultMap">
-        select * from tb_examination_paper tep
-        left join tb_patient_info tpi on tep.patient_id = tpi.patient_id
-        left join tb_scale_info tsi on tep.scale_id = tsi.scale_id
+            resultType="com.yinxt.surveyscale.vo.ExaminationPaperListVO">
+        select tep.examination_paper_id as examinationPaperId,
+        tr.report_name as reportName,
+        tpi.patient_name as patientName
+        from tb_examination_paper tep
+        left join tb_patient tpi on tep.patient_id = tpi.patient_id
+        left join tb_report tr on tep.report_id = tr.report_id
         <where>
-            <if test="scaleName != null and scaleName != '' ">
-                tsi.scale_name like concat('%', #{scaleName}, '%')
+            <if test="reportName != null and reportName != '' ">
+                tr.report_name like concat('%', #{reportName}, '%')
             </if>
             <if test="patientName !=null and patientName != '' ">
                 and tpi.patient_name = #{patientName,jdbcType=VARCHAR}
-            </if>
-            <if test="judgeStatus != null and judgeStatus != '' ">
-                and judge_status = #{judgeStatus,jdbcType=VARCHAR}
             </if>
             and tpi.doctor_id = #{doctorId,jdbcType=VARCHAR}
         </where>
@@ -45,38 +38,109 @@
     </select>
 
     <select id="selectExaminationPaperInfo" parameterType="com.yinxt.surveyscale.po.ExaminationPaperPO"
-            resultMap="ExaminationPaperResultMap">
-        select * from tb_examination_paper tep
-        left join tb_patient_info tpi on tep.patient_id = tpi.patient_id
+            resultType="com.yinxt.surveyscale.entity.Examination">
+        select
+        examination_paper_id as examinationPaperId,
+        tep.paper_id as patientId,
+        tep.report_id as reportId
+        from tb_examination_paper tep
+        left join tb_patient tpi on tep.patient_id = tpi.patient_id
+        -- left join tb_scale_paper tsp on tsp.paper_id = tep.examination_paper_id
         <where>
             and tep.examination_paper_id=#{examinationPaperId,jdbcType=VARCHAR}
             and tpi.doctor_id = #{doctorId,jdbcType=VARCHAR}
         </where>
     </select>
 
-    <select id="selectExaminationPaperListByIdArray" resultType="com.yinxt.surveyscale.vo.ExaminationPaperListRespVO">
+    <select id="selectReportNameByPaperId" parameterType="string" resultType="string">
+        select tr.report_name as reportName
+        from tb_examination_paper tep left join tb_report tr on tr.report_id = tep.report_id
+        where tep.examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectExaminationPaperScaleById" parameterType="string"
+            resultType="com.yinxt.surveyscale.vo.ExaminationPaperScalesListRespVO">
         select tep.examination_paper_id as examinationPaperId, tsi.scale_name as scaleName, tpi.patient_name as
-        patientName,tep.use_time as useTime, tep.judge_status as judgeStatus,tji.total_score as totalScore
+        patientName, tsp.use_time as useTime,
+        tsp.judge_status as judgeStatus, tj.total_score as totalScore, tsi.question_count as questionCount,
+        tsp.create_time as examinationDate, tj.check_user as checkUser
         from tb_examination_paper tep
-        left join tb_patient_info tpi on tep.patient_id = tpi.patient_id
-        left join tb_scale_info tsi on tep.scale_id = tsi.scale_id
-        left join tb_judge_info tji on tep.examination_paper_id = tji.examination_paper_id
-        where tep.examination_paper_id in
-        <foreach collection="array" open="(" close=")" separator="," item="examinationPaperId">
-            #{examinationPaperId,jdbcType=VARCHAR}
-        </foreach>
+        left join tb_patient tpi on tep.patient_id = tpi.patient_id
+        left join tb_scale_paper tsp on tsp.paper_id = tep.examination_paper_id
+        left join tb_scale tsi on tsp.scale_id = tsi.scale_id
+        left join tb_judge tj on tsp.scale_paper_id = tj.scale_paper_id
+        where tep.examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
         and tpi.doctor_id=#{doctorId,jdbcType=VARCHAR}
     </select>
 
-    <select id="selectAllExaminationPaper" resultType="com.yinxt.surveyscale.vo.ExaminationPaperListRespVO">
-        select tep.examination_paper_id as examinationPaperId, tsi.scale_name as scaleName, tpi.patient_name as
-        patientName,tep.use_time as useTime, tep.judge_status as judgeStatus,tji.total_score as totalScore
+    <select id="selectAllExaminationPaperScaleId" parameterType="string" resultType="string">
+        select tep.examination_paper_id
         from tb_examination_paper tep
-        left join tb_patient_info tpi on tep.patient_id = tpi.patient_id
-        left join tb_scale_info tsi on tep.scale_id = tsi.scale_id
-        left join tb_judge_info tji on tep.examination_paper_id = tji.examination_paper_id
-        where
-        tpi.doctor_id=#{doctorId,jdbcType=VARCHAR}
+        left join tb_patient tpi on tep.patient_id = tpi.patient_id
+        where tpi.doctor_id=#{doctorId,jdbcType=VARCHAR}
+    </select>
+
+    <!--            量表答卷              -->
+    <insert id="insertScalePaperInfo" parameterType="com.yinxt.surveyscale.entity.ScalePaperInfo">
+        insert into tb_scale_paper(scale_paper_id, paper_id, scale_id, use_time, judge_status, create_time, update_time)
+        values (#{scalePaperId,jdbcType=VARCHAR}, #{paperId,jdbcType=VARCHAR}, #{scaleId,jdbcType=VARCHAR}, #{useTime,jdbcType=VARCHAR}, #{judgeStatus, jdbcType=VARCHAR}, now(), now())
+    </insert>
+
+    <update id="updateScalePaperInfo" parameterType="string">
+        update tb_scale_paper
+        <set>
+            <if test="judgeStatus != null and judgeStatus != '' ">
+                judge_status = #{judgeStatus,jdbcType=VARCHAR}
+            </if>
+        </set>
+    </update>
+
+    <select id="selectScalePaperList" parameterType="string" resultType="com.yinxt.surveyscale.vo.ScalePaperListVO">
+        select
+        tsp.scale_paper_id as scalePaperId,
+        tsp.paper_id as examinationPaperId,
+        ts.scale_id as scaleId,
+        ts.scale_name as scaleName,
+        tsp.use_time as useTime,
+        tsp.judge_status as judgeStatus,
+        tsp.create_time as createTime
+        from tb_scale_paper tsp
+        left join tb_examination_paper tep on tsp.paper_id = tep.examination_paper_id
+        left join tb_scale ts on tsp.scale_id = ts.scale_id
+        where tsp.paper_id = #{#examinationPaperId,jdbcType=VARCHAR}
+        and tep.doctor_id = #{doctorId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectScalePaperInfo" parameterType="string" resultType="com.yinxt.surveyscale.entity.ScalePaperInfo">
+        select scale_paper_id as scalePaperId,
+        paper_id as paperId,
+        scale_id scaleId,
+        use_time as useTime,
+        judge_status as judgeStatus,
+        create_time as createTime
+        from tb_scale_paper where scale_paper_id =#{scalePaperId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectScalePaperQuestionById" parameterType="string"
+            resultType="com.yinxt.surveyscale.vo.ScalePaperQuestionListRespVO">
+        select
+        tsp.scale_paper_id as scalePaperId,
+        tsp.scale_id as scaleId,
+        ts.scale_name as scaleName,
+        tq.question_id as questionId,
+        tq.title as title,
+        tq.items as items,
+        tq.attachment as attachment,
+        tq.record_score as recordScore,
+        tq.group_type as groupType,
+        tq.display as display,
+        ta.content as content,
+        ta.score as score
+        from tb_scale_paper tsp
+        left join tb_scale ts on ts.scale_id = tsp.scale_id
+        left join tb_answer ta on tsp.scale_paper_id = ta.scale_paper_id
+        left join tb_question tq on tq.question_id = ta.question_id
+        where scale_paper_id = #{scalePaperId,jdbcType=VARCHAR}
     </select>
 
 </mapper>
