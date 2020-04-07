@@ -33,7 +33,7 @@
     <insert id="insertQuestion" parameterType="com.yinxt.surveyscale.entity.Question">
         insert into
         tb_question
-        (question_id, scale_id, question_type, title, items, attachment,record_score,group_type,insert_content,
+        (question_id, scale_id, question_type, title, items, attachment, record_score, group_type, insert_content,
         create_time, update_time)
         values (
         #{questionId,jdbcType=VARCHAR}, #{scaleId,jdbcType=VARCHAR}, #{questionType,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},
