@@ -1,6 +1,5 @@
 package com.yinxt.surveyscale.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**

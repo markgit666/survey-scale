@@ -20,8 +20,10 @@
     <select id="selectExaminationPaperList" parameterType="com.yinxt.surveyscale.po.ExaminationPaperListQueryPO"
             resultType="com.yinxt.surveyscale.vo.ExaminationPaperListVO">
         select tep.examination_paper_id as examinationPaperId,
+        tr.report_id as reportId,
         tr.report_name as reportName,
-        tpi.patient_name as patientName
+        tpi.patient_name as patientName,
+        tep.create_time as createTime
         from tb_examination_paper tep
         left join tb_patient tpi on tep.patient_id = tpi.patient_id
         left join tb_report tr on tep.report_id = tr.report_id
@@ -59,10 +61,9 @@
     </select>
 
     <select id="selectExaminationPaperScaleById" resultType="com.yinxt.surveyscale.vo.ExaminationPaperScalesListRespVO">
-        select tep.examination_paper_id as examinationPaperId, tsi.scale_name as scaleName, tpi.patient_name as
-        patientName, tsp.use_time as useTime,
-        tsp.judge_status as judgeStatus, tj.total_score as totalScore, tsi.question_count as questionCount,
-        tsp.create_time as examinationDate, tj.check_user as checkUser
+        select tep.examination_paper_id as examinationPaperId, tsi.scale_id as scaleId, tsi.scale_name as scaleName, tpi.patient_name as
+        patientName, tsp.use_time as useTime, tsi.question_count as questionCount, tsp.create_time as examinationDate,
+        tj.check_user as checkUser, tsp.judge_status as judgeStatus, tj.total_score as totalScore,
         from tb_examination_paper tep
         left join tb_patient tpi on tep.patient_id = tpi.patient_id
         left join tb_scale_paper tsp on tsp.paper_id = tep.examination_paper_id
