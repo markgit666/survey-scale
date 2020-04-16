@@ -47,7 +47,7 @@ public class ExaminationPaperController {
 
     @RequestMapping(value = "list/get")
     public Result getExaminationPaperList(@RequestBody @Valid ListDataReqDTO<ExaminationPaperListReqDTO> listDataReqDTO) {
-        return Result.success(getExaminationPaperList(listDataReqDTO));
+        return Result.success(examinationPaperService.getExaminationPaperList(listDataReqDTO));
     }
 
     @RequestMapping(value = "scale/list")
