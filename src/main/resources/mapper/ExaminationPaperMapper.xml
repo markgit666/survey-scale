@@ -106,8 +106,7 @@
         from tb_scale_paper tsp
         left join tb_examination_paper tep on tsp.paper_id = tep.examination_paper_id
         left join tb_scale ts on tsp.scale_id = ts.scale_id
-        where tsp.paper_id = #{#examinationPaperId,jdbcType=VARCHAR}
-        and tep.doctor_id = #{doctorId,jdbcType=VARCHAR}
+        where tsp.paper_id = #{examinationPaperId,jdbcType=VARCHAR}
     </select>
 
     <select id="selectScalePaperInfo" parameterType="string" resultType="com.yinxt.surveyscale.entity.ScalePaperInfo">
