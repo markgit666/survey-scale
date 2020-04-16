@@ -249,7 +249,7 @@ public class ExaminationPaperService {
      * @param listDataReqDTO
      * @return
      */
-    public Result getExaminationPaperList(ListDataReqDTO<ExaminationPaperListReqDTO> listDataReqDTO) {
+    public PageBean getExaminationPaperList(ListDataReqDTO<ExaminationPaperListReqDTO> listDataReqDTO) {
         log.info("获取试卷列表参数：{}", JSON.toJSONString(listDataReqDTO));
         ExaminationPaperListReqDTO examinationPaperListReqDTO = listDataReqDTO.getData();
         ExaminationPaperListQueryPO examinationPaperListQueryPO = new ExaminationPaperListQueryPO();
@@ -258,17 +258,19 @@ public class ExaminationPaperService {
         }
         String doctorId = doctorInfoService.getLoginDoctorId();
         examinationPaperListQueryPO.setDoctorId(doctorId);
+
         PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
-        List<ExaminationPaperListVO> examinationPaperListVOList = examinationPaperMapper.selectExaminationPaperList(examinationPaperListQueryPO);
-        for (ExaminationPaperListVO examinationPaperListVO : examinationPaperListVOList) {
+        List<ExaminationPaperListVO> examinationPaperListVOS = examinationPaperMapper.selectExaminationPaperList(examinationPaperListQueryPO);
+        for (ExaminationPaperListVO examinationPaperListVO : examinationPaperListVOS) {
             int scaleNum = reportService.getScaleNumByReportId(examinationPaperListVO.getReportId());
             examinationPaperListVO.setScaleNum(scaleNum);
-            examinationPaperListVO.setDoctorId(doctorId);
         }
-        PageInfo pageInfo = new PageInfo(examinationPaperListVOList);
-        PageBean pageBean = new PageBean(pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getPages(), pageInfo.getTotal(), examinationPaperListVOList);
+        DoctorInfoVO doctorInfoVO = new DoctorInfoVO();
+        doctorInfoVO.setDoctorId(doctorId);
+        PageInfo pageInfo = new PageInfo(examinationPaperListVOS);
+        PageBean pageBean = new PageBean(pageInfo, doctorInfoVO);
         log.info("获取试卷列表成功：{}", JSON.toJSONString(pageBean));
-        return Result.success(pageBean);
+        return pageBean;
     }
 
     /**

@@ -34,7 +34,7 @@ public interface ExaminationPaperMapper {
 
     Examination selectExaminationPaperInfo(ExaminationPaperPO examinationPaperPO);
 
-    List<ExaminationPaperScalesListRespVO> selectExaminationPaperScaleById(@Param("examinationPaperId") String examinationPaperId, @Param("doctor") String doctorId);
+    List<ExaminationPaperScalesListRespVO> selectExaminationPaperScaleById(@Param("examinationPaperId") String examinationPaperId, @Param("doctorId") String doctorId);
 
     String selectReportNameByPaperId(@Param("examinationPaperId") String examinationPaperId);
 

@@ -31,6 +31,10 @@ public class PageBean<T> {
      * 列表数据
      */
     private List<T> list;
+    /**
+     * 其他内容
+     */
+    private Object content;
 
     public PageBean() {
 
@@ -51,4 +55,14 @@ public class PageBean<T> {
         this.totalNum = pageInfo.getTotal();
         this.list = pageInfo.getList();
     }
+
+    public PageBean(PageInfo pageInfo, Object content) {
+        this.pageNo = pageInfo.getPageNum();
+        this.pageSize = pageInfo.getPageSize();
+        this.totalPage = pageInfo.getPages();
+        this.totalNum = pageInfo.getTotal();
+        this.list = pageInfo.getList();
+        this.content = content;
+    }
+
 }
