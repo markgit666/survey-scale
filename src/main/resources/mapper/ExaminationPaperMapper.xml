@@ -103,10 +103,12 @@
         ts.scale_name as scaleName,
         tsp.use_time as useTime,
         tsp.judge_status as judgeStatus,
-        tsp.create_time as createTime
+        tsp.create_time as createTime,
+        tj.total_score as totalScore
         from tb_scale_paper tsp
         left join tb_examination_paper tep on tsp.paper_id = tep.examination_paper_id
         left join tb_scale ts on tsp.scale_id = ts.scale_id
+        left join tb_judge tj on tsp.scale_paper_id = tj.scale_paper_id
         where tsp.paper_id = #{examinationPaperId,jdbcType=VARCHAR}
     </select>
 

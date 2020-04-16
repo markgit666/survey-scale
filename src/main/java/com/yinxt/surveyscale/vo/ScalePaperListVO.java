@@ -40,6 +40,10 @@ public class ScalePaperListVO {
      */
     private String judgeStatus;
     /**
+     * 总分
+     */
+    private String totalScore;
+    /**
      * 答题时间
      */
     private Date createTime;
