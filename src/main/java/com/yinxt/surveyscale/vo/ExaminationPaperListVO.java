@@ -16,6 +16,10 @@ public class ExaminationPaperListVO {
      */
     private String examinationPaperId;
     /**
+     * 医生编号
+     */
+    private String doctorId;
+    /**
      * 报告表编号
      */
     private String reportId;

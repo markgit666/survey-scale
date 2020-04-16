@@ -256,12 +256,14 @@ public class ExaminationPaperService {
         if (examinationPaperListReqDTO != null) {
             BeanUtils.copyProperties(examinationPaperListReqDTO, examinationPaperListQueryPO);
         }
-        examinationPaperListQueryPO.setDoctorId(doctorInfoService.getLoginDoctorId());
+        String doctorId = doctorInfoService.getLoginDoctorId();
+        examinationPaperListQueryPO.setDoctorId(doctorId);
         PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
         List<ExaminationPaperListVO> examinationPaperListVOList = examinationPaperMapper.selectExaminationPaperList(examinationPaperListQueryPO);
         for (ExaminationPaperListVO examinationPaperListVO : examinationPaperListVOList) {
             int scaleNum = reportService.getScaleNumByReportId(examinationPaperListVO.getReportId());
             examinationPaperListVO.setScaleNum(scaleNum);
+            examinationPaperListVO.setDoctorId(doctorId);
         }
         PageInfo pageInfo = new PageInfo(examinationPaperListVOList);
         PageBean pageBean = new PageBean(pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getPages(), pageInfo.getTotal(), examinationPaperListVOList);
