@@ -18,6 +18,16 @@
      #{score,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, now(), now())
     </insert>
 
+    <insert id="insertAnswerList">
+        insert into tb_answer(answer_id, scale_paper_id, question_id, score, content, create_time, update_time)
+        values
+        <foreach collection="answerList" item="answer" separator=",">
+            (#{answer.answerId,jdbcType=VARCHAR}, #{answer.scalePaperId,jdbcType=VARCHAR},
+            #{answer.questionId,jdbcType=VARCHAR}, #{answer.score,jdbcType=VARCHAR}, #{answer.content,jdbcType=VARCHAR},
+            now(), now())
+        </foreach>
+    </insert>
+
     <update id="updateAnswer">
         update tb_answer
         <set>

@@ -5,6 +5,8 @@ import com.yinxt.surveyscale.entity.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AnswerService {
 
@@ -19,6 +21,10 @@ public class AnswerService {
      */
     public void saveAnswer(Answer answer) {
         answerMapper.insertAnswer(answer);
+    }
+
+    public void saveAnswerList(List<Answer> answerList) {
+        answerMapper.insertAnswerList(answerList);
     }
 
     /**

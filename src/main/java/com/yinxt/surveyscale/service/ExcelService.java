@@ -185,7 +185,6 @@ public class ExcelService {
      *
      * @param response
      * @param scalePaperIdList
-     * @param doctorId
      */
     public void getScalePaperExcelById(HttpServletResponse response, List<String> scalePaperIdList) {
         for (String scalePaperId : scalePaperIdList) {

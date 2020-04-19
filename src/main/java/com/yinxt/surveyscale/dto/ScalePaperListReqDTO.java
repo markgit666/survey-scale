@@ -18,4 +18,8 @@ public class ScalePaperListReqDTO {
      */
     @NotBlank(message = "答卷id不能为空")
     private String examinationPaperId;
+    /**
+     * 量表名称
+     */
+    private String scaleName;
 }

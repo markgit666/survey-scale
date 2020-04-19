@@ -32,13 +32,19 @@ public class ExcelController {
     }
 
     @RequestMapping(value = "export/examinationPaper/info")
-    public void exportExaminationPaperExcel(@RequestParam("examinationPaperIdArray") List<String> examinationPaperArray, @RequestParam("doctorId") String doctorId, HttpServletResponse response) {
-        excelService.getExaminationPaperExcelById(response, examinationPaperArray, doctorId);
+    public void exportExaminationPaperExcel(@RequestParam("examinationPaperIdArray") List<String> examinationPaperIdArray, @RequestParam("doctorId") String doctorId, HttpServletResponse response) {
+        excelService.getExaminationPaperExcelById(response, examinationPaperIdArray, doctorId);
     }
 
     @RequestMapping(value = "export/all/examinationPaper/info")
     public void exportAllExaminationPaperExcel(HttpServletResponse response, @RequestParam("doctorId") String doctorId) {
         excelService.getAllExaminationPaperExcel(response, doctorId);
     }
+
+    @RequestMapping(value = "export/scalePaper/info")
+    public void exportScalePaperExcel(HttpServletResponse response, @RequestParam("scalePaperIdArray") List<String> scalePaperIdArray) {
+        excelService.getScalePaperExcelById(response, scalePaperIdArray);
+    }
+
 
 }

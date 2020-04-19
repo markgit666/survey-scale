@@ -57,6 +57,7 @@ public class ReportService {
         List<ScaleInfo> scaleInfoList = new ArrayList<>();
         List<String> scaleIdList = new ArrayList<>();
         //判断是否查询到报告表
+        //todo
         if (report != null || StringUtils.isNotEmpty(reportId)) {
             //查询量表ID集合
             List<String> list = reportMapper.getReportScaleIdListById(reportId);

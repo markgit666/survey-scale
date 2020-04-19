@@ -110,6 +110,9 @@
         left join tb_scale ts on tsp.scale_id = ts.scale_id
         left join tb_judge tj on tsp.scale_paper_id = tj.scale_paper_id
         where tsp.paper_id = #{examinationPaperId,jdbcType=VARCHAR}
+        <if test="scaleName != null and scaleName != '' ">
+            and ts.scale_name like concat('%', #{scaleName,jdbcType=VARCHAR}, '%')
+        </if>
     </select>
 
     <select id="selectScalePaperInfo" parameterType="string" resultType="com.yinxt.surveyscale.entity.ScalePaperInfo">

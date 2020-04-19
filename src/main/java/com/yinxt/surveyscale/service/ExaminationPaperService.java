@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -173,6 +174,7 @@ public class ExaminationPaperService {
         //保存答案
         List<CommitAnswerReqDTO> commitAnswerReqDTOS = examinationPaperCommitDTO.getAnswerList();
         if (commitAnswerReqDTOS != null) {
+            List<Answer> answerList = new ArrayList<>();
             for (CommitAnswerReqDTO commitAnswerReqDTO : commitAnswerReqDTOS) {
                 /**
                  * 封装答案信息
@@ -187,8 +189,9 @@ public class ExaminationPaperService {
                 answer.setScore(commitAnswerReqDTO.getScore());
                 formatAnswerChoose(commitAnswerReqDTO);
                 answer.setContent(commitAnswerReqDTO.getContent());
-                answerService.saveAnswer(answer);
+                answerList.add(answer);
             }
+            answerService.saveAnswerList(answerList);
         }
         return Result.success();
     }
@@ -285,7 +288,7 @@ public class ExaminationPaperService {
             throw new LogicException("报告表答卷编号不能为空");
         }
         PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
-        List<ScalePaperListVO> scalePaperListVOList = examinationPaperMapper.selectScalePaperList(scalePaperListReqDTO.getExaminationPaperId(), doctorInfoService.getLoginDoctorId());
+        List<ScalePaperListVO> scalePaperListVOList = examinationPaperMapper.selectScalePaperList(scalePaperListReqDTO.getExaminationPaperId(), scalePaperListReqDTO.getScaleName(), doctorInfoService.getLoginDoctorId());
         PageInfo pageInfo = new PageInfo(scalePaperListVOList);
         PageBean pageBean = new PageBean(pageInfo);
         return pageBean;

@@ -20,7 +20,7 @@ public interface ExaminationPaperMapper {
 
     int updateScalePaperInfo(@Param("scalePaperId") String scalePaperId);
 
-    List<ScalePaperListVO> selectScalePaperList(@Param("examinationPaperId") String examinationPaperId, @Param("doctorId") String doctorId);
+    List<ScalePaperListVO> selectScalePaperList(@Param("examinationPaperId") String examinationPaperId, @Param("scaleName") String scaleName, @Param("doctorId") String doctorId);
 
     ScalePaperInfo selectScalePaperInfo(@Param("scalePaperId") String scalePaperId);
 
