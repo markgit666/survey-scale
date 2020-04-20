@@ -78,7 +78,7 @@ public class ExcelService {
             PatientInfo patientInfo = patientInfoList.get(i);
             col[0] = patientInfo.getPatientId();
             col[1] = patientInfo.getName();
-            col[2] = patientInfo.getBirthday();
+            col[2] = new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(patientInfo.getBirthday());
             col[3] = "1".equals(patientInfo.getGender()) ? "男" : "女";
             col[4] = patientInfo.getFamilyAddress();
             col[5] = patientInfo.getTelephoneNumber();
