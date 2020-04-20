@@ -203,7 +203,7 @@ public class ExcelService {
      * @param scalePaperQuestionListRespVOList
      */
     public void outputScalePaperExcel(HttpServletResponse response, List<ScalePaperQuestionListRespVO> scalePaperQuestionListRespVOList) {
-        String header[] = {"量表答卷编号", "题目编号", "题目标题", "单选/多选）选项", "附件", "是否记分", "分组名称", "显示", "答案", "得分"};
+        String header[] = {"量表答卷编号", "题目编号", "题目标题", "(单选/多选）选项", "图片附件编号", "是否记分", "分组名称", "显示", "答案", "得分"};
         ScalePaperQuestionListRespVO paperQuestionListRespVO = scalePaperQuestionListRespVOList.get(0);
         String fileName = paperQuestionListRespVO.getScaleId() + "-" + paperQuestionListRespVO.getScaleName() + "-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) + ".xlsx";
         String sheetName = "量表答卷信息";
