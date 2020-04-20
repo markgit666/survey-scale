@@ -155,7 +155,7 @@
         left join tb_scale ts on ts.scale_id = tsp.scale_id
         left join tb_answer ta on tsp.scale_paper_id = ta.scale_paper_id
         left join tb_question tq on tq.question_id = ta.question_id
-        where scale_paper_id = #{scalePaperId,jdbcType=VARCHAR}
+        where tsp.scale_paper_id = #{scalePaperId,jdbcType=VARCHAR}
     </select>
 
     <update id="deleteScalePaperById" parameterType="string">
