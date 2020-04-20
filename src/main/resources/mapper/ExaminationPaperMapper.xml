@@ -85,7 +85,7 @@
     </select>
 
     <update id="deleteExaminationPaperById" parameterType="string">
-        update tb_examination_paper set effective_status = 0 where examination_paper_id = 'examinationPaperId'
+        update tb_examination_paper set effective_status = 0 where examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
     </update>
 
     <!--            量表答卷              -->
@@ -159,7 +159,7 @@
     </select>
 
     <update id="deleteScalePaperById" parameterType="string">
-        update tb_scale_paper set effective_status = 0 where paper_id = 'examinationPaperId'
+        update tb_scale_paper set effective_status = 0 where paper_id =  #{examinationPaperId,jdbcType=VARCHAR}
     </update>
 
 </mapper>
