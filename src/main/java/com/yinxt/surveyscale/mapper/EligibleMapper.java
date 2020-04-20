@@ -2,6 +2,7 @@ package com.yinxt.surveyscale.mapper;
 
 import com.yinxt.surveyscale.dto.PatientEligibleDTO;
 import com.yinxt.surveyscale.entity.PatientEligible;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -23,10 +24,26 @@ public interface EligibleMapper {
     int insertPatientEligibleInfo(PatientEligibleDTO patientEligibleDTO);
 
     /**
+     * 批量新增病人的实验条件信息
+     *
+     * @param patientEligibleDTOList
+     * @return
+     */
+    int insertPatientEligibleList(@Param("patientEligibleDTOList") List<PatientEligibleDTO> patientEligibleDTOList);
+
+    /**
      * 修改病人的实验条件信息
+     *
+     * @param patientEligibleDTO
+     * @return
      */
     int updatePatientEligibleInfo(PatientEligibleDTO patientEligibleDTO);
 
-    List<PatientEligible> selectPatientEligibleInfo();
+    /**
+     * 查询病人的实验条件信息列表
+     *
+     * @return
+     */
+    List<PatientEligible> selectPatientEligibleList();
 
 }

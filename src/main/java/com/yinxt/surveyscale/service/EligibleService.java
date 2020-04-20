@@ -28,6 +28,15 @@ public class EligibleService {
     }
 
     /**
+     * 批量保存病人条件答案信息
+     *
+     * @param patientEligibleDTOList
+     */
+    public void savePatientEligibleList(List<PatientEligibleDTO> patientEligibleDTOList) {
+        eligibleMapper.insertPatientEligibleList(patientEligibleDTOList);
+    }
+
+    /**
      * 修改病人条件答案信息
      *
      * @param patientEligibleDTO
@@ -42,7 +51,7 @@ public class EligibleService {
      * @return
      */
     public List<PatientEligible> getPatientPatientEligible() {
-        List<PatientEligible> patientEligibleList = eligibleMapper.selectPatientEligibleInfo();
+        List<PatientEligible> patientEligibleList = eligibleMapper.selectPatientEligibleList();
         return patientEligibleList;
     }
 

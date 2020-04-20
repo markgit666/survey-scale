@@ -38,9 +38,6 @@ public class ReportService {
     public List<ReportListVO> getDoctorPersonReportList(ReportListReqDTO reportListReqDTO) {
         reportListReqDTO.setDoctorId(doctorInfoService.getLoginDoctorId());
         List<ReportListVO> reportListVOList = reportMapper.getDoctorPersonReportList(reportListReqDTO);
-        for (ReportListVO reportListVO : reportListVOList) {
-            reportListVO.setScaleNum(reportMapper.getReportScaleNum(reportListVO.getReportId()));
-        }
         return reportListVOList;
     }
 
@@ -54,25 +51,24 @@ public class ReportService {
     public ReportInfoVO getReportDetailInfo(String reportId, boolean detail) {
         //查询报告表
         Report report = reportMapper.getReportById(reportId);
-        List<ScaleInfo> scaleInfoList = new ArrayList<>();
-        List<String> scaleIdList = new ArrayList<>();
-        //判断是否查询到报告表
-        //todo
-        if (report != null || StringUtils.isNotEmpty(reportId)) {
-            //查询量表ID集合
-            List<String> list = reportMapper.getReportScaleIdListById(reportId);
-            scaleIdList = list;
-            for (String scaleId : list) {
-                scaleInfoList.add(scaleInfoService.getFormatScaleInfo(scaleId));
-            }
-        }
+        //报告表VO
         ReportInfoVO reportInfoVO = new ReportInfoVO();
         BeanUtils.copyProperties(report, reportInfoVO);
-        //判断是否需要详细数据
-        if (detail) {
-            reportInfoVO.setScaleInfoList(scaleInfoList);
+        //判断是否查询到报告表
+        if (report != null) {
+            //查询量表ID集合
+            List<String> list = reportMapper.getReportScaleIdListById(reportId);
+            reportInfoVO.setScaleIdList(list);
+            //判断是否需要详细数据
+            if (detail) {
+                //量表信息列表
+                List<ScaleInfo> scaleInfoList = new ArrayList<>();
+                for (String scaleId : list) {
+                    scaleInfoList.add(scaleInfoService.getFormatScaleInfo(scaleId));
+                }
+                reportInfoVO.setScaleInfoList(scaleInfoList);
+            }
         }
-        reportInfoVO.setScaleIdList(scaleIdList);
         return reportInfoVO;
     }
 

@@ -45,7 +45,7 @@ public class PatientInfoService {
      *
      * @param patientRelationInfoDTO
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public PatientIdVO savePatientRelationInfo(PatientRelationInfoDTO patientRelationInfoDTO) {
         try {
             //1、保存病人信息
@@ -56,8 +56,8 @@ public class PatientInfoService {
             List<PatientEligibleDTO> patientEligibleDTOList = patientRelationInfoDTO.getPatientEligibleList();
             for (PatientEligibleDTO patientEligibleDTO : patientEligibleDTOList) {
                 patientEligibleDTO.setPatientId(patientId);
-                eligibleService.savePatientEligibleInfo(patientEligibleDTO);
             }
+            eligibleService.savePatientEligibleList(patientEligibleDTOList);
             return patientIdVO;
         } catch (Exception e) {
             log.info("保存病人相关信息失败", e);

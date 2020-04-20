@@ -1,6 +1,7 @@
 package com.yinxt.surveyscale.service;
 
 import com.yinxt.surveyscale.common.constant.Constant;
+import com.yinxt.surveyscale.common.threadpool.ThreadPoolUtil;
 import com.yinxt.surveyscale.common.util.RSAUtil;
 import com.yinxt.surveyscale.dto.FindBackPasswordReqDTO;
 import com.yinxt.surveyscale.dto.LoginReqDTO;
@@ -126,15 +127,18 @@ public class DoctorInfoService {
         if (doctorAuthInfo != null) {
             Result.error(ResultEnum.LOGIN_NAME_EXISTS);
         }
-        //发送验证码邮件
-        try {
-            String code = sendEmailService.sendVerifyCodeEmail(emailAddress);
-            //将验证码缓存入redis
-            RedisUtil.setKey(Constant.REDIS_REGISTER_PREFIX + emailAddress, code, TIME);
-        } catch (Exception e) {
-            log.error("邮件发送失败：", e);
-            throw new LogicException(e.getMessage());
-        }
+        //异步发送邮件
+        ThreadPoolUtil.getInstance().executeTask(() -> {
+            //发送验证码邮件
+            try {
+                String code = sendEmailService.sendVerifyCodeEmail(emailAddress);
+                //将验证码缓存入redis
+                RedisUtil.setKey(Constant.REDIS_REGISTER_PREFIX + emailAddress, code, TIME);
+            } catch (Exception e) {
+                log.error("邮件发送失败：", e);
+                throw new LogicException(e.getMessage());
+            }
+        });
         return Result.success(ResultEnum.VERIFY_CODE_SEND_SUCCESS);
     }
 

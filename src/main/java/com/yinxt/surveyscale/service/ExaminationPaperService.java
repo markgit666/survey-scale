@@ -19,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URLDecoder;
@@ -98,8 +99,6 @@ public class ExaminationPaperService {
         }
         //生成试卷编号
         String examinationPaperId = RedisUtil.getSequenceId("EX");
-        ExaminationPaperDTO examinationPaperDTO = new ExaminationPaperDTO();
-        examinationPaperDTO.setExaminationPaperId(examinationPaperId);
         BlankExaminationPaperVO blankExaminationPaperVO = new BlankExaminationPaperVO();
         blankExaminationPaperVO.setExaminationPaperId(examinationPaperId);
         //设置报告表信息
@@ -264,10 +263,6 @@ public class ExaminationPaperService {
 
         PageHelper.startPage(listDataReqDTO.getPageNo(), listDataReqDTO.getPageSize());
         List<ExaminationPaperListVO> examinationPaperListVOS = examinationPaperMapper.selectExaminationPaperList(examinationPaperListQueryPO);
-        for (ExaminationPaperListVO examinationPaperListVO : examinationPaperListVOS) {
-            int scaleNum = reportService.getScaleNumByReportId(examinationPaperListVO.getReportId());
-            examinationPaperListVO.setScaleNum(scaleNum);
-        }
         DoctorInfoVO doctorInfoVO = new DoctorInfoVO();
         doctorInfoVO.setDoctorId(doctorId);
         PageInfo pageInfo = new PageInfo(examinationPaperListVOS);
@@ -295,7 +290,7 @@ public class ExaminationPaperService {
     }
 
     /**
-     * 获取量表答卷编号
+     * 获取量表答卷详情
      *
      * @param scalePaperId
      * @return
@@ -303,6 +298,9 @@ public class ExaminationPaperService {
     public ScalePaperDetailVO getScalePaperDetailInfo(String scalePaperId) {
         ScalePaperInfo scalePaperInfo = examinationPaperMapper.selectScalePaperInfo(scalePaperId);
         ScalePaperDetailVO scalePaperDetailVO = new ScalePaperDetailVO();
+        if (scalePaperInfo == null) {
+            return scalePaperDetailVO;
+        }
         BeanUtils.copyProperties(scalePaperInfo, scalePaperDetailVO);
         //量表信息
         String scaleId = scalePaperInfo.getScaleId();
@@ -371,4 +369,20 @@ public class ExaminationPaperService {
     public List<ScalePaperQuestionListRespVO> getScalePaperQuestionListById(String scalePaperId) {
         return examinationPaperMapper.selectScalePaperQuestionById(scalePaperId);
     }
+
+    /**
+     * description:同事删除报告表和量表答卷
+     * <end>
+     *
+     * @param examinationPaperId
+     * @return void
+     * @author yinxt
+     * @date 2020年04月20日 18:53
+     */
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public void removeExaminationPaper(String examinationPaperId) {
+        examinationPaperMapper.deleteExaminationPaperById(examinationPaperId);
+        examinationPaperMapper.deleteScalePaperById(examinationPaperId);
+    }
+
 }

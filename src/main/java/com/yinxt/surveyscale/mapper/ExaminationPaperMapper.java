@@ -41,4 +41,9 @@ public interface ExaminationPaperMapper {
     List<String> selectAllExaminationPaperScaleId(@Param("doctorId") String doctorId);
 
     List<ScalePaperQuestionListRespVO> selectScalePaperQuestionById(@Param("scalePaperId") String scalePaperId);
+
+    int deleteExaminationPaperById(@Param("examinationPaperId") String examinationPaperId);
+
+    int deleteScalePaperById(@Param("examinationPaperId") String examinationPaperId);
+
 }

@@ -36,6 +36,10 @@ public class ScalePaperListVO {
      */
     private String useTime;
     /**
+     * 答题时间
+     */
+    private Date createTime;
+    /**
      * 评定状态
      */
     private String judgeStatus;
@@ -43,9 +47,14 @@ public class ScalePaperListVO {
      * 总分
      */
     private String totalScore;
+
     /**
-     * 答题时间
+     * 评定人
      */
-    private Date createTime;
+    private String checkUser;
+    /**
+     * 评分时间
+     */
+    private Date checkTime;
 
 }

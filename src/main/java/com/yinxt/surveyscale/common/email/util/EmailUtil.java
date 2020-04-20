@@ -29,18 +29,27 @@ public class EmailUtil {
     @Value("${mail.smtp.port}")
     private String smtpPort;
 
-    //邮件协议
+    /**
+     * 邮件协议
+     */
     private static final String protocol = "smtp";
-    //邮件内容类型
+    /**
+     * 邮件内容类型
+     */
     private static final String contentType = "text/html;charset=UTF-8";
-    //字符集
+    /**
+     * 字符集
+     */
     private static final String charset = "utf-8";
 
     public void send(EmailInfo emailInfo) throws Exception {
         Properties properties = new Properties();
-        properties.setProperty("mail.transport.protocol", protocol);//使用的协议
-        properties.setProperty("mail.smtp.host", mailSmtpHost);//smtp服务器地址
-        properties.setProperty("mail.smtp.auth", "true");// 需要请求认证
+        //使用的协议
+        properties.setProperty("mail.transport.protocol", protocol);
+        //smtp服务器地址
+        properties.setProperty("mail.smtp.host", mailSmtpHost);
+        //需要请求认证
+        properties.setProperty("mail.smtp.auth", "true");
         properties.setProperty("mail.smtp.port", smtpPort);
         properties.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         properties.setProperty("mail.smtp.socketFactory.fallback", "false");
@@ -48,10 +57,13 @@ public class EmailUtil {
 
         Session session = Session.getInstance(properties);
         session.setDebug(true);
-        MimeMessage message = createMimeMessage(session, emailInfo);//创建邮件
+        //创建邮件
+        MimeMessage message = createMimeMessage(session, emailInfo);
         Transport transport = session.getTransport();
-        transport.connect(mailUserAddress, mailUserPassword);//连接邮件服务器
-        transport.sendMessage(message, message.getAllRecipients());//发送
+        //连接邮件服务器
+        transport.connect(mailUserAddress, mailUserPassword);
+        //发送
+        transport.sendMessage(message, message.getAllRecipients());
     }
 
     /**
@@ -64,10 +76,14 @@ public class EmailUtil {
      */
     public MimeMessage createMimeMessage(Session session, EmailInfo emailInfo) throws Exception {
         MimeMessage mimeMessage = new MimeMessage(session);
-        mimeMessage.setFrom(new InternetAddress(mailUserAddress, webCHNName, charset));//发送人
-        mimeMessage.setRecipients(MimeMessage.RecipientType.TO, emailInfo.getSendTo());//收件人
-        mimeMessage.setSubject(emailInfo.getTitle(), charset);//主题
-        mimeMessage.setContent(emailInfo.getContent(), contentType);//邮件内容
+        //发送人
+        mimeMessage.setFrom(new InternetAddress(mailUserAddress, webCHNName, charset));
+        //收件人
+        mimeMessage.setRecipients(MimeMessage.RecipientType.TO, emailInfo.getSendTo());
+        //主题
+        mimeMessage.setSubject(emailInfo.getTitle(), charset);
+        //邮件内容
+        mimeMessage.setContent(emailInfo.getContent(), contentType);
         return mimeMessage;
     }
 
