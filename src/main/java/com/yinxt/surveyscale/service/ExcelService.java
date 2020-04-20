@@ -2,6 +2,7 @@ package com.yinxt.surveyscale.service;
 
 import com.yinxt.surveyscale.common.util.ExcelUtil;
 import com.yinxt.surveyscale.entity.PatientInfo;
+import com.yinxt.surveyscale.entity.ScaleInfo;
 import com.yinxt.surveyscale.vo.ExaminationPaperScalesListRespVO;
 import com.yinxt.surveyscale.vo.ScalePaperQuestionListRespVO;
 import lombok.extern.slf4j.Slf4j;
@@ -145,8 +146,8 @@ public class ExcelService {
         for (String examinationPaperId : list) {
             List<ExaminationPaperScalesListRespVO> examinationPaperScalesListRespVOS = examinationPaperService.getExaminationPaperScaleListById(examinationPaperId, doctorId);
             if (examinationPaperScalesListRespVOS.size() >= 1) {
-                String excelName = examinationPaperService.getReportNameByPaperId(examinationPaperId);
-                outputExaminationPaperExcel(excelName, examinationPaperScalesListRespVOS, response);
+//                String excelName = examinationPaperService.getReportNameByPaperId(examinationPaperId);
+                outputExaminationPaperExcel(examinationPaperScalesListRespVOS, response);
             }
         }
     }
@@ -158,24 +159,24 @@ public class ExcelService {
      * @param examinationPaperScalesListRespVOS
      * @param response
      */
-    public void outputExaminationPaperExcel(String excelName, List<ExaminationPaperScalesListRespVO> examinationPaperScalesListRespVOS, HttpServletResponse response) {
-        String[] header = {"答卷编号", "量表答卷编号", "量表名称", "被试者姓名", "题目数量", "用时", "答题日期", "评分状态", "评定人", "总分"};
-        String fileName = excelName + "-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) + ".xlsx";
+    public void outputExaminationPaperExcel(List<ExaminationPaperScalesListRespVO> examinationPaperScalesListRespVOS, HttpServletResponse response) {
+        String[] header = {"量表答卷编号", "量表名称", "被试者姓名", "题目数量", "用时", "答题日期", "评分状态", "评定人", "总分"};
+        ExaminationPaperScalesListRespVO listRespVO = examinationPaperScalesListRespVOS.get(0);
+        String fileName = listRespVO.getExaminationPaperId() + "-" + listRespVO.getReportName() + "-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) + ".xlsx";
         String sheetName = "报告表答卷信息";
         String[][] content = new String[examinationPaperScalesListRespVOS.size()][header.length + 1];
         for (int i = 0; i < examinationPaperScalesListRespVOS.size(); i++) {
             String col[] = content[i];
             ExaminationPaperScalesListRespVO examinationPaperScalesListRespVO = examinationPaperScalesListRespVOS.get(i);
-            col[0] = examinationPaperScalesListRespVO.getExaminationPaperId();
-            col[1] = examinationPaperScalesListRespVO.getScalePaperId();
-            col[2] = examinationPaperScalesListRespVO.getScaleName();
-            col[3] = examinationPaperScalesListRespVO.getPatientName();
-            col[4] = String.valueOf(examinationPaperScalesListRespVO.getQuestionCount());
-            col[5] = examinationPaperScalesListRespVO.getUseTime();
-            col[6] = examinationPaperScalesListRespVO.getExaminationDate();
-            col[7] = "1".equals(examinationPaperScalesListRespVO.getJudgeStatus()) ? "已评分" : "未评分";
-            col[8] = examinationPaperScalesListRespVO.getCheckUser();
-            col[9] = examinationPaperScalesListRespVO.getTotalScore();
+            col[0] = examinationPaperScalesListRespVO.getScalePaperId();
+            col[1] = examinationPaperScalesListRespVO.getScaleName();
+            col[2] = examinationPaperScalesListRespVO.getPatientName();
+            col[3] = String.valueOf(examinationPaperScalesListRespVO.getQuestionCount());
+            col[4] = examinationPaperScalesListRespVO.getUseTime();
+            col[5] = examinationPaperScalesListRespVO.getExaminationDate();
+            col[6] = "1".equals(examinationPaperScalesListRespVO.getJudgeStatus()) ? "已评分" : "未评分";
+            col[7] = examinationPaperScalesListRespVO.getCheckUser();
+            col[8] = examinationPaperScalesListRespVO.getTotalScore();
         }
         outputExcel(response, fileName, sheetName, header, content);
     }
@@ -202,26 +203,24 @@ public class ExcelService {
      * @param scalePaperQuestionListRespVOList
      */
     public void outputScalePaperExcel(HttpServletResponse response, List<ScalePaperQuestionListRespVO> scalePaperQuestionListRespVOList) {
-        String header[] = {"量表答卷编号", "量表编号", "量表名称", "题目编号", "题目标题", "单选/多选）选项", "附件", "是否记分", "分组名称", "显示", "答案", "得分"};
-        String scaleName = scalePaperQuestionListRespVOList.get(0).getScaleName();
-        String fileName = scaleName + "-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) + ".xlsx";
+        String header[] = {"量表答卷编号", "题目编号", "题目标题", "单选/多选）选项", "附件", "是否记分", "分组名称", "显示", "答案", "得分"};
+        ScalePaperQuestionListRespVO paperQuestionListRespVO = scalePaperQuestionListRespVOList.get(0);
+        String fileName = paperQuestionListRespVO.getScaleId() + "-" + paperQuestionListRespVO.getScaleName() + "-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) + ".xlsx";
         String sheetName = "量表答卷信息";
         String[][] content = new String[scalePaperQuestionListRespVOList.size()][header.length + 1];
         for (int i = 0; i < scalePaperQuestionListRespVOList.size(); i++) {
             String[] col = content[i];
-            ScalePaperQuestionListRespVO scalePaperQuestionListRespVO = scalePaperQuestionListRespVOList.get(0);
+            ScalePaperQuestionListRespVO scalePaperQuestionListRespVO = scalePaperQuestionListRespVOList.get(i);
             col[0] = scalePaperQuestionListRespVO.getScalePaperId();
-            col[1] = scalePaperQuestionListRespVO.getScaleId();
-            col[2] = scalePaperQuestionListRespVO.getScaleName();
-            col[3] = scalePaperQuestionListRespVO.getQuestionId();
-            col[4] = scalePaperQuestionListRespVO.getTitle();
-            col[5] = scalePaperQuestionListRespVO.getItems();
-            col[6] = scalePaperQuestionListRespVO.getAttachment();
-            col[7] = scalePaperQuestionListRespVO.isRecordScore() ? "是" : "否";
-            col[8] = scalePaperQuestionListRespVO.getGroupType();
-            col[9] = scalePaperQuestionListRespVO.isDisplay() ? "是" : "否";
-            col[10] = scalePaperQuestionListRespVO.getContent();
-            col[11] = String.valueOf(scalePaperQuestionListRespVO.getScore());
+            col[1] = scalePaperQuestionListRespVO.getQuestionId();
+            col[2] = scalePaperQuestionListRespVO.getTitle();
+            col[3] = scalePaperQuestionListRespVO.getItems();
+            col[4] = scalePaperQuestionListRespVO.getAttachment();
+            col[5] = scalePaperQuestionListRespVO.isRecordScore() ? "是" : "否";
+            col[6] = scalePaperQuestionListRespVO.getGroupType();
+            col[7] = scalePaperQuestionListRespVO.isDisplay() ? "是" : "否";
+            col[8] = scalePaperQuestionListRespVO.getContent();
+            col[9] = String.valueOf(scalePaperQuestionListRespVO.getScore());
         }
         outputExcel(response, fileName, sheetName, header, content);
     }
