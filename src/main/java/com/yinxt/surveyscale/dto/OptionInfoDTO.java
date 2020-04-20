@@ -17,5 +17,5 @@ public class OptionInfoDTO {
     /**
      * 选项分数
      */
-    private double optionScore;
+    private Double optionScore;
 }

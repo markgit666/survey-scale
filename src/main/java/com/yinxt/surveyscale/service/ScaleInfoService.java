@@ -150,6 +150,9 @@ public class ScaleInfoService {
      */
     public ScaleInfo getFormatScaleInfo(String scaleId) {
         ScaleInfo scaleInfo = getScaleInfoById(scaleId);
+        if (scaleInfo == null) {
+            return null;
+        }
         /**
          * 查找每张量表的题目
          */

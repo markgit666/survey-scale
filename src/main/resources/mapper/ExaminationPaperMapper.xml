@@ -23,13 +23,17 @@
         tr.report_id as reportId,
         tr.report_name as reportName,
         tpi.patient_name as patientName,
-        tep.create_time as createTime
+        tep.create_time as createTime,
+        (select count(*)
+        from tb_report_scale
+        where report_id = tr.report_id) as scaleNum
         from tb_examination_paper tep
         left join tb_patient tpi on tep.patient_id = tpi.patient_id
         left join tb_report tr on tep.report_id = tr.report_id
         <where>
+            effective_status = 0
             <if test="reportName != null and reportName != '' ">
-                tr.report_name like concat('%', #{reportName}, '%')
+                and tr.report_name like concat('%', #{reportName}, '%')
             </if>
             <if test="patientName !=null and patientName != '' ">
                 and tpi.patient_name = #{patientName,jdbcType=VARCHAR}
@@ -80,6 +84,10 @@
         where tpi.doctor_id=#{doctorId,jdbcType=VARCHAR}
     </select>
 
+    <update id="deleteExaminationPaperById" parameterType="string">
+        update tb_examination_paper set effective_status = 0 where examination_paper_id = 'examinationPaperId'
+    </update>
+
     <!--            量表答卷              -->
     <insert id="insertScalePaperInfo" parameterType="com.yinxt.surveyscale.entity.ScalePaperInfo">
         insert into tb_scale_paper(scale_paper_id, paper_id, scale_id, use_time, judge_status, create_time, update_time)
@@ -102,14 +110,17 @@
         ts.scale_id as scaleId,
         ts.scale_name as scaleName,
         tsp.use_time as useTime,
-        tsp.judge_status as judgeStatus,
         tsp.create_time as createTime,
+        tsp.judge_status as judgeStatus,
+        tj.check_user as checkUser,
+        tj.check_time as checkTime,
         tj.total_score as totalScore
         from tb_scale_paper tsp
         left join tb_examination_paper tep on tsp.paper_id = tep.examination_paper_id
         left join tb_scale ts on tsp.scale_id = ts.scale_id
         left join tb_judge tj on tsp.scale_paper_id = tj.scale_paper_id
         where tsp.paper_id = #{examinationPaperId,jdbcType=VARCHAR}
+        and tsp.effective_status = 0 and tep.effective_status = 0
     </select>
 
     <select id="selectScalePaperInfo" parameterType="string" resultType="com.yinxt.surveyscale.entity.ScalePaperInfo">
@@ -143,5 +154,9 @@
         left join tb_question tq on tq.question_id = ta.question_id
         where scale_paper_id = #{scalePaperId,jdbcType=VARCHAR}
     </select>
+
+    <update id="deleteScalePaperById" parameterType="string">
+        update tb_scale_paper set effective_status = 0 where paper_id = 'examinationPaperId'
+    </update>
 
 </mapper>

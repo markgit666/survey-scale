@@ -150,7 +150,8 @@ public class QuestionService {
                 String[] optionArray = item.split(Constant.SCORE_SPLIT);
                 OptionInfoDTO optionInfoDTO = new OptionInfoDTO();
                 optionInfoDTO.setOption(optionArray[0]);
-                if ((Constant.radio_type.equals(question.getQuestionType()) || Constant.checkBox_type.equals(question.getQuestionType())) && optionArray.length > 1) {
+                boolean condition = (Constant.radio_type.equals(question.getQuestionType()) || Constant.checkBox_type.equals(question.getQuestionType())) && optionArray.length > 1;
+                if (condition) {
                     optionInfoDTO.setOptionScore(Double.valueOf(optionArray[1]));
                 }
                 items.add(optionInfoDTO);

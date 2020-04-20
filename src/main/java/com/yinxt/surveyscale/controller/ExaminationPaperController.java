@@ -60,4 +60,10 @@ public class ExaminationPaperController {
         return Result.success(examinationPaperService.getScalePaperDetailInfo(scalePaperDetailReqDTO.getScalePaperId()));
     }
 
+    @RequestMapping(value = "remove")
+    public Result removeExaminationPaper(@RequestBody RemoveExaminationPaperReqDTO removeExaminationPaperReqDTO) {
+        examinationPaperService.removeExaminationPaper(removeExaminationPaperReqDTO.getExaminationPaperId());
+        return Result.success();
+    }
+
 }

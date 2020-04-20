@@ -8,6 +8,16 @@
         #{remarks,jdbcType=VARCHAR}, now())
     </insert>
 
+    <insert id="insertPatientEligibleList" parameterType="com.yinxt.surveyscale.dto.PatientEligibleDTO">
+        insert into tb_eligible_patient(eligible_id, patient_id, answer, remarks, create_time)
+        values
+        <foreach collection="patientEligibleDTOList" item="patientEligibleDTO" separator=",">
+            (#{patientEligibleDTO.eligibleId,jdbcType=VARCHAR}, #{patientEligibleDTO.patientId,jdbcType=VARCHAR},
+            #{patientEligibleDTO.answer,jdbcType=VARCHAR},
+            #{patientEligibleDTO.remarks,jdbcType=VARCHAR}, now())
+        </foreach>
+    </insert>
+
     <update id="updatePatientEligibleInfo" parameterType="com.yinxt.surveyscale.dto.PatientEligibleDTO">
         update tb_eligible_patient
         set
@@ -23,7 +33,7 @@
         </where>
     </update>
 
-    <select id="selectPatientEligibleInfo" resultType="com.yinxt.surveyscale.entity.PatientEligible">
+    <select id="selectPatientEligibleList" resultType="com.yinxt.surveyscale.entity.PatientEligible">
         select eligible_id as eligibleId,
         group_name as groupName,
         type as type,

@@ -13,7 +13,10 @@
         select tdr.report_id as reportId,
         tr.report_name as reportName,
         td.doctor_id as doctorId,
-        td.doctor_name as doctorName
+        td.doctor_name as doctorName,
+        (select count(trs.scale_id)
+        from tb_report_scale trs
+        where report_id = tr.report_id) as scaleNum
         from tb_doctor_report tdr
         left join tb_report tr on tdr.report_id = tr.report_id
         left join tb_doctor td on tdr.doctor_id = td.doctor_id

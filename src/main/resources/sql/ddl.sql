@@ -92,6 +92,7 @@ create table if not exists tb_examination_paper
 	examination_paper_id varchar(45) not null comment '答卷编号',
 	patient_id varchar(45) not null comment '病人编号',
 	report_id varchar(45) not null comment '报告编号',
+	effective_status tinyint default 1 commit '有效状态标识',
 	create_time datetime not null comment '创建时间',
 	update_time datetime null comment '修改时间',
 	constraint examination_papaer_id_UNIQUE
@@ -258,6 +259,7 @@ create table if not exists tb_scale_paper
 	scale_id varchar(45) not null comment '量表编号',
 	use_time varchar(45) null comment '量表答题耗时',
 	judge_status varchar(8) null comment '评定状态',
+	effective_status tinyint default 1 commit '有效状态标识',
 	create_time datetime not null comment '创建时间',
 	update_time datetime not null comment '修改时间',
 	constraint paper_scacle_id_UNIQUE
