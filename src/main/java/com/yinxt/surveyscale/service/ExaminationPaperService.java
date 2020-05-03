@@ -237,11 +237,12 @@ public class ExaminationPaperService {
                 Answer answer = new Answer();
                 answer.setAnswerId(answerJudgeDTO.getAnswerId());
                 answer.setScore(answerJudgeDTO.getScore());
+                answer.setQuestionId(answerJudgeDTO.getQuestionId());
                 answerService.updateAnswer(answer);
             }
         }
         //更新试卷的评分状态为已评分
-        examinationPaperMapper.updateScalePaperInfo(scalePaperJudgeReqDTO.getScalePaperId());
+        examinationPaperMapper.updateScalePaperJudgeStatus(scalePaperJudgeReqDTO.getScalePaperId());
         return Result.success();
     }
 

@@ -18,7 +18,7 @@ public interface ExaminationPaperMapper {
 
     int insertScalePaperInfo(ScalePaperInfo scalePaperInfo);
 
-    int updateScalePaperInfo(@Param("scalePaperId") String scalePaperId);
+    int updateScalePaperJudgeStatus(@Param("scalePaperId") String scalePaperId);
 
     List<ScalePaperListVO> selectScalePaperList(@Param("examinationPaperId") String examinationPaperId, @Param("scaleName") String scaleName, @Param("doctorId") String doctorId);
 
@@ -27,8 +27,6 @@ public interface ExaminationPaperMapper {
     int insertExaminationPaper(Examination examination);
 
     int selectCountByExaminationPaper(@Param("examinationPaperId") String examinationPaperId);
-
-    int updateJudgeStatus(@Param("examinationPaperId") String examinationPaperId);
 
     List<ExaminationPaperListVO> selectExaminationPaperList(ExaminationPaperListQueryPO examinationPaperListQueryPO);
 

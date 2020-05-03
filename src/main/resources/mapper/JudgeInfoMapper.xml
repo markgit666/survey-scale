@@ -31,6 +31,6 @@
         check_user = #{checkUser,jdbcType=VARCHAR},
         total_score = #{totalScore,jdbcType=VARCHAR},
         update_time = now()
-        where scale_paper = #{examinationPaperId,jdbcType=VARCHAR}
+        where scale_paper_id = #{scalePaperId,jdbcType=VARCHAR}
     </update>
 </mapper>

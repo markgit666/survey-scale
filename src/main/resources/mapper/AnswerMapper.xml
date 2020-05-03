@@ -28,7 +28,7 @@
         </foreach>
     </insert>
 
-    <update id="updateAnswer">
+    <update id="updateAnswer" parameterType="com.yinxt.surveyscale.entity.Answer">
         update tb_answer
         <set>
             <trim suffixOverrides=",">
@@ -43,6 +43,7 @@
         </set>
         <where>
             answer_id=#{answerId,jdbcType=VARCHAR}
+            and question_id=#{questionId,jdbcType=VARCHAR}
         </where>
     </update>
 

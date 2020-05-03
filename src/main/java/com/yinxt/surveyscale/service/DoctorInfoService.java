@@ -228,14 +228,16 @@ public class DoctorInfoService {
         if (doctorAuthInfo == null) {
             return Result.error(ResultEnum.EMAIL_NO_REGISTER);
         }
-        try {
-            //发送验证码邮件
-            String code = sendEmailService.sendVerifyCodeEmail(emailAddress);
-            RedisUtil.setKey(Constant.REDIS_MODIFY_PASSWORD_PREFIX + emailAddress, code, TIME);
-        } catch (Exception e) {
-            log.error("邮件发送失败：", e);
-            throw new LogicException(e.getMessage());
-        }
+        ThreadPoolUtil.getInstance().executeTask(() -> {
+            try {
+                //发送验证码邮件
+                String code = sendEmailService.sendVerifyCodeEmail(emailAddress);
+                RedisUtil.setKey(Constant.REDIS_MODIFY_PASSWORD_PREFIX + emailAddress, code, TIME);
+            } catch (Exception e) {
+                log.error("邮件发送失败：", e);
+                throw new LogicException(e.getMessage());
+            }
+        });
         return Result.success(ResultEnum.VERIFY_CODE_SEND_SUCCESS);
     }
 

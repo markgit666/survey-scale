@@ -2,6 +2,7 @@ package com.yinxt.surveyscale.dto;
 
 import lombok.Data;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -28,5 +29,6 @@ public class ScalePaperJudgeReqDTO {
     /**
      * 答案评定信息
      */
+    @Valid
     private List<AnswerJudgeDTO> answerJudgeList;
 }

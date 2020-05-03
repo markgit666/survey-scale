@@ -11,12 +11,6 @@
         select count(0) from tb_examination_paper where examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
     </select>
 
-    <update id="updateJudgeStatus" parameterType="string">
-        update tb_examination_paper
-        set judge_status = "1"
-        where examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
-    </update>
-
     <select id="selectExaminationPaperList" parameterType="com.yinxt.surveyscale.po.ExaminationPaperListQueryPO"
             resultType="com.yinxt.surveyscale.vo.ExaminationPaperListVO">
         select tep.examination_paper_id as examinationPaperId,
@@ -94,13 +88,12 @@
         values (#{scalePaperId,jdbcType=VARCHAR}, #{paperId,jdbcType=VARCHAR}, #{scaleId,jdbcType=VARCHAR}, #{useTime,jdbcType=VARCHAR}, #{judgeStatus, jdbcType=VARCHAR}, now(), now())
     </insert>
 
-    <update id="updateScalePaperInfo" parameterType="string">
+    <update id="updateScalePaperJudgeStatus" parameterType="string">
         update tb_scale_paper
         <set>
-            <if test="judgeStatus != null and judgeStatus != '' ">
-                judge_status = #{judgeStatus,jdbcType=VARCHAR}
-            </if>
+            judge_status = '1'
         </set>
+        where scale_paper_id=#{scalePaperId,jdbcType=VARCHAR}
     </update>
 
     <select id="selectScalePaperList" resultType="com.yinxt.surveyscale.vo.ScalePaperListVO">
