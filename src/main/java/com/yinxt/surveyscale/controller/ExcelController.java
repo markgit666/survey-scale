@@ -22,7 +22,7 @@ public class ExcelController {
     private ExcelService excelService;
 
     @RequestMapping(value = "export/patient/info")
-    public void exportPatientInfoExcel(@RequestParam("patientIdArray") String[] patientIdArray, @RequestParam("doctorId") String doctorId, HttpServletResponse response) {
+    public void exportPatientInfoExcel(@RequestParam("patientIdArray") List<String> patientIdArray, @RequestParam("doctorId") String doctorId, HttpServletResponse response) {
         excelService.getPatientInfoExcelById(response, patientIdArray, doctorId);
     }
 

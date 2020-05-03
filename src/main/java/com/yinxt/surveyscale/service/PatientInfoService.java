@@ -188,7 +188,7 @@ public class PatientInfoService {
      * @param patientIdArray
      * @return
      */
-    public List<PatientInfo> getPatientInfoListByIdArray(String[] patientIdArray, String doctorId) {
+    public List<PatientInfo> getPatientInfoListByIdArray(List<String> patientIdArray, String doctorId) {
         return patientInfoMapper.selectPatientListByIdArray(patientIdArray, doctorId);
     }
 
@@ -197,8 +197,8 @@ public class PatientInfoService {
      *
      * @return
      */
-    public List<PatientInfo> getAllPatientInfo(String doctorId) {
-        return patientInfoMapper.selectAllPatientInfo(doctorId);
+    public List<String> getAllPatientIdList(String doctorId) {
+        return patientInfoMapper.selectAllPatientIdList(doctorId);
     }
 
 }

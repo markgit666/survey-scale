@@ -1,19 +1,20 @@
 package com.yinxt.surveyscale.service;
 
+import com.yinxt.surveyscale.common.exeption.LogicException;
 import com.yinxt.surveyscale.common.util.ExcelUtil;
+import com.yinxt.surveyscale.common.util.ZipFilesUtils;
 import com.yinxt.surveyscale.entity.PatientInfo;
-import com.yinxt.surveyscale.entity.ScaleInfo;
 import com.yinxt.surveyscale.vo.ExaminationPaperScalesListRespVO;
 import com.yinxt.surveyscale.vo.ScalePaperQuestionListRespVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.logging.LogException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,34 +36,57 @@ public class ExcelService {
     @Autowired
     private ExaminationPaperService examinationPaperService;
 
+    @Value("${excel.path}")
+    private String excelPath;
+
     /**
      * 根据病人编号导出病人信息Excel
      *
      * @param response
      * @param patientIdArray
+     * @param doctorId
      */
-    public void getPatientInfoExcelById(HttpServletResponse response, String[] patientIdArray, String doctorId) {
-        List<PatientInfo> patientInfoList = patientInfoService.getPatientInfoListByIdArray(patientIdArray, doctorId);
-        outputPatientInfoExcel(patientInfoList, response);
+    public void getPatientInfoExcelById(HttpServletResponse response, List<String> patientIdArray, String doctorId) {
+        outPutPatientInfoList(response, patientIdArray, doctorId);
     }
 
     /**
      * 导出医生名下全部病人信息Excel
      *
      * @param response
+     * @param doctorId
      */
     public void getAllPatientInfoExcel(HttpServletResponse response, String doctorId) {
-        List<PatientInfo> patientInfoList = patientInfoService.getAllPatientInfo(doctorId);
-        outputPatientInfoExcel(patientInfoList, response);
+        List<String> patientInfoList = patientInfoService.getAllPatientIdList(doctorId);
+        outPutPatientInfoList(response, patientInfoList, doctorId);
     }
+
+    public void outPutPatientInfoList(HttpServletResponse response, List<String> list, String doctorId) {
+        String nowDateTime = new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date());
+        String nowDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String directory = excelPath + File.separator + "patientInfo" + File.separator + "original" + File.separator + nowDate + File.separator + nowDateTime;
+        List<PatientInfo> patientInfoList = patientInfoService.getPatientInfoListByIdArray(list, doctorId);
+        outputPatientInfoExcel(patientInfoList, directory, nowDateTime);
+        //压缩文件
+        String zipFilePath = excelPath + File.separator + "patientInfo" + File.separator + "zip" + File.separator + nowDate + File.separator + "patientInfo" + "-" + nowDateTime + ".zip";
+        try {
+            ZipFilesUtils.zipByFolder(directory, zipFilePath);
+        } catch (IOException e) {
+            log.error("压缩病人信息表失败", e);
+            throw new LogException("导出病人信息失败");
+        }
+        outputExcel(response, zipFilePath);
+    }
+
 
     /**
      * 构建导出Excel的参数
      *
      * @param patientInfoList
-     * @param response
+     * @param directory
+     * @param nowDateStr
      */
-    private void outputPatientInfoExcel(List<PatientInfo> patientInfoList, HttpServletResponse response) {
+    private void outputPatientInfoExcel(List<PatientInfo> patientInfoList, String directory, String nowDateStr) {
         String[] header = {"编号", "姓名", "出生日期", "性别", "家庭地址", "联系方式", "利手", "民族", "婚姻",
                 "工作状态", "在职职业", "文化程度", "受教育年数（年）",
                 "是否打呼噜", "居住方式", "既往病史", "其他疾病", "吸烟史",
@@ -71,7 +95,7 @@ public class ExcelService {
                 "现病史（有无记忆下降）", "记忆力下降多久（年）", "体格检查情况",
                 "是否合并使用促认知药物",
                 "具体促认知药物", "具体药物的剂量"};
-        String fileName = "被试者信息表-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) + ".xlsx";
+        String fileName = "被试者信息表-" + nowDateStr + ".xlsx";
         String sheetName = "被试者信息";
         String[][] content = new String[patientInfoList.size()][header.length + 1];
         for (int i = 0; i < patientInfoList.size(); i++) {
@@ -79,7 +103,7 @@ public class ExcelService {
             PatientInfo patientInfo = patientInfoList.get(i);
             col[0] = patientInfo.getPatientId();
             col[1] = patientInfo.getName();
-            col[2] = new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(patientInfo.getBirthday());
+            col[2] = new SimpleDateFormat("yyyy-MM-dd").format(patientInfo.getBirthday());
             col[3] = "1".equals(patientInfo.getGender()) ? "男" : "女";
             col[4] = patientInfo.getFamilyAddress();
             col[5] = patientInfo.getTelephoneNumber();
@@ -112,7 +136,8 @@ public class ExcelService {
             col[32] = patientInfo.getDrugsType();
             col[33] = patientInfo.getDrugsDosage();
         }
-        outputExcel(response, fileName, sheetName, header, content);
+        XSSFWorkbook xssfWorkbook = ExcelUtil.getWorkbook(sheetName, header, content);
+        saveExcelToDirectory(xssfWorkbook, fileName, directory);
     }
 
     /**
@@ -120,6 +145,7 @@ public class ExcelService {
      *
      * @param response
      * @param examinationPaperIdList
+     * @param doctorId
      */
     public void getExaminationPaperExcelById(HttpServletResponse response, List<String> examinationPaperIdList, String doctorId) {
         outputExaminationPaperList(response, examinationPaperIdList, doctorId);
@@ -129,6 +155,7 @@ public class ExcelService {
      * 获取医生名下全部病人的答卷信息Excel
      *
      * @param response
+     * @param doctorId
      */
     public void getAllExaminationPaperExcel(HttpServletResponse response, String doctorId) {
         List<String> examinationPaperIdList = examinationPaperService.getAllExaminationPaperIdList(doctorId);
@@ -143,13 +170,26 @@ public class ExcelService {
      * @param doctorId
      */
     public void outputExaminationPaperList(HttpServletResponse response, List<String> list, String doctorId) {
+        String nowDateTime = new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date());
+        String nowDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String directory = excelPath + File.separator + "examinationPaper" + File.separator + "original" + File.separator + nowDate + File.separator + nowDateTime;
         for (String examinationPaperId : list) {
             List<ExaminationPaperScalesListRespVO> examinationPaperScalesListRespVOS = examinationPaperService.getExaminationPaperScaleListById(examinationPaperId, doctorId);
             if (examinationPaperScalesListRespVOS.size() >= 1) {
-//                String excelName = examinationPaperService.getReportNameByPaperId(examinationPaperId);
-                outputExaminationPaperExcel(examinationPaperScalesListRespVOS, response);
+                String excelName = examinationPaperService.getReportNameByPaperId(examinationPaperId);
+                examinationPaperScalesListRespVOS.get(0).setReportName(excelName);
+                outputExaminationPaperExcel(examinationPaperScalesListRespVOS, directory, nowDateTime);
             }
         }
+        //压缩文件
+        String zipFilePath = excelPath + File.separator + "examinationPaper" + File.separator + "zip" + File.separator + nowDate + File.separator + "scalePaper" + "-" + nowDateTime + ".zip";
+        try {
+            ZipFilesUtils.zipByFolder(directory, zipFilePath);
+        } catch (IOException e) {
+            log.error("压缩报告表答卷信息表失败", e);
+            throw new LogException("导出报告表答卷信息失败");
+        }
+        outputExcel(response, zipFilePath);
     }
 
 
@@ -157,12 +197,13 @@ public class ExcelService {
      * 构建导出答卷excel的参数
      *
      * @param examinationPaperScalesListRespVOS
-     * @param response
+     * @param directory
+     * @param nowDateStr
      */
-    public void outputExaminationPaperExcel(List<ExaminationPaperScalesListRespVO> examinationPaperScalesListRespVOS, HttpServletResponse response) {
+    public void outputExaminationPaperExcel(List<ExaminationPaperScalesListRespVO> examinationPaperScalesListRespVOS, String directory, String nowDateStr) {
         String[] header = {"量表答卷编号", "量表名称", "被试者姓名", "题目数量", "用时", "答题日期", "评分状态", "评定人", "总分"};
         ExaminationPaperScalesListRespVO listRespVO = examinationPaperScalesListRespVOS.get(0);
-        String fileName = listRespVO.getExaminationPaperId() + "-" + listRespVO.getReportName() + "-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) + ".xlsx";
+        String fileName = listRespVO.getExaminationPaperId() + "-" + listRespVO.getReportName() + "-" + nowDateStr + ".xlsx";
         String sheetName = "报告表答卷信息";
         String[][] content = new String[examinationPaperScalesListRespVOS.size()][header.length + 1];
         for (int i = 0; i < examinationPaperScalesListRespVOS.size(); i++) {
@@ -176,9 +217,10 @@ public class ExcelService {
             col[5] = examinationPaperScalesListRespVO.getExaminationDate();
             col[6] = "1".equals(examinationPaperScalesListRespVO.getJudgeStatus()) ? "已评分" : "未评分";
             col[7] = examinationPaperScalesListRespVO.getCheckUser();
-            col[8] = String.valueOf(examinationPaperScalesListRespVO.getTotalScore());
+            col[8] = examinationPaperScalesListRespVO.getTotalScore() == null ? "" : String.valueOf(examinationPaperScalesListRespVO.getTotalScore());
         }
-        outputExcel(response, fileName, sheetName, header, content);
+        XSSFWorkbook xssfWorkbook = ExcelUtil.getWorkbook(sheetName, header, content);
+        saveExcelToDirectory(xssfWorkbook, fileName, directory);
     }
 
     /**
@@ -188,24 +230,37 @@ public class ExcelService {
      * @param scalePaperIdList
      */
     public void getScalePaperExcelById(HttpServletResponse response, List<String> scalePaperIdList) {
+        String nowDateTime = new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date());
+        String nowDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String directory = excelPath + File.separator + "scalePaper" + File.separator + "original" + File.separator + nowDate + File.separator + nowDateTime;
         for (String scalePaperId : scalePaperIdList) {
             List<ScalePaperQuestionListRespVO> scalePaperQuestionListRespVOList = examinationPaperService.getScalePaperQuestionListById(scalePaperId);
             if (scalePaperQuestionListRespVOList.size() > 0) {
-                outputScalePaperExcel(response, scalePaperQuestionListRespVOList);
+                outputScalePaperExcel(scalePaperQuestionListRespVOList, directory, nowDateTime);
             }
         }
+        //压缩文件
+        String zipFilePath = excelPath + File.separator + "scalePaper" + File.separator + "zip" + File.separator + nowDate + File.separator + "scalePaper" + "-" + nowDateTime + ".zip";
+        try {
+            ZipFilesUtils.zipByFolder(directory, zipFilePath);
+        } catch (IOException e) {
+            log.error("压缩量表答卷信息表失败", e);
+            throw new LogException("导出量表答卷信息失败");
+        }
+        outputExcel(response, zipFilePath);
     }
 
     /**
      * 导出量表答卷到Excel
      *
-     * @param response
      * @param scalePaperQuestionListRespVOList
+     * @param directory
+     * @param nowDateStr
      */
-    public void outputScalePaperExcel(HttpServletResponse response, List<ScalePaperQuestionListRespVO> scalePaperQuestionListRespVOList) {
-        String header[] = {"量表答卷编号", "题目编号", "题目标题", "(单选/多选）选项", "图片附件编号", "是否记分", "分组名称", "显示", "答案", "得分"};
+    public void outputScalePaperExcel(List<ScalePaperQuestionListRespVO> scalePaperQuestionListRespVOList, String directory, String nowDateStr) {
+        String header[] = {"量表答卷编号", "题目编号", "题目标题", "(单选/多选）选项", "图片附件编号", "答案", "得分"};
         ScalePaperQuestionListRespVO paperQuestionListRespVO = scalePaperQuestionListRespVOList.get(0);
-        String fileName = paperQuestionListRespVO.getScaleId() + "-" + paperQuestionListRespVO.getScaleName() + "-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) + ".xlsx";
+        String fileName = paperQuestionListRespVO.getScaleId() + "-" + paperQuestionListRespVO.getScaleName() + "-" + nowDateStr + ".xlsx";
         String sheetName = "量表答卷信息";
         String[][] content = new String[scalePaperQuestionListRespVOList.size()][header.length + 1];
         for (int i = 0; i < scalePaperQuestionListRespVOList.size(); i++) {
@@ -216,54 +271,69 @@ public class ExcelService {
             col[2] = scalePaperQuestionListRespVO.getTitle();
             col[3] = scalePaperQuestionListRespVO.getItems();
             col[4] = scalePaperQuestionListRespVO.getAttachment();
-            col[5] = scalePaperQuestionListRespVO.isRecordScore() ? "是" : "否";
-            col[6] = scalePaperQuestionListRespVO.getGroupType();
-            col[7] = scalePaperQuestionListRespVO.isDisplay() ? "是" : "否";
-            col[8] = scalePaperQuestionListRespVO.getContent();
-            col[9] = String.valueOf(scalePaperQuestionListRespVO.getScore());
+//            col[5] = scalePaperQuestionListRespVO.isRecordScore() ? "是" : "否";
+//            col[6] = scalePaperQuestionListRespVO.getGroupType();
+//            col[7] = scalePaperQuestionListRespVO.isDisplay() ? "是" : "否";
+            col[5] = scalePaperQuestionListRespVO.getContent();
+            col[6] = scalePaperQuestionListRespVO.getScore() == null ? "" : String.valueOf(scalePaperQuestionListRespVO.getScore());
         }
-        outputExcel(response, fileName, sheetName, header, content);
+        XSSFWorkbook xssfWorkbook = ExcelUtil.getWorkbook(sheetName, header, content);
+        saveExcelToDirectory(xssfWorkbook, fileName, directory);
+    }
+
+    /**
+     * 保存excel到文件路径中
+     *
+     * @param xssfWorkbook
+     * @param fileName
+     * @param directory
+     */
+    private void saveExcelToDirectory(XSSFWorkbook xssfWorkbook, String fileName, String directory) {
+        File file = new File(directory);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        try (
+                OutputStream outputStream = new FileOutputStream(directory + File.separator + fileName);
+                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream)
+        ) {
+            xssfWorkbook.write(bufferedOutputStream);
+            bufferedOutputStream.flush();
+        } catch (Exception e) {
+            log.error("保存excel到文件路径失败", e);
+            throw new LogicException("下载文件失败");
+        }
+
     }
 
     /**
      * 导出excel
      *
      * @param response
-     * @param sheetName
-     * @param header
-     * @param content
+     * @param filePath
      */
-    private void outputExcel(HttpServletResponse response, String fileName, String sheetName, String[] header, String[][] content) {
-        XSSFWorkbook xssfWorkbook = ExcelUtil.getWorkbook(sheetName, header, content);
-        //声明输出流
-        OutputStream outputStream = null;
+    private void outputExcel(HttpServletResponse response, String filePath) {
+        File file = new File(filePath);
         //响应到客户端
-        try {
+        try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(response.getOutputStream());
+             InputStream inputStream = new FileInputStream(file);
+             BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream)
+        ) {
+            byte[] b = new byte[1024];
+            int readLength = bufferedInputStream.read(b);
+            while (readLength != -1) {
+                bufferedOutputStream.write(b);
+                readLength = bufferedInputStream.read(b);
+            }
             //设置响应头
             response.setContentType("application/octet-stream;charset=UTF-8");
-            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getName(), "UTF-8"));
             response.addHeader("Pargam", "no-cache");
             response.addHeader("Cache-Control", "no-cache");
-
-            //获取输出流
-            outputStream = response.getOutputStream();
-
-            //用文档写输出流
-            xssfWorkbook.write(outputStream);
-
             //刷新输出流
-            outputStream.flush();
+            bufferedOutputStream.flush();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            //关闭输出流
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    log.error("关闭输出流失败：", e);
-                }
-            }
         }
     }
 

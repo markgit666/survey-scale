@@ -280,8 +280,8 @@
         </where>
     </update>
 
-    <select id="selectAllPatientInfo" parameterType="string" resultMap="patientInfoResultMap">
-        select * from tb_patient
+    <select id="selectAllPatientIdList" parameterType="string" resultMap="patientInfoResultMap">
+        select patient_id from tb_patient
         where doctor_id = #{doctorId,jdbcType=VARCHAR};
     </select>
 

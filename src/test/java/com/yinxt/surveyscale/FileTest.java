@@ -1,17 +1,26 @@
 package com.yinxt.surveyscale;
 
+import com.yinxt.surveyscale.service.ExcelService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = SurveyScaleApplicationTests.class)
+@WebAppConfiguration
 public class FileTest {
+
+    @Autowired
+    private ExcelService excelService;
 
     @Test
     public void decryptFile() {
@@ -60,5 +69,15 @@ public class FileTest {
         content = content.replace("code", "123456");
         log.info("content:{}", content);
     }
+
+    @Test
+    public void testZip() {
+        List<String> scalePaperIdList = new ArrayList<>();
+        scalePaperIdList.add("SP202004100001");
+        scalePaperIdList.add("SP202004100002");
+        scalePaperIdList.add("SP202004100003");
+        excelService.getScalePaperExcelById(null, scalePaperIdList);
+    }
+
 
 }

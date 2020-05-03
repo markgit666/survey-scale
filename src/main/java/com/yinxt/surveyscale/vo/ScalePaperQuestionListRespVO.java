@@ -57,6 +57,6 @@ public class ScalePaperQuestionListRespVO {
     /**
      * 得分
      */
-    private double score;
+    private Double score;
 
 }
