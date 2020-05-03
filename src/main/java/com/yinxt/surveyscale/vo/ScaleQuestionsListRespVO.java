@@ -20,6 +20,6 @@ public class ScaleQuestionsListRespVO {
     private String title;
     private String questionType;
     private String answer;
-    private String score;
+    private Double score;
 
 }

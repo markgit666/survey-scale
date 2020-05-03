@@ -54,6 +54,6 @@ public class ExaminationPaperScalesListRespVO {
     /**
      * 总分
      */
-    private String totalScore;
+    private Double totalScore;
 
 }

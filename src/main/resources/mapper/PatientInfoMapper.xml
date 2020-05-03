@@ -74,7 +74,7 @@
             <if test="name != null and name != '' ">
                 and patient_name = #{name,jdbcType=VARCHAR}
             </if>
-            <if test="birthday != null and birthday != '' ">
+            <if test="birthday != null">
                 and birthday = #{birthday,jdbcType=DATE}
             </if>
             <if test="gender != null and gender != '' ">

@@ -24,7 +24,7 @@ public class ScalePaperJudgeReqDTO {
     /**
      * 总分
      */
-    private Integer totalScore;
+    private double totalScore;
     /**
      * 答案评定信息
      */

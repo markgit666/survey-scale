@@ -176,7 +176,7 @@ public class ExcelService {
             col[5] = examinationPaperScalesListRespVO.getExaminationDate();
             col[6] = "1".equals(examinationPaperScalesListRespVO.getJudgeStatus()) ? "已评分" : "未评分";
             col[7] = examinationPaperScalesListRespVO.getCheckUser();
-            col[8] = examinationPaperScalesListRespVO.getTotalScore();
+            col[8] = String.valueOf(examinationPaperScalesListRespVO.getTotalScore());
         }
         outputExcel(response, fileName, sheetName, header, content);
     }
