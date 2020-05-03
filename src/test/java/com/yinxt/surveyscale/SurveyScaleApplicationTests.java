@@ -11,11 +11,8 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 @SpringBootApplication
 @EnableTransactionManagement
-@MapperScan("com.yinxt.surveyscale.*")
 @Configurable
 @ServletComponentScan
 public class SurveyScaleApplicationTests {
