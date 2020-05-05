@@ -15,9 +15,6 @@ import java.util.zip.CheckedOutputStream;
  * 解决了由于java.util.zip包不支持汉字的问题。 使用java.util.zip包时,当zip文件中有名字为中文的文件时,
  * 就会出现异常:"Exception in thread "main " java.lang.IllegalArgumentException at
  * java.util.zip.ZipInputStream.getUTF8String(ZipInputStream.java:285)
- *
- * @author luzw
- * @version 创建时间：2016-07-23
  */
 @Slf4j
 public class AntZipUtil {
