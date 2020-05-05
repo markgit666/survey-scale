@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.Filter;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Configuration
@@ -95,24 +96,21 @@ public class ShiroConfig {
         filterMap.put("authc", new UserAuthenticationFilter());
         shiroFilterFactoryBean.setFilters(filterMap);
 
-        Map<String, String> filterChainDefinitionMap = new HashMap<>();
-        /**
-         * 开发用
-         */
-        filterChainDefinitionMap.put("/report/**", "anon");
-        filterChainDefinitionMap.put("/patient/**", "anon");
-        filterChainDefinitionMap.put("/eligible/**", "anon");
-
+        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         filterChainDefinitionMap.put("/common/**", "anon");
         filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/authc/**", "anon");
         filterChainDefinitionMap.put("/file/**", "anon");
         filterChainDefinitionMap.put("/paper/patient/**", "anon");
-//        filterChainDefinitionMap.put("/paper/report/patient/status/check", "anon");
-//        filterChainDefinitionMap.put("/paper/blank/get", "anon");
-//        filterChainDefinitionMap.put("/paper/scale/get", "anon");
-//        filterChainDefinitionMap.put("/paper/answer/commit", "anon");
         filterChainDefinitionMap.put("/excel/**", "anon");
+        //swagger2
+        filterChainDefinitionMap.put("/swagger-ui.html", "anon");
+        filterChainDefinitionMap.put("/swagger-resources", "anon");
+        filterChainDefinitionMap.put("/swagger-resources/configuration/security", "anon");
+        filterChainDefinitionMap.put("/swagger-resources/configuration/ui", "anon");
+        filterChainDefinitionMap.put("/v2/api-docs", "anon");
+        filterChainDefinitionMap.put("/webjars/springfox-swagger-ui/**", "anon");
+
         filterChainDefinitionMap.put("/**", "authc");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

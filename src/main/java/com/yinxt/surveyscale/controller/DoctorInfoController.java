@@ -9,11 +9,14 @@ import com.yinxt.surveyscale.service.CaptchaService;
 import com.yinxt.surveyscale.service.DoctorInfoService;
 import com.yinxt.surveyscale.common.result.Result;
 import com.yinxt.surveyscale.common.result.ResultEnum;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@Api(value = "医生API")
 @RestController
 @RequestMapping(value = "authc")
 public class DoctorInfoController {
@@ -29,6 +32,7 @@ public class DoctorInfoController {
      * @param loginReqDTO
      * @return
      */
+    @ApiOperation(value = "登陆", notes = "登陆", httpMethod = "POST")
     @RequestMapping(value = "login")
     public Result login(@RequestBody @Valid LoginReqDTO loginReqDTO) {
         return doctorInfoService.login(loginReqDTO);
@@ -40,6 +44,7 @@ public class DoctorInfoController {
      * @param registerReqDTO
      * @return
      */
+    @ApiOperation(value = "注册", notes = "注册", httpMethod = "POST")
     @RequestMapping(value = "register")
     public Result register(@RequestBody RegisterReqDTO registerReqDTO) {
         return doctorInfoService.register(registerReqDTO);
@@ -50,6 +55,7 @@ public class DoctorInfoController {
      *
      * @return
      */
+    @ApiOperation(value = "未认证", notes = "未认证跳转", httpMethod = "GET")
     @RequestMapping(value = "unauthc")
     public Result unauthc() {
         return Result.error(ResultEnum.UNAUTHC);
@@ -60,6 +66,7 @@ public class DoctorInfoController {
      *
      * @return
      */
+    @ApiOperation(value = "登出", notes = "登出", httpMethod = "POST")
     @RequestMapping(value = "logout")
     public Result logout() {
         return doctorInfoService.logout();
@@ -71,6 +78,7 @@ public class DoctorInfoController {
      * @param verifyCodeReqDTO
      * @return
      */
+    @ApiOperation(value = "获取注册验证码", notes = "获取注册验证码", httpMethod = "POST")
     @RequestMapping(value = "verifyCode/get")
     public Result getRegisterVerifyCode(@RequestBody VerifyCodeReqDTO verifyCodeReqDTO) {
         return doctorInfoService.getRegisterVerifyCode(verifyCodeReqDTO);
@@ -81,6 +89,7 @@ public class DoctorInfoController {
      *
      * @return
      */
+    @ApiOperation(value = "获取图片验证码", notes = "获取图片验证码", httpMethod = "GET")
     @RequestMapping(value = "captcha/get")
     public Result getCaptcha() {
         return captchaService.getCaptcha();
@@ -93,6 +102,7 @@ public class DoctorInfoController {
      * @param findBackPasswordReqDTO
      * @return
      */
+    @ApiOperation(value = "找回密码", notes = "找回密码", httpMethod = "POST")
     @RequestMapping(value = "password/findBack")
     public Result findBackPassword(@RequestBody @Valid FindBackPasswordReqDTO findBackPasswordReqDTO) {
         return doctorInfoService.findBackPassword(findBackPasswordReqDTO);
@@ -104,6 +114,7 @@ public class DoctorInfoController {
      * @param modifyPasswordReqDTO
      * @return
      */
+    @ApiOperation(value = "修改密码", notes = "修改密码", httpMethod = "POST")
     @RequestMapping(value = "password/modify")
     public Result modifyPassword(@RequestBody ModifyPasswordReqDTO modifyPasswordReqDTO) {
         return doctorInfoService.modifyPassword(modifyPasswordReqDTO);
