@@ -59,10 +59,10 @@ public class SwaggerConfig {
     public ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("《量表小助手接口文档》")//标题
-                .description("description:项目摘要")//描述
+                .description("description:帮助医生给被试者做经颅磁刺激后的调查问卷小助手")//描述
                 .license("license").licenseUrl("http://www.baidu.com")
                 .termsOfServiceUrl("http://www.baidu.com")//（不可见）条款地址，公司内部使用的话不需要配
-                .contact(new Contact("yinxt", "http://www.baidu.com", "943121438@qq.com"))//作者信息
+                .contact(new Contact("殷笑天", "http://www.baidu.com", "943121438@qq.com"))//作者信息
                 .version("1.0.0")//版本号
                 .build();
     }
