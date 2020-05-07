@@ -103,6 +103,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/file/**", "anon");
         filterChainDefinitionMap.put("/paper/patient/**", "anon");
         filterChainDefinitionMap.put("/excel/**", "anon");
+        filterChainDefinitionMap.put("/error", "anon");
         //swagger2
         filterChainDefinitionMap.put("/swagger-ui.html", "anon");
         filterChainDefinitionMap.put("/swagger-resources", "anon");

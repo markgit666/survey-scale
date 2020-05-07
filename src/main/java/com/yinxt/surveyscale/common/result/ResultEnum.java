@@ -19,7 +19,9 @@ public enum ResultEnum {
     VERIFY_CODE_NOT_CORRECT("100008", "验证码不正确"),
     EMAIL_NO_REGISTER("100009", "邮箱未注册"),
     FILE_NUM_TOO_MUCH("100010", "文件数量过多"),
-    FILE_TOO_BIG("100011", "文件过大，请调整文件大小后重试");
+    FILE_TOO_BIG("100011", "文件过大，请调整文件大小后重试"),
+    SERVCIE_ERROR("100012", "服务异常"),
+    URL_ERROR("100013", "无此资源");
 
     private String code;
     private String name;

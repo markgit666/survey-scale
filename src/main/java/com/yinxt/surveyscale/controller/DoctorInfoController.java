@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Api(value = "医生API")
+@Api(tags = {"doctor:"}, value = "医生相关", description = "医生相关APIdd")
 @RestController
 @RequestMapping(value = "authc")
 public class DoctorInfoController {
@@ -32,7 +32,7 @@ public class DoctorInfoController {
      * @param loginReqDTO
      * @return
      */
-    @ApiOperation(value = "登陆", notes = "登陆", httpMethod = "POST")
+    @ApiOperation(value = "登录", notes = "登录", httpMethod = "POST")
     @RequestMapping(value = "login")
     public Result login(@RequestBody @Valid LoginReqDTO loginReqDTO) {
         return doctorInfoService.login(loginReqDTO);

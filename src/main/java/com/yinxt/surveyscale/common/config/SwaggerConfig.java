@@ -9,6 +9,7 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -33,11 +34,25 @@ public class SwaggerConfig {
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
+                .tags(new Tag("doctor:", "医生相关API"), getTags())
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build()
                 .enable(swaggerEnable);
+    }
+
+    private Tag[] getTags() {
+        Tag[] tags = {
+                new Tag("examination:", "答题相关API"),
+                new Tag("excel:", "excel导出相关API"),
+                new Tag("file:", "文件上传下载相关API"),
+                new Tag("patient:", "被试者相关API"),
+                new Tag("report:", "报告表相关API"),
+                new Tag("eligible:", "实验条件相关API"),
+                new Tag("scale:", "量表相关API")
+        };
+        return tags;
     }
 
     @Bean
