@@ -25,6 +25,7 @@ public class SessionManager extends DefaultWebSessionManager {
             return sessionId;
         } else {
             return super.getSessionId(request, response);
+//            return null;
         }
     }
 

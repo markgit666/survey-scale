@@ -41,6 +41,7 @@ public class CaptchaService {
     public Result getCaptcha() {
         //生成验证码文字
         String kaptchaText = defaultKaptcha.createText();
+        log.info("验证码：{}", kaptchaText);
 
         //生成token，并缓存验证码到redis
         String token = UUID.randomUUID().toString();

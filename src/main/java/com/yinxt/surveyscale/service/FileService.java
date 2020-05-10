@@ -53,6 +53,9 @@ public class FileService {
         if (StringUtils.isBlank(reportId)) {
             throw new LogicException("报告表编号不能为空");
         }
+        if (StringUtils.isBlank(doctorId)){
+            throw new LogicException("医生编号不存在");
+        }
         //前端答题页面路径
         String url = request.getParameter("url");
         //生成报告表二维码

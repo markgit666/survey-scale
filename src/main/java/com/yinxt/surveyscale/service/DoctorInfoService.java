@@ -89,7 +89,7 @@ public class DoctorInfoService {
         } catch (Exception e) {
             log.error("解密失败：", e);
         }
-        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginReqDTO.getLoginName(), loginReqDTO.getPassword());
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginReqDTO.getLoginName(), loginReqDTO.getPassword(), loginReqDTO.isRememberMe());
         Subject subject = SecurityUtils.getSubject();
         try {
             subject.login(usernamePasswordToken);

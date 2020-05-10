@@ -24,6 +24,10 @@ public class LoginReqDTO {
     @NotBlank(message = "密码不能为空")
     private String password;
     /**
+     * 记住我
+     */
+    private boolean rememberMe;
+    /**
      * 验证码token
      */
     @NotBlank(message = "验证码token不能为空")

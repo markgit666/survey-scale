@@ -2,9 +2,11 @@ package com.yinxt.surveyscale.common.shiro;
 
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
+import org.apache.shiro.mgt.RememberMeManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.crazycake.shiro.RedisCacheManager;
@@ -33,22 +35,35 @@ public class ShiroConfig {
         DefaultWebSecurityManager defaultSecurityManager = new DefaultWebSecurityManager();
         defaultSecurityManager.setRealm(realm());
         defaultSecurityManager.setSessionManager(sessionManager());
+        defaultSecurityManager.setRememberMeManager(rememberMeManager());
         defaultSecurityManager.setCacheManager(cacheManager());
         return defaultSecurityManager;
     }
 
     @Bean
     public SessionManager sessionManager() {
-        SimpleCookie simpleCookie = new SimpleCookie("Token");
-        simpleCookie.setPath("/");
-        simpleCookie.setHttpOnly(false);
         SessionManager sessionManager = new SessionManager();
         sessionManager.setSessionDAO(redisSessionDAO());
-        sessionManager.setSessionIdCookie(simpleCookie);
         sessionManager.setDeleteInvalidSessions(true);
         sessionManager.setSessionValidationSchedulerEnabled(true);
-        sessionManager.setGlobalSessionTimeout(3600000);
+        sessionManager.setGlobalSessionTimeout(120000);
         return sessionManager;
+    }
+
+
+    @Bean
+    public CookieRememberMeManager rememberMeManager() {
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(rememberMeCookie());
+        return cookieRememberMeManager;
+    }
+
+    @Bean
+    public SimpleCookie rememberMeCookie() {
+        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+        simpleCookie.setHttpOnly(true);
+        simpleCookie.setMaxAge(604800);
+        return simpleCookie;
     }
 
     @Bean
@@ -112,7 +127,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/v2/api-docs", "anon");
         filterChainDefinitionMap.put("/webjars/springfox-swagger-ui/**", "anon");
 
-        filterChainDefinitionMap.put("/**", "authc");
+        filterChainDefinitionMap.put("/**", "user");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
@@ -120,3 +135,4 @@ public class ShiroConfig {
     }
 
 }
+
