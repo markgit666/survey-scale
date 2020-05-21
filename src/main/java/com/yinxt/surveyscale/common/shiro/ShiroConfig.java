@@ -117,6 +117,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/authc/**", "anon");
         filterChainDefinitionMap.put("/file/**", "anon");
         filterChainDefinitionMap.put("/paper/patient/**", "anon");
+        filterChainDefinitionMap.put("/patient/relation/**", "anon");
         filterChainDefinitionMap.put("/excel/**", "anon");
         filterChainDefinitionMap.put("/error", "anon");
         //swagger2
