@@ -49,7 +49,7 @@ public class PatientInfoService {
     public PatientIdVO savePatientRelationInfo(PatientRelationInfoDTO patientRelationInfoDTO) {
         try {
             //1、保存病人信息
-            String patientId = savePatientInfo(patientRelationInfoDTO.getPatientInfo());
+            String patientId = savePatientInfo(patientRelationInfoDTO.getPatientInfo(), true);
             PatientIdVO patientIdVO = new PatientIdVO();
             patientIdVO.setPatientId(patientId);
             //2、保存实验条件的答案
@@ -70,14 +70,16 @@ public class PatientInfoService {
      *
      * @param patientInfoCommitReqDTO
      */
-    public String savePatientInfo(PatientInfoCommitReqDTO patientInfoCommitReqDTO) {
-        //解密doctorId
-        String encryptDoctorId = patientInfoCommitReqDTO.getDoctorId();
-        try {
-            patientInfoCommitReqDTO.setDoctorId(RSAUtil.decrypt(URLDecoder.decode(encryptDoctorId, "UTF-8").replace(" ", "+"), privateKey));
-        } catch (Exception e) {
-            log.info("医生编号解密失败");
-            throw new LogicException("错误的医生编号");
+    public String savePatientInfo(PatientInfoCommitReqDTO patientInfoCommitReqDTO, boolean isEncrypted) {
+        if (isEncrypted) {
+            //解密doctorId
+            String encryptDoctorId = patientInfoCommitReqDTO.getDoctorId();
+            try {
+                patientInfoCommitReqDTO.setDoctorId(RSAUtil.decrypt(URLDecoder.decode(encryptDoctorId, "UTF-8").replace(" ", "+"), privateKey));
+            } catch (Exception e) {
+                log.info("医生编号解密失败");
+                throw new LogicException("错误的医生编号");
+            }
         }
         PatientInfo patientInfo = new PatientInfo();
         BeanUtils.copyProperties(patientInfoCommitReqDTO, patientInfo);

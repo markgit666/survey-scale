@@ -129,12 +129,11 @@ public class ExcelService {
             col[25] = patientInfo.getMentalDiseaseFamilyHistory();
             col[26] = patientInfo.getOtherMentalDiseaseFamilyHistory();
             col[27] = patientInfo.getCurrentMedicalHistoryMemoryLoss();
-            col[28] = patientInfo.getCurrentMedicalHistoryMemoryLoss();
-            col[29] = patientInfo.getMemoryLossTime();
-            col[30] = patientInfo.getPhysicalExamination();
-            col[31] = patientInfo.getIsUseCognitiveDrugs();
-            col[32] = patientInfo.getDrugsType();
-            col[33] = patientInfo.getDrugsDosage();
+            col[28] = patientInfo.getMemoryLossTime();
+            col[29] = patientInfo.getPhysicalExamination();
+            col[30] = patientInfo.getIsUseCognitiveDrugs();
+            col[31] = patientInfo.getDrugsType();
+            col[32] = patientInfo.getDrugsDosage();
         }
         XSSFWorkbook xssfWorkbook = ExcelUtil.getWorkbook(sheetName, header, content);
         saveExcelToDirectory(xssfWorkbook, fileName, directory);

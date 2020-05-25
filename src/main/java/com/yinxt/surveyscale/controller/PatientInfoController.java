@@ -47,7 +47,7 @@ public class PatientInfoController {
     @ApiOperation(value = "被试者基本信息保存", notes = "被试者基本信息保存", httpMethod = "POST")
     @RequestMapping(value = "info/save")
     public Result savePatientInfo(@RequestBody @Valid PatientInfoCommitReqDTO patientInfoCommitReqDTO) {
-        patientInfoService.savePatientInfo(patientInfoCommitReqDTO);
+        patientInfoService.savePatientInfo(patientInfoCommitReqDTO, false);
         return Result.success();
     }
 
