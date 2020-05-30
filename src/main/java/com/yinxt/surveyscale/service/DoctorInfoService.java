@@ -1,6 +1,7 @@
 package com.yinxt.surveyscale.service;
 
 import com.yinxt.surveyscale.common.constant.Constant;
+import com.yinxt.surveyscale.common.enums.UserTypeEnum;
 import com.yinxt.surveyscale.common.threadpool.ThreadPoolUtil;
 import com.yinxt.surveyscale.common.util.RSAUtil;
 import com.yinxt.surveyscale.dto.FindBackPasswordReqDTO;
@@ -182,6 +183,7 @@ public class DoctorInfoService {
         doctorAuthInfo.setSalt(salt);
         String md5Password = new Md5Hash(doctorAuthInfo.getPassword(), salt, Constant.salt).toString();
         doctorAuthInfo.setPassword(md5Password);
+        doctorAuthInfo.setIdentity(UserTypeEnum.ADMIN.type);
         doctorInfoMapper.insertDoctorInfo(doctorAuthInfo);
         //删除缓存
         RedisUtil.deleteKey(cacheKey);
