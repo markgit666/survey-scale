@@ -16,6 +16,7 @@ import com.yinxt.surveyscale.common.exeption.LogicException;
 import com.yinxt.surveyscale.common.redis.RedisUtil;
 import com.yinxt.surveyscale.common.result.Result;
 import com.yinxt.surveyscale.common.result.ResultEnum;
+import com.yinxt.surveyscale.vo.DoctorIdentityVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -98,7 +99,11 @@ public class DoctorInfoService {
         }
         if (subject.isAuthenticated()) {
             String sessionId = subject.getSession().getId().toString();
-            return Result.success(ResultEnum.AUTHC, sessionId);
+            DoctorAuthInfo doctorAuthInfo = doctorInfoMapper.getDoctorInfoByLoginName(loginReqDTO.getLoginName());
+            DoctorIdentityVO doctorIdentityVO = new DoctorIdentityVO();
+            doctorIdentityVO.setToken(sessionId);
+            doctorIdentityVO.setIdentity(doctorAuthInfo.getIdentity());
+            return Result.success(ResultEnum.AUTHC, doctorIdentityVO);
         } else {
             return Result.error(ResultEnum.AUTHC_ERROR);
         }

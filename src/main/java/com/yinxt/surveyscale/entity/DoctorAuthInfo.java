@@ -28,5 +28,9 @@ public class DoctorAuthInfo {
      * 盐
      */
     private String salt;
+    /**
+     * 身份
+     */
+    private String identity;
 
 }

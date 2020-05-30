@@ -8,6 +8,7 @@
         <result column="login_name" property="loginName"/>
         <result column="password" property="password"/>
         <result column="salt" property="salt"/>
+        <result column="identity" property="identity"/>
     </resultMap>
 
     <select id="getDoctorInfoByLoginNameAndPassword" resultMap="DoctorInfoResultMap">

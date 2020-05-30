@@ -30,7 +30,7 @@
                 and tr.report_name like concat('%', #{reportName}, '%')
             </if>
             <if test="patientName !=null and patientName != '' ">
-                and tpi.patient_name = #{patientName,jdbcType=VARCHAR}
+                and tpi.patient_name like concat('%', #{patientName}, '%')
             </if>
             and tpi.doctor_id = #{doctorId,jdbcType=VARCHAR}
         </where>
@@ -59,7 +59,7 @@
     </select>
 
     <select id="selectExaminationPaperScaleById" resultType="com.yinxt.surveyscale.vo.ExaminationPaperScalesListRespVO">
-        select tep.examination_paper_id as examinationPaperId, tsi.scale_id as scaleId, tsi.scale_name as scaleName, tpi.patient_name as
+        select tep.examination_paper_id as examinationPaperId, tsi.scale_id as scaleId, tsp.scale_paper_id as scalePaperId, tsi.scale_name as scaleName, tpi.patient_name as
         patientName, tsp.use_time as useTime, tsi.question_count as questionCount, tsp.create_time as examinationDate,
         tj.check_user as checkUser, tsp.judge_status as judgeStatus, tj.total_score as totalScore
         from tb_examination_paper tep

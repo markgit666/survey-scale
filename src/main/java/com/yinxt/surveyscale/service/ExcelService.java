@@ -200,7 +200,7 @@ public class ExcelService {
      * @param nowDateStr
      */
     public void outputExaminationPaperExcel(List<ExaminationPaperScalesListRespVO> examinationPaperScalesListRespVOS, String directory, String nowDateStr) {
-        String[] header = {"量表答卷编号", "量表名称", "被试者姓名", "题目数量", "用时", "答题日期", "评分状态", "评定人", "总分"};
+        String[] header = {"量表答卷编号", "量表名称", "被试者姓名", "题目数量", "用时（分钟）", "答题日期", "评分状态", "评定人", "总分"};
         ExaminationPaperScalesListRespVO listRespVO = examinationPaperScalesListRespVOS.get(0);
         String fileName = listRespVO.getExaminationPaperId() + "-" + listRespVO.getReportName() + "-" + nowDateStr + ".xlsx";
         String sheetName = "报告表答卷信息";
