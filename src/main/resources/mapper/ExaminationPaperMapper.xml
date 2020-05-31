@@ -109,6 +109,7 @@
         tj.check_time as checkTime,
         tj.total_score as totalScore
         from tb_scale_paper tsp
+        inner join tb_report_scale trs on tsp.scale_id = trs.scale_id
         left join tb_examination_paper tep on tsp.paper_id = tep.examination_paper_id
         left join tb_scale ts on tsp.scale_id = ts.scale_id
         left join tb_judge tj on tsp.scale_paper_id = tj.scale_paper_id
