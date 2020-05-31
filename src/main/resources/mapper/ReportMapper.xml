@@ -41,6 +41,16 @@
         where tr.report_id = #{reportId,jdbcType=VARCHAR}
     </select>
 
+    <select id="getReportByReportAndDoctorId" parameterType="string" resultMap="reportResultMap">
+        select tr.report_id,
+        tr.report_name,
+        tr.create_time,
+        tr.update_time
+        from tb_report tr
+        where tr.report_id = #{reportId,jdbcType=VARCHAR}
+        and exists(select 1 from tb_doctor_report tdr where tr.report_id = tdr.report_id and tdr.doctor_id=#{doctorId,jdbcType=VARCHAR})
+    </select>
+
     <select id="getReportScaleIdListById" parameterType="string" resultType="string">
         select trs.scale_id
         from tb_report_scale trs

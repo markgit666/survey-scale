@@ -16,7 +16,7 @@ public interface ScaleInfoMapper {
 
     List<ScaleInfo> selectScaleInfoList(@Param("scaleName") String scaleName, @Param("doctorId") String doctorId);
 
-    ScaleInfo selectScaleInfo(@Param("scaleId") String scaleId, @Param("doctorId") String doctorId);
+    ScaleInfo selectScaleInfo(@Param("scaleId") String scaleId);
 
     int updateScaleInfo(ScaleInfo scaleInfo);
 

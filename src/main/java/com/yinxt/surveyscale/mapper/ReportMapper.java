@@ -22,6 +22,8 @@ public interface ReportMapper {
 
     Report getReportById(@Param("reportId") String reportId);
 
+    Report getReportByReportAndDoctorId(@Param("reportId") String reportId, @Param("doctorId") String doctorId);
+
     List<String> getReportScaleIdListById(@Param("reportId") String reportId);
 
     int selectScaleNumByReportId(@Param("reportId") String reportId);

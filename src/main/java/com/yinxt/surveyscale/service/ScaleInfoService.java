@@ -183,7 +183,7 @@ public class ScaleInfoService {
      * @return
      */
     public ScaleInfo getScaleInfoById(String scaleId) {
-        return scaleInfoMapper.selectScaleInfo(scaleId, doctorInfoService.getLoginDoctorId());
+        return scaleInfoMapper.selectScaleInfo(scaleId);
     }
 
     /**

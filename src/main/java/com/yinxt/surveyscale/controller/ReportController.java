@@ -38,7 +38,7 @@ public class ReportController {
         return Result.success(reportService.getDoctorPersonReportList(reportListReqDTO));
     }
 
-    @ApiOperation(value = "删除报告表", notes = "删除报告表", httpMethod = "POST")
+    @ApiOperation(value = "获取报告表详情", notes = "获取报告表详情", httpMethod = "POST")
     @RequestMapping(value = "detail/info")
     public Result getReportDetailInfo(@Valid @RequestBody ReportDetailReqDTO reportDetailReqDTO) {
         return Result.success(reportService.getReportDetailInfo(reportDetailReqDTO.getReportId(), true));

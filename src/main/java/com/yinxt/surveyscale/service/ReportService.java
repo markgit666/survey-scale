@@ -50,7 +50,7 @@ public class ReportService {
      */
     public ReportInfoVO getReportDetailInfo(String reportId, boolean detail) {
         //查询报告表
-        Report report = reportMapper.getReportById(reportId);
+        Report report = reportMapper.getReportByReportAndDoctorId(reportId, doctorInfoService.getLoginDoctorId());
         //报告表VO
         ReportInfoVO reportInfoVO = new ReportInfoVO();
         BeanUtils.copyProperties(report, reportInfoVO);
