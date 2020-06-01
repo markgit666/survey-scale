@@ -102,7 +102,7 @@ public class ExaminationPaperService {
         BlankExaminationPaperVO blankExaminationPaperVO = new BlankExaminationPaperVO();
         blankExaminationPaperVO.setExaminationPaperId(examinationPaperId);
         //设置报告表信息
-        ReportInfoVO reportInfoVO = reportService.getReportDetailInfo(reportId, false);
+        ReportInfoVO reportInfoVO = reportService.getReportDetailInfo(reportId, false, false);
         blankExaminationPaperVO.setReportInfoVO(reportInfoVO);
         return blankExaminationPaperVO;
     }

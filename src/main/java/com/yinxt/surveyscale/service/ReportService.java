@@ -48,14 +48,19 @@ public class ReportService {
      * @param detail
      * @return
      */
-    public ReportInfoVO getReportDetailInfo(String reportId, boolean detail) {
+    public ReportInfoVO getReportDetailInfo(String reportId, boolean detail, boolean needLogin) {
         //查询报告表
-        Report report = reportMapper.getReportByReportAndDoctorId(reportId, doctorInfoService.getLoginDoctorId());
+        Report report;
+        if (needLogin) {
+            report = reportMapper.getReportByReportAndDoctorId(reportId, doctorInfoService.getLoginDoctorId());
+        } else {
+            report = reportMapper.getReportById(reportId);
+        }
         //报告表VO
         ReportInfoVO reportInfoVO = new ReportInfoVO();
-        BeanUtils.copyProperties(report, reportInfoVO);
         //判断是否查询到报告表
         if (report != null) {
+            BeanUtils.copyProperties(report, reportInfoVO);
             //查询量表ID集合
             List<String> list = reportMapper.getReportScaleIdListById(reportId);
             reportInfoVO.setScaleIdList(list);
