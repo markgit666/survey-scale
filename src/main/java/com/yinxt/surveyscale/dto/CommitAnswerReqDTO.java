@@ -21,7 +21,7 @@ public class CommitAnswerReqDTO {
 //    @NotBlank(message = "答案内容不能为空")
     private String content;
     /**
-     * 得分
+     * 每一题的得分
      */
     private double score;
     /**

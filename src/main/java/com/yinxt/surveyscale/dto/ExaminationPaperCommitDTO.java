@@ -39,6 +39,7 @@ public class ExaminationPaperCommitDTO {
     /**
      * 评定人
      */
+    @NotBlank(message = "评定人不能为空")
     private String checkUser;
     /**
      * 总分
