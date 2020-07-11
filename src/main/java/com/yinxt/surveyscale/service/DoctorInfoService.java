@@ -183,7 +183,7 @@ public class DoctorInfoService {
         doctorAuthInfo.setSalt(salt);
         String md5Password = new Md5Hash(doctorAuthInfo.getPassword(), salt, Constant.salt).toString();
         doctorAuthInfo.setPassword(md5Password);
-        doctorAuthInfo.setIdentity(UserTypeEnum.ADMIN.type);
+        doctorAuthInfo.setIdentity(UserTypeEnum.NORMAL.type);
         doctorInfoMapper.insertDoctorInfo(doctorAuthInfo);
         //删除缓存
         RedisUtil.deleteKey(cacheKey);

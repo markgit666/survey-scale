@@ -12,7 +12,7 @@ public enum UserTypeEnum {
     /**
      * 管理员
      */
-    ADMIN("admin", "0"),
+    ADMIN("ADMIN", "0"),
     /**
      * 普通用户
      */

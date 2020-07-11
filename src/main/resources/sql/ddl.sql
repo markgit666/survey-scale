@@ -19,6 +19,10 @@
 -- Table structure for table `tb_answer`
 --
 
+CREATE SCHEMA `survey_scale` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
+
+USE survey_scale;
+
 DROP TABLE IF EXISTS `tb_answer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -35,7 +39,7 @@ CREATE TABLE `tb_answer` (
   UNIQUE KEY `answer_id_UNIQUE` (`answer_id`),
   KEY `idx_question_id` (`question_id`),
   KEY `idx_scale_paper_id` (`scale_paper_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5750 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -58,7 +62,7 @@ CREATE TABLE `tb_doctor` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `doctor_id_UNIQUE` (`doctor_id`),
   KEY `idx_login_name` (`login_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -76,7 +80,7 @@ CREATE TABLE `tb_doctor_report` (
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,7 +101,7 @@ CREATE TABLE `tb_eligible` (
   `update_time` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `tb_eligible_eligible_id_uindex` (`eligible_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COMMENT='参与实验的条件';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='参与实验的条件';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -118,7 +122,7 @@ CREATE TABLE `tb_eligible_patient` (
   PRIMARY KEY (`id`),
   KEY `idx_eligible_id` (`eligible_id`),
   KEY `idx_patient_id` (`patient_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=891 DEFAULT CHARSET=utf8mb4 COMMENT='病人实验条件表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='病人实验条件表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -138,7 +142,7 @@ CREATE TABLE `tb_examination_paper` (
   `update_time` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `examination_papaer_id_UNIQUE` (`examination_paper_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -157,7 +161,7 @@ CREATE TABLE `tb_file` (
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `file_no_UNIQUE` (`file_no`)
-) ENGINE=InnoDB AUTO_INCREMENT=197 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -179,7 +183,7 @@ CREATE TABLE `tb_judge` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `judge_id_UNIQUE` (`judge_id`),
   UNIQUE KEY `scale_paper_id_UNIQUE` (`scale_paper_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -233,7 +237,7 @@ CREATE TABLE `tb_patient` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id_UNIQUE` (`patient_id`),
   KEY `idx_doctor_id` (`doctor_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8mb4 COMMENT='病人信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='病人信息表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -261,7 +265,7 @@ CREATE TABLE `tb_question` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `question_id_UNIQUE` (`question_id`),
   KEY `idx_scale_id` (`scale_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=387 DEFAULT CHARSET=utf8mb4 COMMENT='题目表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='题目表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -280,7 +284,7 @@ CREATE TABLE `tb_report` (
   `update_time` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `report_id_UNIQUE` (`report_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -297,7 +301,7 @@ CREATE TABLE `tb_report_scale` (
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -321,7 +325,7 @@ CREATE TABLE `tb_scale` (
   UNIQUE KEY `scale_id_UNIQUE` (`scale_id`),
   KEY `idx_doctor_id` (`doctor_id`),
   KEY `idx_scale_name` (`scale_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=119 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -345,7 +349,7 @@ CREATE TABLE `tb_scale_paper` (
   UNIQUE KEY `paper_scacle_id_UNIQUE` (`scale_paper_id`),
   KEY `idx_paper_id` (`paper_id`),
   KEY `idx_scale_id` (`scale_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=311 DEFAULT CHARSET=utf8mb4 COMMENT='量表答卷';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='量表答卷';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
