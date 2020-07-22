@@ -55,5 +55,21 @@ public class ExaminationPaperScalesListRespVO {
      * 总分
      */
     private Double totalScore;
+    /**
+     * 频率总分
+     */
+    private Double frequencyTotalScore;
+    /**
+     * 严重程度总分
+     */
+    private Double seriousTotalScore;
+    /**
+     * 频率*严重程度总分
+     */
+    private Double frequencySeriousTotalScore;
+    /**
+     * 苦恼程度
+     */
+    private Double distressTotalScore;
 
 }

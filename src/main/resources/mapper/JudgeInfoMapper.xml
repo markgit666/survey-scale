@@ -8,13 +8,18 @@
         <result column="check_user" property="checkUser"/>
         <result column="check_time" property="checkTime"/>
         <result column="total_score" property="totalScore"/>
+        <result column="frequency_total_score" property="frequencyTotalScore"/>
+        <result column="serious_total_score" property="seriousTotalScore"/>
+        <result column="frequency_serious_total_score" property="frequencySeriousTotalScore"/>
+        <result column="distress_total_score" property="distressTotalScore"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
     <insert id="insertJudgeInfo" parameterType="com.yinxt.surveyscale.entity.JudgeInfo">
-        insert into tb_judge(judge_id, scale_paper_id, check_user, check_time, total_score, create_time, update_time)
-        values (#{judgeId,jdbcType=VARCHAR}, #{scalePaperId,jdbcType=VARCHAR}, #{checkUser,jdbcType=VARCHAR}, now(), #{totalScore,jdbcType=VARCHAR}, now(), now())
+        insert into tb_judge(judge_id, scale_paper_id, check_user, check_time, total_score, frequency_total_score, serious_total_score, frequency_serious_total_score, distress_total_score, create_time, update_time)
+        values (#{judgeId,jdbcType=VARCHAR}, #{scalePaperId,jdbcType=VARCHAR}, #{checkUser,jdbcType=VARCHAR}, now(), #{totalScore,jdbcType=VARCHAR},
+        #{frequencyTotalScore,jdbcType=VARCHAR}, #{seriousTotalScore,jdbcType=VARCHAR}, #{frequencySeriousTotalScore,jdbcType=VARCHAR}, #{distressTotalScore,jdbcType=VARCHAR}, now(), now())
     </insert>
 
 
@@ -30,6 +35,10 @@
         check_time = now(),
         check_user = #{checkUser,jdbcType=VARCHAR},
         total_score = #{totalScore,jdbcType=VARCHAR},
+        frequency_total_score = #{frequencyTotalScore,jdbcType=VARCHAR},
+        serious_total_score = #{seriousTotalScore,jdbcType=VARCHAR},
+        frequency_serious_total_score = #{frequencySeriousTotalScore,jdbcType=VARCHAR},
+        distress_total_score = #{distressTotalScore,jdbcType=VARCHAR},
         update_time = now()
         where scale_paper_id = #{scalePaperId,jdbcType=VARCHAR}
     </update>

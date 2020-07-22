@@ -165,6 +165,10 @@ public class ExaminationPaperService {
             judgeInfo.setScalePaperId(scalePaperId);
             judgeInfo.setCheckUser(examinationPaperCommitDTO.getCheckUser());
             judgeInfo.setTotalScore(examinationPaperCommitDTO.getTotalScore());
+            judgeInfo.setFrequencyTotalScore(examinationPaperCommitDTO.getFrequencyTotalScore());
+            judgeInfo.setSeriousTotalScore(examinationPaperCommitDTO.getSeriousTotalScore());
+            judgeInfo.setFrequencySeriousTotalScore(examinationPaperCommitDTO.getFrequencySeriousTotalScore());
+            judgeInfo.setDistressTotalScore(examinationPaperCommitDTO.getDistressTotalScore());
             judgeInfoService.saveJudgeInfo(judgeInfo);
 
         }
@@ -228,6 +232,10 @@ public class ExaminationPaperService {
         judgeInfo.setScalePaperId(scalePaperJudgeReqDTO.getScalePaperId());
         judgeInfo.setCheckUser(scalePaperJudgeReqDTO.getCheckUser());
         judgeInfo.setTotalScore(scalePaperJudgeReqDTO.getTotalScore());
+        judgeInfo.setFrequencyTotalScore(scalePaperJudgeReqDTO.getFrequencyTotalScore());
+        judgeInfo.setSeriousTotalScore(scalePaperJudgeReqDTO.getSeriousTotalScore());
+        judgeInfo.setFrequencySeriousTotalScore(scalePaperJudgeReqDTO.getFrequencySeriousTotalScore());
+        judgeInfo.setDistressTotalScore(scalePaperJudgeReqDTO.getDistressTotalScore());
         judgeInfoService.saveJudgeInfo(judgeInfo);
 
         //保存每一题的评分

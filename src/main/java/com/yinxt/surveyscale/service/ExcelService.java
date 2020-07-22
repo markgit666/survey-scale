@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +39,8 @@ public class ExcelService {
 
     @Value("${excel.path}")
     private String excelPath;
+
+    private static final String NPI_SCALE_NAME = "神经精神科量表";
 
     /**
      * 根据病人编号导出病人信息Excel
@@ -200,7 +203,7 @@ public class ExcelService {
      * @param nowDateStr
      */
     public void outputExaminationPaperExcel(List<ExaminationPaperScalesListRespVO> examinationPaperScalesListRespVOS, String directory, String nowDateStr) {
-        String[] header = {"量表答卷编号", "量表名称", "被试者姓名", "题目数量", "用时（分钟）", "答题日期", "评分状态", "评定人", "总分"};
+        String[] header = {"量表答卷编号", "量表名称", "被试者姓名", "题目数量", "用时（分钟）", "答题日期", "评分状态", "评定人", "总分", "频率总分(仅NPI)", "严重程度总分(仅NPI)", "频率*严重程度总分(仅NPI)", "使照料者苦恼程度(仅NPI)"};
         ExaminationPaperScalesListRespVO listRespVO = examinationPaperScalesListRespVOS.get(0);
         String fileName = listRespVO.getExaminationPaperId() + "-" + listRespVO.getReportName() + "-" + nowDateStr + ".xlsx";
         String sheetName = "报告表答卷信息";
@@ -217,6 +220,12 @@ public class ExcelService {
             col[6] = "1".equals(examinationPaperScalesListRespVO.getJudgeStatus()) ? "已评分" : "未评分";
             col[7] = examinationPaperScalesListRespVO.getCheckUser();
             col[8] = examinationPaperScalesListRespVO.getTotalScore() == null ? "" : String.valueOf(examinationPaperScalesListRespVO.getTotalScore());
+            if (examinationPaperScalesListRespVO.getScaleName().contains(NPI_SCALE_NAME)) {
+                col[9] = String.valueOf(examinationPaperScalesListRespVO.getFrequencyTotalScore());
+                col[10] = String.valueOf(examinationPaperScalesListRespVO.getSeriousTotalScore());
+                col[11] = String.valueOf(examinationPaperScalesListRespVO.getFrequencySeriousTotalScore());
+                col[12] = String.valueOf(examinationPaperScalesListRespVO.getDistressTotalScore());
+            }
         }
         XSSFWorkbook xssfWorkbook = ExcelUtil.getWorkbook(sheetName, header, content);
         saveExcelToDirectory(xssfWorkbook, fileName, directory);

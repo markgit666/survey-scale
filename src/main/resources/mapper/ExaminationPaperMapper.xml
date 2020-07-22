@@ -61,7 +61,8 @@
     <select id="selectExaminationPaperScaleById" resultType="com.yinxt.surveyscale.vo.ExaminationPaperScalesListRespVO">
         select tep.examination_paper_id as examinationPaperId, tsi.scale_id as scaleId, tsp.scale_paper_id as scalePaperId, tsi.scale_name as scaleName, tpi.patient_name as
         patientName, tsp.use_time as useTime, tsi.question_count as questionCount, tsp.create_time as examinationDate,
-        tj.check_user as checkUser, tsp.judge_status as judgeStatus, tj.total_score as totalScore
+        tj.check_user as checkUser, tsp.judge_status as judgeStatus, tj.total_score as totalScore,
+        tj.frequency_total_score as frequencyTotalScore, tj.serious_total_score as seriousTotalScore, tj.frequency_serious_total_score as frequencySeriousTotalScore, tj.distress_total_score as distressTotalScore
         from tb_examination_paper tep
         left join tb_patient tpi on tep.patient_id = tpi.patient_id
         left join tb_scale_paper tsp on tsp.paper_id = tep.examination_paper_id
