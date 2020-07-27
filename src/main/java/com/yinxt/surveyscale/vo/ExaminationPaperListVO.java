@@ -28,6 +28,10 @@ public class ExaminationPaperListVO {
      */
     private String patientName;
     /**
+     * 是否需要继续答题
+     */
+    private String isNeedContinueAnswer;
+    /**
      * 量表数量
      */
     private int scaleNum;

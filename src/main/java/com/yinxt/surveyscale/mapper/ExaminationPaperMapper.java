@@ -36,11 +36,15 @@ public interface ExaminationPaperMapper {
 
     String selectReportNameByPaperId(@Param("examinationPaperId") String examinationPaperId);
 
+    String selectReportIdByPaperId(@Param("examinationPaperId") String examinationPaperId);
+
     List<String> selectAllExaminationPaperScaleId(@Param("doctorId") String doctorId);
 
     List<ScalePaperQuestionListRespVO> selectScalePaperQuestionById(@Param("scalePaperId") String scalePaperId);
 
     int selectCountScalePaperByPaperIdAndScaleId(@Param("paperId") String paperId, @Param("scaleId") String scaleId);
+
+    int selectCountScalePaperByPaperId(@Param("paperId") String paperId);
 
     int deleteExaminationPaperById(@Param("examinationPaperId") String examinationPaperId);
 

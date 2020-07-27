@@ -8,7 +8,7 @@ import lombok.Data;
  * @date 2020-03-15 16:02
  */
 @Data
-public class BlankExaminationPaperVO {
+public class ExaminationPaperVO {
     /**
      * 试卷编号
      */

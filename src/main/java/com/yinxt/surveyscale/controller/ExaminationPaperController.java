@@ -37,7 +37,7 @@ public class ExaminationPaperController {
 
     @ApiOperation(value = "随访信息提交", notes = "随访信息提交，非首次答题时填写", httpMethod = "POST")
     @RequestMapping(value = "commitFollowUpInfo")
-    public Result commitFollowUpInfo(@RequestBody FollowUpInfoCommitReqDTO followUpInfoCommitReqDTO) {
+    public Result commitFollowUpInfo(@RequestBody @Valid FollowUpInfoCommitReqDTO followUpInfoCommitReqDTO) {
         examinationPaperService.commitFollowUpInfo(followUpInfoCommitReqDTO);
         return Result.success();
     }
@@ -64,6 +64,13 @@ public class ExaminationPaperController {
     @RequestMapping(value = "list/get")
     public Result getExaminationPaperList(@RequestBody @Valid ListDataReqDTO<ExaminationPaperListReqDTO> listDataReqDTO) {
         return Result.success(examinationPaperService.getExaminationPaperList(listDataReqDTO));
+    }
+
+    @ApiOperation(value = "继续答题,获取量表答卷列表", notes = "继续答题,获取量表答卷列表", httpMethod = "POST")
+    @RequestMapping(value = "continueAnswer")
+    public Result continueExamination(@RequestBody @Valid ContinueExaminationReqDTO continueExaminationReqDTO) {
+        examinationPaperService.continueExamination(continueExaminationReqDTO);
+        return Result.success();
     }
 
     @ApiOperation(value = "删除报告表答卷", notes = "删除报告表答卷", httpMethod = "POST")
