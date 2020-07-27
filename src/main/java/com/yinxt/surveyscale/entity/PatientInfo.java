@@ -16,6 +16,14 @@ public class PatientInfo {
      */
     private String patientId;
     /**
+     * 病例号
+     */
+    private String medicalRecordNum;
+    /**
+     * 组别
+     */
+    private String patientGroup;
+    /**
      * 医生编号
      */
     private String doctorId;
@@ -151,11 +159,6 @@ public class PatientInfo {
      */
     private String drinkingYears;
     /**
-     * 具体认知药物
-     */
-    private String drugsType;
-
-    /**
      * 状态（是否有效）
      */
     private String status;
@@ -167,9 +170,5 @@ public class PatientInfo {
      * 更新时间
      */
     private String updateTime;
-    /**
-     * 签约状态
-     */
-    private String signStatus;
 
 }

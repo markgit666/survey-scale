@@ -4,6 +4,8 @@
 
     <resultMap id="patientInfoResultMap" type="com.yinxt.surveyscale.entity.PatientInfo">
         <result column="patient_id" property="patientId"/>
+        <result column="medical_record_num" property="medicalRecordNum"/>
+        <result column="patient_group" property="patientGroup"/>
         <result column="doctor_id" property="doctorId"/>
         <result column="patient_name" property="name"/>
         <result column="id_card" property="idCard"/>
@@ -39,7 +41,6 @@
         <result column="drinking_type" property="drinkingType"/>
         <result column="drinking_num_eachday" property="drinkingNumEachDay"/>
         <result column="drinking_years" property="drinkingYears"/>
-        <result column="drugs_type" property="drugsType"/>
     </resultMap>
 
     <select id="selectPatientInfo" parameterType="com.yinxt.surveyscale.entity.PatientInfo"
@@ -87,6 +88,12 @@
             <if test="nation != null and nation != '' ">
                 and nation = #{nation,jdbcType=VARCHAR}
             </if>
+            <if test="medicalRecordNum != null and medicalRecordNum != '' ">
+                and medical_record_num=#{medicalRecordNum,jdbcType=VARCHAR}
+            </if>
+            <if test="patientGroup != null and patientGroup != '' ">
+                and patient_group=#{patientGroup,jdbcType=VARCHAR}
+            </if>
             and doctor_id = #{doctorId,jdbcType=VARCHAR}
         </where>
         order by create_time desc
@@ -132,16 +139,18 @@
 
     <insert id="insertPatientInfo" parameterType="com.yinxt.surveyscale.entity.PatientInfo">
         insert into tb_patient
-        (patient_id, doctor_id, patient_name, id_card, gender, birthday, telephone_number, family_address, create_time,
+        (patient_id, medical_record_num, patient_group, doctor_id, patient_name, id_card, gender, birthday, telephone_number, family_address, create_time,
         update_time, nation, marriage_status, work_status, in_service_job, education_level,
         education_years,is_snoring, living_way, medical_history, other_medical_history, smoking_history,
         smoking_num_eachday, smoking_years, is_mental_disease_family_history, mental_disease_family_history,
         other_mental_disease_family_history, current_medical_history_memory_loss, memory_loss_time, physical_examination,
         is_use_cognitive_drugs, drugs_dosage, hand, drinking_history, drinking_type, drinking_num_eachday,
-        drinking_years, drugs_type
+        drinking_years
         )
         values (
         #{patientId,jdbcType=VARCHAR},
+        #{medicalRecordNum,jdbcType=VARCHAR},
+        #{patientGroup,jdbcType=VARCHAR},
         #{doctorId,jdbcType=VARCHAR},
         #{name,jdbcType=VARCHAR},
         #{idCard,jdbcType=VARCHAR},
@@ -161,8 +170,7 @@
         #{currentMedicalHistoryMemoryLoss,jdbcType=VARCHAR},#{memoryLossTime,jdbcType=VARCHAR},#{physicalExamination,jdbcType=VARCHAR},
         #{isUseCognitiveDrugs,jdbcType=VARCHAR},#{drugsDosage,jdbcType=VARCHAR},#{hand,jdbcType=VARCHAR},
         #{drinkingHistory,jdbcType=VARCHAR},#{drinkingType,jdbcType=VARCHAR},#{drinkingNumEachDay,jdbcType=VARCHAR},
-        #{drinkingYears,jdbcType=VARCHAR},
-        #{drugsType,jdbcType=VARCHAR}
+        #{drinkingYears,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -171,6 +179,12 @@
         <set>
             <if test="name != null">
                 patient_name=#{name,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalRecordNum != null">
+                medical_record_num=#{medicalRecordNum,jdbcType=VARCHAR},
+            </if>
+            <if test="patientGroup != null">
+                patient_group=#{patientGroup,jdbcType=VARCHAR},
             </if>
             <if test="idCard != null">
                 id_card=#{idCard,jdbcType=VARCHAR},
@@ -267,12 +281,6 @@
             </if>
             <if test="drinkingYears!=null">
                 drinking_years=#{drinkingYears,jdbcType=VARCHAR},
-            </if>
-            <if test="drugsType!=null">
-                drugs_type=#{drugsType,jdbcType=VARCHAR},
-            </if>
-            <if test="signStatus !=null">
-                sign_status=#{signStatus,jdbcType=VARCHAR}
             </if>
             update_time = now()
         </set>

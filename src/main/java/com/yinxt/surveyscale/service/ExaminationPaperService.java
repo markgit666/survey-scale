@@ -58,8 +58,7 @@ public class ExaminationPaperService {
      * @return
      */
     public PatientInfo checkReportAndPatientStatus(String reportId, String idCard) {
-        String decryptReportId = checkReportId(reportId);
-        return patientInfoService.getPatientInfoByReportIdAndIdCard(decryptReportId, idCard);
+        return patientInfoService.getPatientInfoByReportIdAndIdCard(reportId, idCard);
     }
 
     /**
@@ -88,9 +87,8 @@ public class ExaminationPaperService {
      * @return
      */
     public BlankExaminationPaperVO getBlankExaminationPaper(BlankExaminationPaperReqDTO blankExaminationPaperReqDTO) {
-        String encryptReportId = blankExaminationPaperReqDTO.getReportId();
         String patientId = blankExaminationPaperReqDTO.getPatientId();
-        String reportId = checkReportId(encryptReportId);
+        String reportId = blankExaminationPaperReqDTO.getReportId();
         //查询病人信息
         PatientInfo patientInfo = patientInfoService.getPatientInfoByReportIdAndPatientId(reportId, patientId);
         //判断当前病人ID是否存在
@@ -128,15 +126,7 @@ public class ExaminationPaperService {
         /**
          * 封装试卷作答记录
          */
-        String reportId;
-        try {
-            String decryptReportId = URLDecoder.decode(examinationPaperCommitDTO.getReportId(), "UTF-8");
-            String target = decryptReportId.replace(" ", "+");
-            reportId = RSAUtil.decrypt(target, privateKey);
-        } catch (Exception e) {
-            log.error("解密失败：{}", e);
-            throw new LogicException("答卷保存失败");
-        }
+        String reportId = examinationPaperCommitDTO.getReportId();
         //试卷编号
         String examinationId = examinationPaperCommitDTO.getExaminationPaperId();
         //被试者编号

@@ -19,6 +19,14 @@ public class PatientInfoCommitReqDTO {
      */
     private String patientId;
     /**
+     * 病例号
+     */
+    private String medicalRecordNum;
+    /**
+     * 病人组别
+     */
+    private String patientGroup;
+    /**
      * 医生编号
      */
     @NotBlank(message = "医生编号不能为空")
@@ -158,11 +166,6 @@ public class PatientInfoCommitReqDTO {
      */
     private String drinkingYears;
     /**
-     * 具体认知药物
-     */
-    private String drugsType;
-
-    /**
      * 状态（是否有效）
      */
     private String status;
@@ -174,9 +177,5 @@ public class PatientInfoCommitReqDTO {
      * 更新时间
      */
     private String updateTime;
-    /**
-     * 签约状态
-     */
-    private String signStatus;
 
 }

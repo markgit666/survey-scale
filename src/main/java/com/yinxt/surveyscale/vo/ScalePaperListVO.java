@@ -47,7 +47,6 @@ public class ScalePaperListVO {
      * 总分
      */
     private Double totalScore;
-
     /**
      * 评定人
      */

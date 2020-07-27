@@ -362,3 +362,27 @@ CREATE TABLE `tb_scale_paper` (
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2020-05-30 23:13:44
+
+
+
+alter table tb_judge add frequency_total_score varchar(45) null comment '频率总分';
+alter table tb_judge add serious_total_score varchar(45) null comment '严重程度总分';
+alter table tb_judge add frequency_serious_total_score varchar(45) null comment '频率*严重程度总分';
+alter table tb_judge add distress_total_score varchar(45) null comment '严重程度总分';
+
+
+alter table tb_patient
+	add medical_record_num varchar(45) null comment '病例号' after patient_id;
+
+alter table tb_patient modify patient_group varchar(8) null comment '病人组别';
+
+
+create unique index idx_patient_medical_record_num
+	on tb_patient (medical_record_num);
+
+alter table tb_patient drop column drugs_type;
+
+alter table tb_patient drop column sign_status;
+
+
+

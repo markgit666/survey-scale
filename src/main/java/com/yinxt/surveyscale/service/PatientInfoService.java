@@ -71,16 +71,6 @@ public class PatientInfoService {
      * @param patientInfoCommitReqDTO
      */
     public String savePatientInfo(PatientInfoCommitReqDTO patientInfoCommitReqDTO, boolean isEncrypted) {
-        if (isEncrypted) {
-            //解密doctorId
-            String encryptDoctorId = patientInfoCommitReqDTO.getDoctorId();
-            try {
-                patientInfoCommitReqDTO.setDoctorId(RSAUtil.decrypt(URLDecoder.decode(encryptDoctorId, "UTF-8").replace(" ", "+"), privateKey));
-            } catch (Exception e) {
-                log.info("医生编号解密失败");
-                throw new LogicException("错误的医生编号");
-            }
-        }
         PatientInfo patientInfo = new PatientInfo();
         BeanUtils.copyProperties(patientInfoCommitReqDTO, patientInfo);
         String patientId = patientInfo.getPatientId();
