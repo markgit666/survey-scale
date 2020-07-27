@@ -48,7 +48,7 @@ public class ReportService {
      * @param detail
      * @return
      */
-    public ReportInfoVO getReportDetailInfo(String reportId, boolean detail, boolean needLogin) {
+    public ReportInfoVO getReportDetailInfo(String reportId, boolean detail, boolean needLogin, boolean isNeedQuestions) {
         //查询报告表
         Report report;
         if (needLogin) {
@@ -69,7 +69,7 @@ public class ReportService {
                 //量表信息列表
                 List<ScaleInfo> scaleInfoList = new ArrayList<>();
                 for (String scaleId : list) {
-                    scaleInfoList.add(scaleInfoService.getFormatScaleInfo(scaleId));
+                    scaleInfoList.add(scaleInfoService.getFormatScaleInfo(scaleId, isNeedQuestions));
                 }
                 reportInfoVO.setScaleInfoList(scaleInfoList);
             }

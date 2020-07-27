@@ -100,9 +100,27 @@ public class ExaminationPaperService {
         BlankExaminationPaperVO blankExaminationPaperVO = new BlankExaminationPaperVO();
         blankExaminationPaperVO.setExaminationPaperId(examinationPaperId);
         //设置报告表信息
-        ReportInfoVO reportInfoVO = reportService.getReportDetailInfo(reportId, false, false);
+        ReportInfoVO reportInfoVO = reportService.getReportDetailInfo(reportId, true, false, false);
+        List<ScaleInfo> scaleInfoList = reportInfoVO.getScaleInfoList();
+        scaleInfoList.forEach(scaleInfo -> {
+            int count = examinationPaperMapper.selectCountScalePaperByPaperIdAndScaleId(examinationPaperId, scaleInfo.getScaleId());
+            scaleInfo.setIsAnswer(count > 0 ? "1" : "0");
+        });
         blankExaminationPaperVO.setReportInfoVO(reportInfoVO);
         return blankExaminationPaperVO;
+    }
+
+    /**
+     * 随访信息提交
+     *
+     * @param followUpInfoCommitReqDTO
+     */
+    public void commitFollowUpInfo(FollowUpInfoCommitReqDTO followUpInfoCommitReqDTO) {
+        if (examinationPaperMapper.selectCountByExaminationPaper(followUpInfoCommitReqDTO.getExaminationPaperId()) == 0) {
+            Examination examination = new Examination();
+            BeanUtils.copyProperties(followUpInfoCommitReqDTO, examination);
+            examinationPaperMapper.insertExaminationPaper(examination);
+        }
     }
 
     /**
@@ -112,7 +130,7 @@ public class ExaminationPaperService {
      * @return
      */
     public ScaleInfo getPaperScaleDetail(String scaleId) {
-        return scaleInfoService.getFormatScaleInfo(scaleId);
+        return scaleInfoService.getFormatScaleInfo(scaleId, true);
     }
 
     /**
@@ -132,12 +150,12 @@ public class ExaminationPaperService {
         //被试者编号
         String patientId = examinationPaperCommitDTO.getPatientId();
         String scaleId = examinationPaperCommitDTO.getScaleId();
-        Examination examination = new Examination();
-        examination.setExaminationPaperId(examinationId);
-        examination.setPatientId(patientId);
-        examination.setReportId(reportId);
         //保存报告表答题记录
         if (examinationPaperMapper.selectCountByExaminationPaper(examinationId) == 0) {
+            Examination examination = new Examination();
+            examination.setExaminationPaperId(examinationId);
+            examination.setPatientId(patientId);
+            examination.setReportId(reportId);
             examinationPaperMapper.insertExaminationPaper(examination);
         }
 
@@ -303,7 +321,7 @@ public class ExaminationPaperService {
         BeanUtils.copyProperties(scalePaperInfo, scalePaperDetailVO);
         //量表信息
         String scaleId = scalePaperInfo.getScaleId();
-        ScaleInfo scaleInfo = scaleInfoService.getFormatScaleInfo(scaleId);
+        ScaleInfo scaleInfo = scaleInfoService.getFormatScaleInfo(scaleId, true);
         scalePaperDetailVO.setScaleInfo(scaleInfo);
         //封装题目答案
         List<Question> questionList = scaleInfo.getQuestionList();

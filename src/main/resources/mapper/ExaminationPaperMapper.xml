@@ -3,8 +3,9 @@
 <mapper namespace="com.yinxt.surveyscale.mapper.ExaminationPaperMapper">
 
     <insert id="insertExaminationPaper" parameterType="com.yinxt.surveyscale.entity.Examination">
-        insert into tb_examination_paper(examination_paper_id, patient_id, report_id, create_time, update_time)
-        values (#{examinationPaperId,jdbcType=VARCHAR}, #{patientId, jdbcType=VARCHAR}, #{reportId, jdbcType=VARCHAR}, now(), now())
+        insert into tb_examination_paper(examination_paper_id, patient_id, report_id, adverse_reactions, medication, create_time, update_time)
+        values (#{examinationPaperId,jdbcType=VARCHAR}, #{patientId,jdbcType=VARCHAR}, #{reportId,jdbcType=VARCHAR},
+         #{adverseReactions,jdbcType=VARCHAR}, #{medication,jdbcType=VARCHAR}, now(), now())
     </insert>
 
     <select id="selectCountByExaminationPaper" parameterType="string" resultType="int">
@@ -151,6 +152,10 @@
         left join tb_answer ta on tsp.scale_paper_id = ta.scale_paper_id
         left join tb_question tq on tq.question_id = ta.question_id
         where tsp.scale_paper_id = #{scalePaperId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectCountScalePaperByPaperIdAndScaleId" parameterType="string" resultType="int">
+        select count(*) from tb_scale_paper where paper_id = #{paperId,jdbcType=VARCHAR} and scale_id = #{scaleId,jdbcType=VARCHAR}
     </select>
 
     <update id="deleteScalePaperById" parameterType="string">

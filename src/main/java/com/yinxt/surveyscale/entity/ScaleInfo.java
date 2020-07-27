@@ -35,6 +35,10 @@ public class ScaleInfo {
      */
     private String status;
     /**
+     * 是否完成答题
+     */
+    private String isAnswer;
+    /**
      * 创建时间
      */
     private String createTime;

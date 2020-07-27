@@ -41,7 +41,7 @@ public class ReportController {
     @ApiOperation(value = "获取报告表详情", notes = "获取报告表详情", httpMethod = "POST")
     @RequestMapping(value = "detail/info")
     public Result getReportDetailInfo(@Valid @RequestBody ReportDetailReqDTO reportDetailReqDTO) {
-        return Result.success(reportService.getReportDetailInfo(reportDetailReqDTO.getReportId(), true, true));
+        return Result.success(reportService.getReportDetailInfo(reportDetailReqDTO.getReportId(), true, true, true));
     }
 
 }

@@ -384,5 +384,13 @@ alter table tb_patient drop column drugs_type;
 
 alter table tb_patient drop column sign_status;
 
+alter table tb_examination_paper
+	add adverse_reactions varchar(1024) null comment '不良反应' after effective_status;
+
+alter table tb_examination_paper
+	add medication varchar(1024) null comment '用药情况' after adverseReactions;
+
+
+
 
 

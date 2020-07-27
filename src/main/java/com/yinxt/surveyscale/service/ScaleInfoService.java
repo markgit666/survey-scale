@@ -133,7 +133,7 @@ public class ScaleInfoService {
      */
     public Result getScaleDetailInfo(ScaleInfo scaleInfo) {
         log.info("[getScaleInfo]查询参数：{}", JSON.toJSONString(scaleInfo.getScaleId()));
-        ScaleInfo info = getFormatScaleInfo(scaleInfo.getScaleId());
+        ScaleInfo info = getFormatScaleInfo(scaleInfo.getScaleId(), true);
         //若找不到量表信息
         if (info == null) {
             return Result.error();
@@ -148,30 +148,33 @@ public class ScaleInfoService {
      * @param scaleId
      * @return
      */
-    public ScaleInfo getFormatScaleInfo(String scaleId) {
+    public ScaleInfo getFormatScaleInfo(String scaleId, boolean isNeedQuestions) {
         ScaleInfo scaleInfo = getScaleInfoById(scaleId);
         if (scaleInfo == null) {
             return null;
         }
-        /**
-         * 查找每张量表的题目
-         */
-        List<Question> questionList = questionService.getQuestion(scaleInfo.getScaleId());
 
-        //题目顺序列表
-        List<Question> questionSortList = new ArrayList<>();
-        String[] questionIdSortArray = scaleInfo.getQuestionSort().split(Constant.NORMAL_SPLIT);
-        //如果题目顺序列表不为空则对题目进行排序
-        if (questionIdSortArray.length > 0) {
-            for (int i = 0; i < questionIdSortArray.length; i++) {
-                for (Question question : questionList) {
-                    if (StringUtils.equals(questionIdSortArray[i], question.getQuestionId())) {
-                        questionSortList.add(question);
-                        break;
+        if (isNeedQuestions) {
+            /**
+             * 查找每张量表的题目
+             */
+            List<Question> questionList = questionService.getQuestion(scaleInfo.getScaleId());
+
+            //题目顺序列表
+            List<Question> questionSortList = new ArrayList<>();
+            String[] questionIdSortArray = scaleInfo.getQuestionSort().split(Constant.NORMAL_SPLIT);
+            //如果题目顺序列表不为空则对题目进行排序
+            if (questionIdSortArray.length > 0) {
+                for (int i = 0; i < questionIdSortArray.length; i++) {
+                    for (Question question : questionList) {
+                        if (StringUtils.equals(questionIdSortArray[i], question.getQuestionId())) {
+                            questionSortList.add(question);
+                            break;
+                        }
                     }
                 }
+                scaleInfo.setQuestionList(questionSortList);
             }
-            scaleInfo.setQuestionList(questionSortList);
         }
         return scaleInfo;
     }
