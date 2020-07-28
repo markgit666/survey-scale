@@ -18,20 +18,10 @@ public class ExaminationPaperCommitDTO {
     @NotBlank(message = "试卷编号不能为空")
     private String examinationPaperId;
     /**
-     * 报告表编号
-     */
-    @NotBlank(message = "报告表编号不能为空")
-    private String reportId;
-    /**
      * 量表ID
      */
     @NotBlank(message = "量表编号不能为空")
     private String scaleId;
-    /**
-     * 病人ID
-     */
-    @NotBlank(message = "被试者编号不能为空")
-    private String patientId;
     /**
      * 答题时间
      */

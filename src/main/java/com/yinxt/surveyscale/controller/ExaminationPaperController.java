@@ -68,8 +68,7 @@ public class ExaminationPaperController {
     @ApiOperation(value = "继续答题,获取量表答卷列表", notes = "继续答题,获取量表答卷列表", httpMethod = "POST")
     @RequestMapping(value = "continueAnswer")
     public Result continueExamination(@RequestBody @Valid ContinueExaminationReqDTO continueExaminationReqDTO) {
-        examinationPaperService.continueExamination(continueExaminationReqDTO);
-        return Result.success();
+        return Result.success(examinationPaperService.continueExamination(continueExaminationReqDTO));
     }
 
     @ApiOperation(value = "删除报告表答卷", notes = "删除报告表答卷", httpMethod = "POST")

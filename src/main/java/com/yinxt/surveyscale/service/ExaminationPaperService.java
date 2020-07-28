@@ -97,7 +97,13 @@ public class ExaminationPaperService {
             throw new LogicException("被试者编号不存在");
         }
         //生成试卷编号
-        String examinationPaperId = RedisUtil.getSequenceId("EX");
+        String examinationPaperId = RedisUtil.getSequenceId(Constant.EXAMINATION_PREFIX);
+        Examination examination = new Examination();
+        examination.setExaminationPaperId(examinationPaperId);
+        examination.setReportId(reportId);
+        examination.setPatientId(patientId);
+        examination.setAnswerSequence(1);
+        examinationPaperMapper.insertExaminationPaper(examination);
         ExaminationPaperVO examinationPaperVO = new ExaminationPaperVO();
         examinationPaperVO.setExaminationPaperId(examinationPaperId);
         //设置报告表信息
@@ -144,22 +150,9 @@ public class ExaminationPaperService {
         /**
          * 封装试卷作答记录
          */
-        String reportId = examinationPaperCommitDTO.getReportId();
         //试卷编号
         String examinationId = examinationPaperCommitDTO.getExaminationPaperId();
-        //被试者编号
-        String patientId = examinationPaperCommitDTO.getPatientId();
         String scaleId = examinationPaperCommitDTO.getScaleId();
-        //保存报告表答题记录
-        if (examinationPaperMapper.selectCountByExaminationPaper(examinationId) == 0) {
-            int answerCount = examinationPaperMapper.selectCountByReportIdAndPatientId(reportId, patientId);
-            Examination examination = new Examination();
-            examination.setExaminationPaperId(examinationId);
-            examination.setPatientId(patientId);
-            examination.setReportId(reportId);
-            examination.setAnswerSequence(++answerCount);
-            examinationPaperMapper.insertExaminationPaper(examination);
-        }
 
         //保存量表答题记录
         ScalePaperInfo scalePaperInfo = new ScalePaperInfo();
@@ -299,13 +292,14 @@ public class ExaminationPaperService {
      *
      * @param continueExaminationReqDTO
      */
-    public void continueExamination(ContinueExaminationReqDTO continueExaminationReqDTO) {
+    public ExaminationPaperVO continueExamination(ContinueExaminationReqDTO continueExaminationReqDTO) {
         String examinationPaperId = continueExaminationReqDTO.getExaminationPaperId();
         ExaminationPaperVO examinationPaperVO = new ExaminationPaperVO();
         examinationPaperVO.setExaminationPaperId(examinationPaperId);
         String reportId = examinationPaperMapper.selectReportIdByPaperId(examinationPaperId);
         //设置报告表信息
         examinationPaperVO.setReportInfoVO(formatScaleAnswerStatus(reportId, examinationPaperId));
+        return examinationPaperVO;
     }
 
     /**

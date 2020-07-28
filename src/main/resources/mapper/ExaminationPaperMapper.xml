@@ -2,6 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yinxt.surveyscale.mapper.ExaminationPaperMapper">
 
+    <resultMap id="BaseExaminationPaperResult" type="com.yinxt.surveyscale.entity.Examination">
+        <result column="examination_paper_id" property="examinationPaperId"/>
+        <result column="patient_id" property="patientId"/>
+        <result column="report_id" property="reportId"/>
+        <result column="answer_sequence" property="answerSequence"/>
+        <result column="effective_status" property="effectiveStatus"/>
+        <result column="adverse_reactions" property="adverseReactions"/>
+        <result column="medication" property="medication"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectExamination" parameterType="string" resultMap="BaseExaminationPaperResult">
+        select * from tb_examination_paper where examination_paper_id = #{papaerId,jdbcType=VARCHAR}
+    </select>
+
     <insert id="insertExaminationPaper" parameterType="com.yinxt.surveyscale.entity.Examination">
         insert into tb_examination_paper(examination_paper_id, patient_id, report_id, adverse_reactions, medication, create_time, update_time)
         values (#{examinationPaperId,jdbcType=VARCHAR}, #{patientId,jdbcType=VARCHAR}, #{reportId,jdbcType=VARCHAR},
@@ -66,7 +82,7 @@
     <select id="selectReportIdByPaperId" parameterType="string" resultType="string">
         select report_id
         from tb_examination_paper
-        where tep.examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
+        where examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
     </select>
 
     <select id="selectExaminationPaperScaleById" resultType="com.yinxt.surveyscale.vo.ExaminationPaperScalesListRespVO">
@@ -169,7 +185,7 @@
     </select>
 
     <select id="selectCountScalePaperByPaperId" parameterType="string" resultType="int">
-        select count (*) from tb_scale_paper where paper_id = #{paperId,jdbcType=VARCHAR};
+        select count(*) from tb_scale_paper where paper_id = #{paperId,jdbcType=VARCHAR}
     </select>
 
     <update id="deleteScalePaperById" parameterType="string">

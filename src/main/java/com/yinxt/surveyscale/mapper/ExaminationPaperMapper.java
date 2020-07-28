@@ -16,6 +16,8 @@ import java.util.List;
 @Component
 public interface ExaminationPaperMapper {
 
+    Examination selectExamination(@Param("paperId") String papaerId);
+
     int insertScalePaperInfo(ScalePaperInfo scalePaperInfo);
 
     int updateScalePaperJudgeStatus(@Param("scalePaperId") String scalePaperId);

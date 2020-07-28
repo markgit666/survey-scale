@@ -34,6 +34,10 @@ public class Examination {
      */
     private int answerSequence;
     /**
+     * 有效状态
+     */
+    private String effectiveStatus;
+    /**
      * 创建时间
      */
     private String createTime;
