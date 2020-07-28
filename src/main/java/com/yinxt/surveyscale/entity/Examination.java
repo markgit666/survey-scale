@@ -30,6 +30,10 @@ public class Examination {
      */
     private String medication;
     /**
+     * 答题次序
+     */
+    private int answerSequence;
+    /**
      * 创建时间
      */
     private String createTime;

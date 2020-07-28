@@ -89,10 +89,11 @@ public class ExaminationPaperService {
     public ExaminationPaperVO getBlankExaminationPaper(BlankExaminationPaperReqDTO blankExaminationPaperReqDTO) {
         String patientId = blankExaminationPaperReqDTO.getPatientId();
         String reportId = blankExaminationPaperReqDTO.getReportId();
-        //查询病人信息
-        PatientInfo patientInfo = patientInfoService.getPatientInfoByReportIdAndPatientId(reportId, patientId);
+        if (reportService.getReportById(reportId) == null) {
+            throw new LogicException("报告表不存在");
+        }
         //判断当前病人ID是否存在
-        if (patientInfo == null) {
+        if (patientInfoService.getPatientInfoByReportIdAndPatientId(reportId, patientId) == null) {
             throw new LogicException("被试者编号不存在");
         }
         //生成试卷编号
@@ -100,13 +101,7 @@ public class ExaminationPaperService {
         ExaminationPaperVO examinationPaperVO = new ExaminationPaperVO();
         examinationPaperVO.setExaminationPaperId(examinationPaperId);
         //设置报告表信息
-        ReportInfoVO reportInfoVO = reportService.getReportDetailInfo(reportId, true, false, false);
-        List<ScaleInfo> scaleInfoList = reportInfoVO.getScaleInfoList();
-        scaleInfoList.forEach(scaleInfo -> {
-            int count = examinationPaperMapper.selectCountScalePaperByPaperIdAndScaleId(examinationPaperId, scaleInfo.getScaleId());
-            scaleInfo.setIsAnswer(count > 0 ? "1" : "0");
-        });
-        examinationPaperVO.setReportInfoVO(reportInfoVO);
+        examinationPaperVO.setReportInfoVO(formatScaleAnswerStatus(reportId, examinationPaperId));
         return examinationPaperVO;
     }
 
@@ -115,12 +110,17 @@ public class ExaminationPaperService {
      *
      * @param followUpInfoCommitReqDTO
      */
-    public void commitFollowUpInfo(FollowUpInfoCommitReqDTO followUpInfoCommitReqDTO) {
-        if (examinationPaperMapper.selectCountByExaminationPaper(followUpInfoCommitReqDTO.getExaminationPaperId()) == 0) {
-            Examination examination = new Examination();
-            BeanUtils.copyProperties(followUpInfoCommitReqDTO, examination);
-            examinationPaperMapper.insertExaminationPaper(examination);
-        }
+
+    public FollowUpRespDTO commitFollowUpInfo(FollowUpInfoCommitReqDTO followUpInfoCommitReqDTO) {
+        Examination examination = new Examination();
+        BeanUtils.copyProperties(followUpInfoCommitReqDTO, examination);
+        examination.setExaminationPaperId(RedisUtil.getSequenceId(Constant.EXAMINATION_PREFIX));
+        int answerCount = examinationPaperMapper.selectCountByReportIdAndPatientId(followUpInfoCommitReqDTO.getReportId(), followUpInfoCommitReqDTO.getPatientId());
+        examination.setAnswerSequence(++answerCount);
+        examinationPaperMapper.insertExaminationPaper(examination);
+        FollowUpRespDTO followUpRespDTO = new FollowUpRespDTO();
+        followUpRespDTO.setExaminationPaperId(examination.getExaminationPaperId());
+        return followUpRespDTO;
     }
 
     /**
@@ -139,7 +139,7 @@ public class ExaminationPaperService {
      * @param examinationPaperCommitDTO
      * @return
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Result commitExaminationPaperAnswer(ExaminationPaperCommitDTO examinationPaperCommitDTO) {
         /**
          * 封装试卷作答记录
@@ -152,10 +152,12 @@ public class ExaminationPaperService {
         String scaleId = examinationPaperCommitDTO.getScaleId();
         //保存报告表答题记录
         if (examinationPaperMapper.selectCountByExaminationPaper(examinationId) == 0) {
+            int answerCount = examinationPaperMapper.selectCountByReportIdAndPatientId(reportId, patientId);
             Examination examination = new Examination();
             examination.setExaminationPaperId(examinationId);
             examination.setPatientId(patientId);
             examination.setReportId(reportId);
+            examination.setAnswerSequence(++answerCount);
             examinationPaperMapper.insertExaminationPaper(examination);
         }
 
@@ -303,13 +305,27 @@ public class ExaminationPaperService {
         examinationPaperVO.setExaminationPaperId(examinationPaperId);
         String reportId = examinationPaperMapper.selectReportIdByPaperId(examinationPaperId);
         //设置报告表信息
+        examinationPaperVO.setReportInfoVO(formatScaleAnswerStatus(reportId, examinationPaperId));
+    }
+
+    /**
+     * description:封装量表答题状态
+     * <end>
+     *
+     * @param reportId
+     * @param examinationPaperId
+     * @return com.yinxt.surveyscale.vo.ReportInfoVO
+     * @author yinxt
+     * @date 2020年07月28日 15:23
+     */
+    public ReportInfoVO formatScaleAnswerStatus(String reportId, String examinationPaperId) {
         ReportInfoVO reportInfoVO = reportService.getReportDetailInfo(reportId, true, false, false);
         List<ScaleInfo> scaleInfoList = reportInfoVO.getScaleInfoList();
         scaleInfoList.forEach(scaleInfo -> {
             int count = examinationPaperMapper.selectCountScalePaperByPaperIdAndScaleId(examinationPaperId, scaleInfo.getScaleId());
             scaleInfo.setIsAnswer(count > 0 ? "1" : "0");
         });
-        examinationPaperVO.setReportInfoVO(reportInfoVO);
+        return reportInfoVO;
     }
 
     /**
@@ -412,7 +428,7 @@ public class ExaminationPaperService {
     }
 
     /**
-     * description:同事删除报告表和量表答卷
+     * description:同时删除报告表和量表答卷
      * <end>
      *
      * @param examinationPaperId

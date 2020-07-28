@@ -38,13 +38,12 @@ public class ExaminationPaperController {
     @ApiOperation(value = "随访信息提交", notes = "随访信息提交，非首次答题时填写", httpMethod = "POST")
     @RequestMapping(value = "commitFollowUpInfo")
     public Result commitFollowUpInfo(@RequestBody @Valid FollowUpInfoCommitReqDTO followUpInfoCommitReqDTO) {
-        examinationPaperService.commitFollowUpInfo(followUpInfoCommitReqDTO);
-        return Result.success();
+        return Result.success(examinationPaperService.commitFollowUpInfo(followUpInfoCommitReqDTO));
     }
 
     @ApiOperation(value = "获取量表试卷详情", notes = "获取量表详情", httpMethod = "POST")
     @RequestMapping(value = "patient/scale/get")
-    public Result getPaperScaleDetail(@RequestBody ScaleInfoReqDTO scaleInfoReqDTO) {
+    public Result getPaperScaleDetail(@RequestBody @Valid ScaleInfoReqDTO scaleInfoReqDTO) {
         return Result.success(examinationPaperService.getPaperScaleDetail(scaleInfoReqDTO.getScaleId()));
     }
 
@@ -75,7 +74,7 @@ public class ExaminationPaperController {
 
     @ApiOperation(value = "删除报告表答卷", notes = "删除报告表答卷", httpMethod = "POST")
     @RequestMapping(value = "remove")
-    public Result removeExaminationPaper(@RequestBody RemoveExaminationPaperReqDTO removeExaminationPaperReqDTO) {
+    public Result removeExaminationPaper(@RequestBody @Valid RemoveExaminationPaperReqDTO removeExaminationPaperReqDTO) {
         examinationPaperService.removeExaminationPaper(removeExaminationPaperReqDTO.getExaminationPaperId());
         return Result.success();
     }

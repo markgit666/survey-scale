@@ -1,5 +1,6 @@
 package com.yinxt.surveyscale.service;
 
+import com.yinxt.surveyscale.common.constant.Constant;
 import com.yinxt.surveyscale.mapper.JudgeInfoMapper;
 import com.yinxt.surveyscale.entity.JudgeInfo;
 import com.yinxt.surveyscale.common.redis.RedisUtil;
@@ -18,7 +19,7 @@ public class JudgeInfoService {
      * @param judgeInfo
      */
     public void saveJudgeInfo(JudgeInfo judgeInfo) {
-        judgeInfo.setJudgeId(RedisUtil.getSequenceId("JG"));
+        judgeInfo.setJudgeId(RedisUtil.getSequenceId(Constant.JUDGE_PREFIX));
         JudgeInfo queryResult = judgeInfoMapper.selectJudgeInfo(judgeInfo.getScalePaperId());
         if (queryResult != null) {
             judgeInfoMapper.updateJudgeInfo(judgeInfo);

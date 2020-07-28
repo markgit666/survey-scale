@@ -12,6 +12,10 @@
         select count(0) from tb_examination_paper where examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
     </select>
 
+    <select id="selectCountByReportIdAndPatientId" parameterType="string" resultType="int">
+        select count(*) from tb_examination_paper where report_id = #{reportId,jdbcType=VARCHAR} and patient_id = #{patientId,jdbcType=VARCHAR}
+    </select>
+
     <select id="selectExaminationPaperList" parameterType="com.yinxt.surveyscale.po.ExaminationPaperListQueryPO"
             resultType="com.yinxt.surveyscale.vo.ExaminationPaperListVO">
         select tep.examination_paper_id as examinationPaperId,

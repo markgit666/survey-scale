@@ -372,23 +372,28 @@ alter table tb_judge add distress_total_score varchar(45) null comment '严重�
 
 
 alter table tb_patient
-	add medical_record_num varchar(45) null comment '病例号' after patient_id;
+    add medical_record_num varchar(45) null comment '病例号' after patient_id;
 
-alter table tb_patient modify patient_group varchar(8) null comment '病人组别';
-
+alter table tb_patient
+    add patient_group varchar(8) null comment '病人组别' after medical_record_num;
 
 create unique index idx_patient_medical_record_num
-	on tb_patient (medical_record_num);
+    on tb_patient (medical_record_num);
 
 alter table tb_patient drop column drugs_type;
 
 alter table tb_patient drop column sign_status;
 
 alter table tb_examination_paper
-	add adverse_reactions varchar(1024) null comment '不良反应' after effective_status;
+    add adverse_reactions varchar(1024) null comment '不良反应' after effective_status;
 
 alter table tb_examination_paper
-	add medication varchar(1024) null comment '用药情况' after adverseReactions;
+    add medication varchar(1024) null comment '用药情况' after adverse_reactions;
+
+alter table tb_examination_paper
+add answer_sequence smallint null comment '答题次序' after report_id;
+
+
 
 
 

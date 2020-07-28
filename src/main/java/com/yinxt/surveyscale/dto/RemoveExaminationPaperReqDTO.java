@@ -2,6 +2,8 @@ package com.yinxt.surveyscale.dto;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 删除报告表答请求DTO
  *
@@ -15,5 +17,6 @@ public class RemoveExaminationPaperReqDTO {
     /**
      * 报告表答卷编号
      */
+    @NotBlank(message = "报告表答卷编号不能为空")
     private String examinationPaperId;
 }

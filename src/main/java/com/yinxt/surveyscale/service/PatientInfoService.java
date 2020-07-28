@@ -3,6 +3,7 @@ package com.yinxt.surveyscale.service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.yinxt.surveyscale.common.constant.Constant;
 import com.yinxt.surveyscale.common.enums.StatusEnum;
 import com.yinxt.surveyscale.common.exeption.LogicException;
 import com.yinxt.surveyscale.common.util.RSAUtil;
@@ -78,7 +79,7 @@ public class PatientInfoService {
             log.info("[savePatientInfo]请求参数：{}", JSON.toJSONString(patientInfo));
             PatientInfo checkPatientInfo = patientInfoMapper.selectPatientInfoByPatientId(patientInfo.getPatientId());
             if (checkPatientInfo == null) {
-                patientId = RedisUtil.getSequenceId("PT");
+                patientId = RedisUtil.getSequenceId(Constant.PATIENT_PREFIX);
                 patientInfo.setPatientId(patientId);
                 patientInfoMapper.insertPatientInfo(patientInfo);
             } else {

@@ -12,19 +12,14 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class FollowUpInfoCommitReqDTO {
     /**
-     * 报告表答卷编号
-     */
-    @NotBlank(message = "报告表不能为空")
-    private String examinationPaperId;
-    /**
      * 被试者编号
      */
-    @NotBlank(message = "被试者编号为空")
+    @NotBlank(message = "被试者编号不能为空")
     private String patientId;
     /**
      * 报告表编号
      */
-    @NotBlank(message = "报告表编号为空")
+    @NotBlank(message = "报告表编号不能为空")
     private String reportId;
     /**
      * 不良反应

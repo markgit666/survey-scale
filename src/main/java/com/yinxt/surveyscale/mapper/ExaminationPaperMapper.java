@@ -28,6 +28,8 @@ public interface ExaminationPaperMapper {
 
     int selectCountByExaminationPaper(@Param("examinationPaperId") String examinationPaperId);
 
+    int selectCountByReportIdAndPatientId(@Param("reportId") String reportId, @Param("patientId") String patientId);
+
     List<ExaminationPaperListVO> selectExaminationPaperList(ExaminationPaperListQueryPO examinationPaperListQueryPO);
 
     Examination selectExaminationPaperInfo(ExaminationPaperPO examinationPaperPO);

@@ -29,6 +29,26 @@ public class Constant {
      */
     public static final String DOCTOR_PREFIX = "DR";
     /**
+     * 报告表答卷id前缀
+     */
+    public static final String EXAMINATION_PREFIX = "EX";
+    /**
+     * 被试者id前缀
+     */
+    public static final String PATIENT_PREFIX = "PT";
+    /**
+     * 评分id前缀
+     */
+    public static final String JUDGE_PREFIX = "JG";
+    /**
+     * 问题id前缀
+     */
+    public static final String QUESTION_PREFIX = "QT";
+    /**
+     * 报告表前缀
+     */
+    public static final String report_prex = "RP";
+    /**
      * redis缓存注册验证码前缀
      */
     public static final String REDIS_REGISTER_PREFIX = "register_";
