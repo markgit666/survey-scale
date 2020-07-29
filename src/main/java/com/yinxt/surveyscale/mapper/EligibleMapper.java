@@ -16,7 +16,7 @@ import java.util.List;
 public interface EligibleMapper {
 
     /**
-     * 新增病人的实验条件信息
+     * 新增被试者的实验条件信息
      *
      * @param patientEligibleDTO
      * @return
@@ -24,7 +24,7 @@ public interface EligibleMapper {
     int insertPatientEligibleInfo(PatientEligibleDTO patientEligibleDTO);
 
     /**
-     * 批量新增病人的实验条件信息
+     * 批量新增被试者的实验条件信息
      *
      * @param patientEligibleDTOList
      * @return
@@ -32,7 +32,7 @@ public interface EligibleMapper {
     int insertPatientEligibleList(@Param("patientEligibleDTOList") List<PatientEligibleDTO> patientEligibleDTOList);
 
     /**
-     * 修改病人的实验条件信息
+     * 修改被试者的实验条件信息
      *
      * @param patientEligibleDTO
      * @return
@@ -40,7 +40,7 @@ public interface EligibleMapper {
     int updatePatientEligibleInfo(PatientEligibleDTO patientEligibleDTO);
 
     /**
-     * 查询病人的实验条件信息列表
+     * 查询被试者的实验条件信息列表
      *
      * @return
      */

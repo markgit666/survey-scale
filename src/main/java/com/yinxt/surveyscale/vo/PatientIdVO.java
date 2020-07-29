@@ -11,7 +11,7 @@ import lombok.Data;
 public class PatientIdVO {
 
     /**
-     * 病人编号
+     * 被试者编号
      */
     private String patientId;
 }

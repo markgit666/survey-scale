@@ -19,9 +19,9 @@
     </select>
 
     <insert id="insertExaminationPaper" parameterType="com.yinxt.surveyscale.entity.Examination">
-        insert into tb_examination_paper(examination_paper_id, patient_id, report_id, adverse_reactions, medication, create_time, update_time)
+        insert into tb_examination_paper(examination_paper_id, patient_id, report_id, answer_sequence, adverse_reactions, medication, create_time, update_time)
         values (#{examinationPaperId,jdbcType=VARCHAR}, #{patientId,jdbcType=VARCHAR}, #{reportId,jdbcType=VARCHAR},
-         #{adverseReactions,jdbcType=VARCHAR}, #{medication,jdbcType=VARCHAR}, now(), now())
+         #{answerSequence,jdbcType=INTEGER}, #{adverseReactions,jdbcType=VARCHAR}, #{medication,jdbcType=VARCHAR}, now(), now())
     </insert>
 
     <select id="selectCountByExaminationPaper" parameterType="string" resultType="int">
@@ -53,6 +53,9 @@
             </if>
             <if test="patientName !=null and patientName != '' ">
                 and tpi.patient_name like concat('%', #{patientName}, '%')
+            </if>
+            <if test="answerSequence !=null and answerSequence != '' ">
+                and answer_sequence=#{answerSequence,jdbcType=VARCHAR}
             </if>
             and tpi.doctor_id = #{doctorId,jdbcType=VARCHAR}
         </where>

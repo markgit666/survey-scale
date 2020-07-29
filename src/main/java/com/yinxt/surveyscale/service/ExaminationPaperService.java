@@ -92,7 +92,7 @@ public class ExaminationPaperService {
         if (reportService.getReportById(reportId) == null) {
             throw new LogicException("报告表不存在");
         }
-        //判断当前病人ID是否存在
+        //判断当前被试者ID是否存在
         if (patientInfoService.getPatientInfoByReportIdAndPatientId(reportId, patientId) == null) {
             throw new LogicException("被试者编号不存在");
         }
@@ -404,7 +404,7 @@ public class ExaminationPaperService {
     }
 
     /**
-     * 获取医生名下所有的病人的答卷编号列表
+     * 获取医生名下所有的被试者的答卷编号列表
      *
      * @return
      */

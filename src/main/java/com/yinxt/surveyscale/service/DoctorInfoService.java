@@ -104,6 +104,7 @@ public class DoctorInfoService {
             DoctorIdentityVO doctorIdentityVO = new DoctorIdentityVO();
             doctorIdentityVO.setToken(sessionId);
             doctorIdentityVO.setIdentity(doctorAuthInfo.getIdentity());
+            doctorIdentityVO.setDoctorId(doctorAuthInfo.getDoctorId());
             return Result.success(ResultEnum.AUTHC, doctorIdentityVO);
         } else {
             return Result.error(ResultEnum.AUTHC_ERROR);

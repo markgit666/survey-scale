@@ -15,7 +15,7 @@ public class ExaminationPaperCommitDTO {
     /**
      * 试卷编号
      */
-    @NotBlank(message = "试卷编号不能为空")
+    @NotBlank(message = "报告表答卷编号不能为空")
     private String examinationPaperId;
     /**
      * 量表ID

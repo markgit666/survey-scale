@@ -43,7 +43,7 @@ public class ExcelService {
     private static final String NPI_SCALE_NAME = "神经精神科量表";
 
     /**
-     * 根据病人编号导出病人信息Excel
+     * 根据被试者编号导出被试者信息Excel
      *
      * @param response
      * @param patientIdArray
@@ -54,7 +54,7 @@ public class ExcelService {
     }
 
     /**
-     * 导出医生名下全部病人信息Excel
+     * 导出医生名下全部被试者信息Excel
      *
      * @param response
      * @param doctorId
@@ -75,8 +75,8 @@ public class ExcelService {
         try {
             ZipFilesUtils.zipByFolder(directory, zipFilePath);
         } catch (IOException e) {
-            log.error("压缩病人信息表失败", e);
-            throw new LogException("导出病人信息失败");
+            log.error("压缩被试者信息表失败", e);
+            throw new LogException("导出被试者信息失败");
         }
         outputExcel(response, zipFilePath);
     }
@@ -155,7 +155,7 @@ public class ExcelService {
     }
 
     /**
-     * 获取医生名下全部病人的答卷信息Excel
+     * 获取医生名下全部被试者的答卷信息Excel
      *
      * @param response
      * @param doctorId

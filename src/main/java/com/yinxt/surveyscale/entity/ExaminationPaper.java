@@ -15,7 +15,7 @@ public class ExaminationPaper {
      */
     private String examinationPaperId;
     /**
-     * 病人信息
+     * 被试者信息
      */
     private PatientInfo patientInfo;
     /**

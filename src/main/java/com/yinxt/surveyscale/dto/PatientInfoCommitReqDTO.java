@@ -15,7 +15,7 @@ import java.util.Date;
 @Data
 public class PatientInfoCommitReqDTO {
     /**
-     * 病人编号
+     * 被试者编号
      */
     private String patientId;
     /**
@@ -23,7 +23,7 @@ public class PatientInfoCommitReqDTO {
      */
     private String medicalRecordNum;
     /**
-     * 病人组别
+     * 被试者组别
      */
     private String patientGroup;
     /**
@@ -32,7 +32,7 @@ public class PatientInfoCommitReqDTO {
     @NotBlank(message = "医生编号不能为空")
     private String doctorId;
     /**
-     * 病人姓名
+     * 被试者姓名
      */
     @NotBlank(message = "姓名不能为空")
     private String name;

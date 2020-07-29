@@ -24,13 +24,13 @@ public class ExcelController {
     @Autowired
     private ExcelService excelService;
 
-    @ApiOperation(value = "导出病人信息到excel", notes = "根据病人编号列表，批量导出病人信息到excel", httpMethod = "POST")
+    @ApiOperation(value = "导出被试者信息到excel", notes = "根据被试者编号列表，批量导出被试者信息到excel", httpMethod = "POST")
     @RequestMapping(value = "export/patient/info")
     public void exportPatientInfoExcel(@RequestParam("patientIdArray") List<String> patientIdArray, @RequestParam("doctorId") String doctorId, HttpServletResponse response) {
         excelService.getPatientInfoExcelById(response, patientIdArray, doctorId);
     }
 
-    @ApiOperation(value = "导出医生名下全部病人信息到excel", notes = "导出医生名下全部病人信息到excel", httpMethod = "POST")
+    @ApiOperation(value = "导出医生名下全部被试者信息到excel", notes = "导出医生名下全部被试者信息到excel", httpMethod = "POST")
     @RequestMapping(value = "export/all/patient/info")
     public void exportAllPatientInfoExcel(HttpServletResponse response, @RequestParam("doctorId") String doctorId) {
         excelService.getAllPatientInfoExcel(response, doctorId);

@@ -19,7 +19,7 @@ public class EligibleService {
     private EligibleMapper eligibleMapper;
 
     /**
-     * 保存病人条件答案信息
+     * 保存被试者条件答案信息
      *
      * @param patientEligibleDTO
      */
@@ -28,7 +28,7 @@ public class EligibleService {
     }
 
     /**
-     * 批量保存病人条件答案信息
+     * 批量保存被试者条件答案信息
      *
      * @param patientEligibleDTOList
      */
@@ -37,7 +37,7 @@ public class EligibleService {
     }
 
     /**
-     * 修改病人条件答案信息
+     * 修改被试者条件答案信息
      *
      * @param patientEligibleDTO
      */

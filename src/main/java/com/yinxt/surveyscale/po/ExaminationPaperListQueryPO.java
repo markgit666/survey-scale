@@ -16,9 +16,13 @@ public class ExaminationPaperListQueryPO {
      */
     private String reportName;
     /**
-     * 病人姓名
+     * 被试者姓名
      */
     private String patientName;
+    /**
+     * 答题次序
+     */
+    private String answerSequence;
     /**
      * 医生id
      */

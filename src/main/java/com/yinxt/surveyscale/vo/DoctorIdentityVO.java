@@ -15,7 +15,12 @@ public class DoctorIdentityVO {
      */
     private String token;
     /**
-     * 身份
+     * 身份（管理员/普通用户）
      */
     private String identity;
+    /**
+     * 医生ID
+     */
+    private String doctorId;
+
 }

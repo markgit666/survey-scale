@@ -6,13 +6,13 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * 病人信息
+ * 被试者信息
  */
 
 @Data
 public class PatientInfo {
     /**
-     * 病人编号
+     * 被试者编号
      */
     private String patientId;
     /**
@@ -28,7 +28,7 @@ public class PatientInfo {
      */
     private String doctorId;
     /**
-     * 病人姓名
+     * 被试者姓名
      */
     private String name;
     /**

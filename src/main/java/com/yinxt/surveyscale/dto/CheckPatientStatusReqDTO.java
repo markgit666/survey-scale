@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
 /**
- * 检验病人信息状态请求DTO
+ * 检验被试者信息状态请求DTO
  *
  * @author yinxt
  * @version 1.0

@@ -42,14 +42,14 @@ public class PatientInfoService {
     private String privateKey;
 
     /**
-     * 保存病人相关信息
+     * 保存被试者相关信息
      *
      * @param patientRelationInfoDTO
      */
     @Transactional(rollbackFor = Exception.class)
     public PatientIdVO savePatientRelationInfo(PatientRelationInfoDTO patientRelationInfoDTO) {
         try {
-            //1、保存病人信息
+            //1、保存被试者信息
             String patientId = savePatientInfo(patientRelationInfoDTO.getPatientInfo(), true);
             PatientIdVO patientIdVO = new PatientIdVO();
             patientIdVO.setPatientId(patientId);
@@ -61,13 +61,13 @@ public class PatientInfoService {
             eligibleService.savePatientEligibleList(patientEligibleDTOList);
             return patientIdVO;
         } catch (Exception e) {
-            log.info("保存病人相关信息失败", e);
-            throw new LogicException("病人相关信息保存失败");
+            log.info("保存被试者相关信息失败", e);
+            throw new LogicException("被试者相关信息保存失败");
         }
     }
 
     /**
-     * 添加病人基本信息
+     * 添加被试者基本信息
      *
      * @param patientInfoCommitReqDTO
      */
@@ -87,14 +87,14 @@ public class PatientInfoService {
             }
             log.info("[savePatientInfo]数据保存成功");
         } catch (Exception e) {
-            log.info("保存病人信息异常：{}", e);
-            throw new LogicException("保存病人信息异常");
+            log.info("保存被试者信息异常：{}", e);
+            throw new LogicException("保存被试者信息异常");
         }
         return patientId;
     }
 
     /**
-     * 获取病人信息
+     * 获取被试者信息
      *
      * @param patientInfo
      * @return
@@ -108,7 +108,7 @@ public class PatientInfoService {
     }
 
     /**
-     * 通过量表ID和病人ID校验当前医生名下该病人是否存在
+     * 通过量表ID和被试者ID校验当前医生名下该被试者是否存在
      *
      * @param scaleId
      * @param patientId
@@ -118,7 +118,7 @@ public class PatientInfoService {
     }
 
     /**
-     * 通过报告表ID和身份证号查询当前医生名下病人是否存在
+     * 通过报告表ID和身份证号查询当前医生名下被试者是否存在
      *
      * @param reportId
      * @param idCard
@@ -135,7 +135,7 @@ public class PatientInfoService {
 
 
     /**
-     * 查询病人列表
+     * 查询被试者列表
      *
      * @param listDataReqDTO
      */
@@ -155,7 +155,7 @@ public class PatientInfoService {
             PageBean pageBean = new PageBean(pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getPages(), pageInfo.getTotal(), patientInfos);
             return Result.success(pageBean);
         } catch (Exception e) {
-            log.error("查询病人信息异常：{}", e.getMessage());
+            log.error("查询被试者信息异常：{}", e.getMessage());
             return Result.error();
         }
     }
@@ -168,7 +168,7 @@ public class PatientInfoService {
                 patientInfoMapper.updatePatientInfo(patientInfo);
             }
         } catch (Exception e) {
-            log.error("删除病人信息异常：", e);
+            log.error("删除被试者信息异常：", e);
             return Result.error();
         }
         log.info("[removePatientInfo]删除成功");
@@ -176,7 +176,7 @@ public class PatientInfoService {
     }
 
     /**
-     * 通过病人id数组获取病人信息列表
+     * 通过被试者id数组获取被试者信息列表
      *
      * @param patientIdArray
      * @return
@@ -186,7 +186,7 @@ public class PatientInfoService {
     }
 
     /**
-     * 获取医生名下的全部病人信息列表
+     * 获取医生名下的全部被试者信息列表
      *
      * @return
      */

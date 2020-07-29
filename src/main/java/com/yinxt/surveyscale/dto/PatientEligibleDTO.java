@@ -17,7 +17,7 @@ public class PatientEligibleDTO {
     @NotBlank(message = "实验条件编号不能为空")
     private String eligibleId;
     /**
-     * 病人编号
+     * 被试者编号
      */
     private String patientId;
     /**

@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * 病人相关信息DTO
+ * 被试者相关信息DTO
  *
  * @author yinxt
  * @version 1.0
@@ -18,10 +18,10 @@ import java.util.List;
 public class PatientRelationInfoDTO {
 
     /**
-     * 病人基本信息
+     * 被试者基本信息
      */
     @Valid
-    @NotNull(message = "病人基本信息不能为空")
+    @NotNull(message = "被试者基本信息不能为空")
     private PatientInfoCommitReqDTO patientInfo;
     /**
      * 实验条件信息
