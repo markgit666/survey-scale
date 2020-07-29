@@ -393,6 +393,12 @@ alter table tb_examination_paper
 alter table tb_examination_paper
 add answer_sequence smallint null comment '答题次序' after report_id;
 
+alter table tb_patient drop key user_id_UNIQUE;
+alter table tb_patient
+	add constraint patient_id_UNIQUE
+		unique (patient_id);
+
+
 
 
 
