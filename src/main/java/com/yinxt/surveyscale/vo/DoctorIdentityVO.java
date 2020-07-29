@@ -22,5 +22,9 @@ public class DoctorIdentityVO {
      * 医生ID
      */
     private String doctorId;
+    /**
+     * 邮箱
+     */
+    private String loginName;
 
 }

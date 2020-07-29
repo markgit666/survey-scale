@@ -161,20 +161,13 @@ public class ExaminationPaperService {
         scalePaperInfo.setPaperId(examinationId);
         scalePaperInfo.setScaleId(scaleId);
         scalePaperInfo.setUseTime(String.valueOf(examinationPaperCommitDTO.getUseTime()));
-        if (examinationPaperCommitDTO.getTotalScore() > 0) {
-            scalePaperInfo.setJudgeStatus("1");
-            //保存评定记录信息
-            JudgeInfo judgeInfo = new JudgeInfo();
-            judgeInfo.setScalePaperId(scalePaperId);
-            judgeInfo.setCheckUser(examinationPaperCommitDTO.getCheckUser());
-            judgeInfo.setTotalScore(examinationPaperCommitDTO.getTotalScore());
-            judgeInfo.setFrequencyTotalScore(examinationPaperCommitDTO.getFrequencyTotalScore());
-            judgeInfo.setSeriousTotalScore(examinationPaperCommitDTO.getSeriousTotalScore());
-            judgeInfo.setFrequencySeriousTotalScore(examinationPaperCommitDTO.getFrequencySeriousTotalScore());
-            judgeInfo.setDistressTotalScore(examinationPaperCommitDTO.getDistressTotalScore());
-            judgeInfoService.saveJudgeInfo(judgeInfo);
+        scalePaperInfo.setJudgeStatus("1");
+        //保存评定记录信息
+        JudgeInfo judgeInfo = new JudgeInfo();
+        judgeInfo.setScalePaperId(scalePaperId);
+        BeanUtils.copyProperties(examinationPaperCommitDTO, judgeInfo);
+        judgeInfoService.saveJudgeInfo(judgeInfo);
 
-        }
         examinationPaperMapper.insertScalePaperInfo(scalePaperInfo);
 
         //保存答案
@@ -232,13 +225,7 @@ public class ExaminationPaperService {
     public Result commitScalePaperJudge(ScalePaperJudgeReqDTO scalePaperJudgeReqDTO) {
         //保存评定记录信息
         JudgeInfo judgeInfo = new JudgeInfo();
-        judgeInfo.setScalePaperId(scalePaperJudgeReqDTO.getScalePaperId());
-        judgeInfo.setCheckUser(scalePaperJudgeReqDTO.getCheckUser());
-        judgeInfo.setTotalScore(scalePaperJudgeReqDTO.getTotalScore());
-        judgeInfo.setFrequencyTotalScore(scalePaperJudgeReqDTO.getFrequencyTotalScore());
-        judgeInfo.setSeriousTotalScore(scalePaperJudgeReqDTO.getSeriousTotalScore());
-        judgeInfo.setFrequencySeriousTotalScore(scalePaperJudgeReqDTO.getFrequencySeriousTotalScore());
-        judgeInfo.setDistressTotalScore(scalePaperJudgeReqDTO.getDistressTotalScore());
+        BeanUtils.copyProperties(scalePaperJudgeReqDTO, judgeInfo);
         judgeInfoService.saveJudgeInfo(judgeInfo);
 
         //保存每一题的评分
