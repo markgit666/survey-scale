@@ -277,6 +277,7 @@ public class ExaminationPaperService {
         List<ExaminationPaperListVO> examinationPaperListVOS = examinationPaperMapper.selectExaminationPaperList(examinationPaperListQueryPO);
         examinationPaperListVOS.forEach(examinationPaperListVO -> {
             int answerCount = examinationPaperMapper.selectCountScalePaperByPaperId(examinationPaperListVO.getExaminationPaperId());
+            examinationPaperListVO.setAnswerNum(answerCount);
             examinationPaperListVO.setIsNeedContinueAnswer(answerCount < examinationPaperListVO.getScaleNum() ? "1" : "0");
         });
         DoctorInfoVO doctorInfoVO = new DoctorInfoVO();

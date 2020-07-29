@@ -39,6 +39,7 @@
         tr.report_name as reportName,
         tpi.patient_name as patientName,
         tep.create_time as createTime,
+        tep.answer_sequence as answerSequence,
         (select count(*)
         from tb_report_scale
         where report_id = tr.report_id) as scaleNum
@@ -46,7 +47,7 @@
         left join tb_patient tpi on tep.patient_id = tpi.patient_id
         left join tb_report tr on tep.report_id = tr.report_id
         <where>
-            effective_status = 1
+            tep.effective_status = 1
             <if test="reportName != null and reportName != '' ">
                 and tr.report_name like concat('%', #{reportName}, '%')
             </if>
