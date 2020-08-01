@@ -26,8 +26,8 @@ public class PatientRelationInfoDTO {
     /**
      * 实验条件信息
      */
-    @Valid
-    @NotEmpty(message = "实验条件信息不能为空")
+//    @Valid
+//    @NotEmpty(message = "实验条件信息不能为空")
     private List<PatientEligibleDTO> patientEligibleList;
 
 }

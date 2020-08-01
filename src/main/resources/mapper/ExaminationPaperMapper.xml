@@ -40,6 +40,8 @@
         tpi.patient_name as patientName,
         tep.create_time as createTime,
         tep.answer_sequence as answerSequence,
+        tep.adverse_reactions adverseReactions,
+        tep.medication as medication,
         (select count(*)
         from tb_report_scale
         where report_id = tr.report_id) as scaleNum

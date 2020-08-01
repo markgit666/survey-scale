@@ -18,6 +18,8 @@ public interface ScaleInfoMapper {
 
     ScaleInfo selectScaleInfo(@Param("scaleId") String scaleId);
 
+    List<ScaleInfo> selectScaleInfoByIdList(@Param("scaleIdList") List<String> scaleIdList);
+
     int updateScaleInfo(ScaleInfo scaleInfo);
 
 }

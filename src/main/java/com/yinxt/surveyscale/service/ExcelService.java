@@ -7,6 +7,7 @@ import com.yinxt.surveyscale.entity.PatientInfo;
 import com.yinxt.surveyscale.vo.ExaminationPaperScalesListRespVO;
 import com.yinxt.surveyscale.vo.ScalePaperQuestionListRespVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.logging.LogException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -94,7 +94,7 @@ public class ExcelService {
                 "工作状态", "在职职业", "文化程度", "受教育年数（年）",
                 "是否打呼噜", "居住方式", "既往病史", "其他疾病", "吸烟史",
                 "一天抽几支（支）", "吸烟年数（年）", "饮酒史", "饮酒类型", "一天几两（两）", "喝酒年数（年）",
-                "有无精神疾病家族史", "精神疾病家族史", "其他精神病史",
+                "有无精神疾病家族史", "具体精神疾病家族史", "其他精神病史",
                 "现病史（有无记忆下降）", "记忆力下降多久（年）", "体格检查情况",
                 "是否合并使用促认知药物",
                 "具体促认知药物、剂量、起始时间"};
@@ -212,20 +212,22 @@ public class ExcelService {
         for (int i = 0; i < examinationPaperScalesListRespVOS.size(); i++) {
             String col[] = content[i];
             ExaminationPaperScalesListRespVO examinationPaperScalesListRespVO = examinationPaperScalesListRespVOS.get(i);
-            col[0] = examinationPaperScalesListRespVO.getScalePaperId();
-            col[1] = examinationPaperScalesListRespVO.getScaleName();
-            col[2] = examinationPaperScalesListRespVO.getPatientName();
-            col[3] = String.valueOf(examinationPaperScalesListRespVO.getQuestionCount());
-            col[4] = examinationPaperScalesListRespVO.getUseTime();
-            col[5] = examinationPaperScalesListRespVO.getExaminationDate();
-            col[6] = "1".equals(examinationPaperScalesListRespVO.getJudgeStatus()) ? "已评分" : "未评分";
-            col[7] = examinationPaperScalesListRespVO.getCheckUser();
-            col[8] = examinationPaperScalesListRespVO.getTotalScore() == null ? "" : String.valueOf(examinationPaperScalesListRespVO.getTotalScore());
-            if (examinationPaperScalesListRespVO.getScaleName().contains(NPI_SCALE_NAME)) {
-                col[9] = String.valueOf(examinationPaperScalesListRespVO.getFrequencyTotalScore());
-                col[10] = String.valueOf(examinationPaperScalesListRespVO.getSeriousTotalScore());
-                col[11] = String.valueOf(examinationPaperScalesListRespVO.getFrequencySeriousTotalScore());
-                col[12] = String.valueOf(examinationPaperScalesListRespVO.getDistressTotalScore());
+            if (StringUtils.isNotBlank(examinationPaperScalesListRespVO.getScalePaperId()) && StringUtils.isNotBlank(examinationPaperScalesListRespVO.getScaleName())) {
+                col[0] = examinationPaperScalesListRespVO.getScalePaperId();
+                col[1] = examinationPaperScalesListRespVO.getScaleName();
+                col[2] = examinationPaperScalesListRespVO.getPatientName();
+                col[3] = String.valueOf(examinationPaperScalesListRespVO.getQuestionCount());
+                col[4] = examinationPaperScalesListRespVO.getUseTime();
+                col[5] = examinationPaperScalesListRespVO.getExaminationDate();
+                col[6] = "1".equals(examinationPaperScalesListRespVO.getJudgeStatus()) ? "已评分" : "未评分";
+                col[7] = examinationPaperScalesListRespVO.getCheckUser();
+                col[8] = examinationPaperScalesListRespVO.getTotalScore() == null ? "" : String.valueOf(examinationPaperScalesListRespVO.getTotalScore());
+                if (examinationPaperScalesListRespVO.getScaleName().contains(NPI_SCALE_NAME)) {
+                    col[9] = String.valueOf(examinationPaperScalesListRespVO.getFrequencyTotalScore());
+                    col[10] = String.valueOf(examinationPaperScalesListRespVO.getSeriousTotalScore());
+                    col[11] = String.valueOf(examinationPaperScalesListRespVO.getFrequencySeriousTotalScore());
+                    col[12] = String.valueOf(examinationPaperScalesListRespVO.getDistressTotalScore());
+                }
             }
         }
         XSSFWorkbook xssfWorkbook = ExcelUtil.getWorkbook(sheetName, header, content);

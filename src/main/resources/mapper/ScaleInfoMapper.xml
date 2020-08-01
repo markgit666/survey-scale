@@ -52,6 +52,17 @@
         </where>
     </select>
 
+    <select id="selectScaleInfoByIdList" resultMap="scaleInfoResultMap">
+        select *
+        from tb_scale
+        <where>
+            scale_id in
+            <foreach collection="scaleIdList" index="index" item="scaleId" open="(" close=")" separator=",">
+                #{scaleId,jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </select>
+
     <update id="updateScaleInfo">
         update tb_scale
         <set>

@@ -133,7 +133,8 @@ public class ScaleInfoService {
      */
     public Result getScaleDetailInfo(ScaleInfo scaleInfo) {
         log.info("[getScaleInfo]查询参数：{}", JSON.toJSONString(scaleInfo.getScaleId()));
-        ScaleInfo info = getFormatScaleInfo(scaleInfo.getScaleId(), true);
+        ScaleInfo info = getScaleInfoById(scaleInfo.getScaleId());
+        info = getFormatScaleInfo(info, true);
         //若找不到量表信息
         if (info == null) {
             return Result.error();
@@ -148,12 +149,10 @@ public class ScaleInfoService {
      * @param scaleId
      * @return
      */
-    public ScaleInfo getFormatScaleInfo(String scaleId, boolean isNeedQuestions) {
-        ScaleInfo scaleInfo = getScaleInfoById(scaleId);
+    public ScaleInfo getFormatScaleInfo(ScaleInfo scaleInfo, boolean isNeedQuestions) {
         if (scaleInfo == null) {
             return null;
         }
-
         if (isNeedQuestions) {
             /**
              * 查找每张量表的题目
@@ -187,6 +186,10 @@ public class ScaleInfoService {
      */
     public ScaleInfo getScaleInfoById(String scaleId) {
         return scaleInfoMapper.selectScaleInfo(scaleId);
+    }
+
+    public List<ScaleInfo> getScaleInfoByIdList(List<String> scaleIdList) {
+        return scaleInfoMapper.selectScaleInfoByIdList(scaleIdList);
     }
 
     /**

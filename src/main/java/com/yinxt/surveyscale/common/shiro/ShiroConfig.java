@@ -46,7 +46,7 @@ public class ShiroConfig {
         sessionManager.setSessionDAO(redisSessionDAO());
         sessionManager.setDeleteInvalidSessions(true);
         sessionManager.setSessionValidationSchedulerEnabled(true);
-        sessionManager.setGlobalSessionTimeout(7200000);
+        sessionManager.setGlobalSessionTimeout(14400000);
         return sessionManager;
     }
 

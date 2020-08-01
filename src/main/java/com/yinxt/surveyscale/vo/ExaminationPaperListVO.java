@@ -40,6 +40,14 @@ public class ExaminationPaperListVO {
      */
     private String isNeedContinueAnswer;
     /**
+     * 不良反应
+     */
+    private String adverseReactions;
+    /**
+     * 用药情况
+     */
+    private String medication;
+    /**
      * 量表数量
      */
     private int scaleNum;

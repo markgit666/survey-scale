@@ -399,6 +399,11 @@ alter table tb_patient
 		unique (patient_id);
 
 
+ALTER TABLE `survey_scale`.`tb_patient`
+ADD UNIQUE INDEX `id_card_UNIQUE` (`id_card` ASC);
+
+
+
 
 
 

@@ -136,7 +136,8 @@ public class ExaminationPaperService {
      * @return
      */
     public ScaleInfo getPaperScaleDetail(String scaleId) {
-        return scaleInfoService.getFormatScaleInfo(scaleId, true);
+        ScaleInfo scaleInfo = scaleInfoService.getScaleInfoById(scaleId);
+        return scaleInfoService.getFormatScaleInfo(scaleInfo, true);
     }
 
     /**
@@ -343,7 +344,9 @@ public class ExaminationPaperService {
         BeanUtils.copyProperties(scalePaperInfo, scalePaperDetailVO);
         //量表信息
         String scaleId = scalePaperInfo.getScaleId();
-        ScaleInfo scaleInfo = scaleInfoService.getFormatScaleInfo(scaleId, true);
+
+        ScaleInfo scaleInfo = scaleInfoService.getScaleInfoById(scaleId);
+        scaleInfo = scaleInfoService.getFormatScaleInfo(scaleInfo, true);
         scalePaperDetailVO.setScaleInfo(scaleInfo);
         //封装题目答案
         List<Question> questionList = scaleInfo.getQuestionList();

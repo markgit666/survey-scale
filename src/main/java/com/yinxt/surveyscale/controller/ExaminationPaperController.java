@@ -36,7 +36,7 @@ public class ExaminationPaperController {
     }
 
     @ApiOperation(value = "随访信息提交", notes = "随访信息提交，非首次答题时填写", httpMethod = "POST")
-    @RequestMapping(value = "commitFollowUpInfo")
+    @RequestMapping(value = "patient/commitFollowUpInfo")
     public Result commitFollowUpInfo(@RequestBody @Valid FollowUpInfoCommitReqDTO followUpInfoCommitReqDTO) {
         return Result.success(examinationPaperService.commitFollowUpInfo(followUpInfoCommitReqDTO));
     }
@@ -66,7 +66,7 @@ public class ExaminationPaperController {
     }
 
     @ApiOperation(value = "继续答题,获取量表答卷列表", notes = "继续答题,获取量表答卷列表", httpMethod = "POST")
-    @RequestMapping(value = "continueAnswer")
+    @RequestMapping(value = "/patient/continueAnswer")
     public Result continueExamination(@RequestBody @Valid ContinueExaminationReqDTO continueExaminationReqDTO) {
         return Result.success(examinationPaperService.continueExamination(continueExaminationReqDTO));
     }

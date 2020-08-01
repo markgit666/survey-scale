@@ -67,11 +67,12 @@ public class ReportService {
             //判断是否需要详细数据
             if (detail) {
                 //量表信息列表
-                List<ScaleInfo> scaleInfoList = new ArrayList<>();
-                for (String scaleId : list) {
-                    scaleInfoList.add(scaleInfoService.getFormatScaleInfo(scaleId, isNeedQuestions));
+                List<ScaleInfo> formatScaleInfoList = new ArrayList<>();
+                List<ScaleInfo> scaleInfoList = scaleInfoService.getScaleInfoByIdList(list);
+                for (ScaleInfo scaleInfo : scaleInfoList) {
+                    formatScaleInfoList.add(scaleInfoService.getFormatScaleInfo(scaleInfo, isNeedQuestions));
                 }
-                reportInfoVO.setScaleInfoList(scaleInfoList);
+                reportInfoVO.setScaleInfoList(formatScaleInfoList);
             }
         }
         return reportInfoVO;

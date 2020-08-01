@@ -54,11 +54,11 @@ public class PatientInfoService {
             PatientIdVO patientIdVO = new PatientIdVO();
             patientIdVO.setPatientId(patientId);
             //2、保存实验条件的答案
-            List<PatientEligibleDTO> patientEligibleDTOList = patientRelationInfoDTO.getPatientEligibleList();
-            for (PatientEligibleDTO patientEligibleDTO : patientEligibleDTOList) {
-                patientEligibleDTO.setPatientId(patientId);
-            }
-            eligibleService.savePatientEligibleList(patientEligibleDTOList);
+//            List<PatientEligibleDTO> patientEligibleDTOList = patientRelationInfoDTO.getPatientEligibleList();
+//            for (PatientEligibleDTO patientEligibleDTO : patientEligibleDTOList) {
+//                patientEligibleDTO.setPatientId(patientId);
+//            }
+//            eligibleService.savePatientEligibleList(patientEligibleDTOList);
             return patientIdVO;
         } catch (Exception e) {
             log.info("保存被试者相关信息失败", e);
@@ -72,6 +72,12 @@ public class PatientInfoService {
      * @param patientInfoCommitReqDTO
      */
     public String savePatientInfo(PatientInfoCommitReqDTO patientInfoCommitReqDTO, boolean isEncrypted) {
+        if (patientInfoMapper.selectCountPatientByIdCard(patientInfoCommitReqDTO.getIdCard()) > 0) {
+            throw new LogicException("该身份证号已存在");
+        }
+        if (patientInfoMapper.selectCountPatientByMedicalNum(patientInfoCommitReqDTO.getMedicalRecordNum()) > 0) {
+            throw new LogicException("该病历号已存在");
+        }
         PatientInfo patientInfo = new PatientInfo();
         BeanUtils.copyProperties(patientInfoCommitReqDTO, patientInfo);
         String patientId = patientInfo.getPatientId();

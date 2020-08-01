@@ -55,7 +55,21 @@
             <if test="doctorId != null and doctorId != ''">
                 and doctor_id=#{doctorId,jdbcType=VARCHAR}
             </if>
+            <if test="medicalRecordNum != null and medicalRecordNum != '' ">
+                and medical_record_num=#{medicalRecordNum,jdbcType=VARCHAR}
+            </if>
+            <if test="idCard != null and idCard != '' ">
+                id_card=#{idCard,jdbcType=VARCHAR}
+            </if>
         </where>
+    </select>
+
+    <select id="selectCountPatientByIdCard" resultType="int">
+        select count(*) from tb_patient where id_card = #{idCard,jdbcType=VARCHAR} and status = '1'
+    </select>
+
+    <select id="selectCountPatientByMedicalNum" resultType="int">
+        select count(*) from tb_patient where medical_record_num=#{medicalRecordNum,jdbcType=VARCHAR} and status = '1'
     </select>
 
     <select id="selectPatientInfoByPatientId" resultMap="patientInfoResultMap">
@@ -291,7 +305,8 @@
 
     <select id="selectAllPatientIdList" parameterType="string" resultMap="patientInfoResultMap">
         select patient_id from tb_patient
-        where doctor_id = #{doctorId,jdbcType=VARCHAR};
+        where doctor_id = #{doctorId,jdbcType=VARCHAR}
+        and status = '1'
     </select>
 
 </mapper>
