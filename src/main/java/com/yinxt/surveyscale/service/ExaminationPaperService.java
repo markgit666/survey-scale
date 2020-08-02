@@ -186,6 +186,7 @@ public class ExaminationPaperService {
                 answer.setQuestionId(questionId);
                 answer.setScalePaperId(scalePaperInfo.getScalePaperId());
                 answer.setContent(commitAnswerReqDTO.getContent());
+                answer.setInsertContent(commitAnswerReqDTO.getInsertContent());
                 answer.setScore(commitAnswerReqDTO.getScore());
                 formatAnswerChoose(commitAnswerReqDTO);
                 answer.setContent(commitAnswerReqDTO.getContent());

@@ -12,7 +12,6 @@
         <result column="record_score" property="recordScore"/>
         <result column="group_type" property="groupType"/>
         <result column="display" property="display"/>
-        <result column="insert_content" property="insertContent"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
@@ -33,12 +32,12 @@
     <insert id="insertQuestion" parameterType="com.yinxt.surveyscale.entity.Question">
         insert into
         tb_question
-        (question_id, scale_id, question_type, title, items, attachment, record_score, group_type, insert_content,
+        (question_id, scale_id, question_type, title, items, attachment, record_score, group_type,
         create_time, update_time)
         values (
         #{questionId,jdbcType=VARCHAR}, #{scaleId,jdbcType=VARCHAR}, #{questionType,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},
         #{itemStr,jdbcType=VARCHAR}, #{attachment,jdbcType=VARCHAR}, #{recordScore,jdbcType=VARCHAR}, #{groupType,jdbcType=VARCHAR},
-        #{insertContent,jdbcType=VARCHAR}, now(), now()
+        now(), now()
         )
     </insert>
 
@@ -69,9 +68,6 @@
                 </if>
                 <if test="display != null and display != '' ">
                     display=#{display,jdbcType=VARCHAR},
-                </if>
-                <if test="insertContent != null and insertContent != '' ">
-                    insert_content=#{insertContent,jdbcType=VARCHAR},
                 </if>
                 update_time=now()
             </trim>

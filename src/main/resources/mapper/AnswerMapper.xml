@@ -7,24 +7,26 @@
         <result column="examination_paper_id" property="scalePaperId"/>
         <result column="question_id" property="questionId"/>
         <result column="content" property="content"/>
+        <result column="insert_content" property="insertContent"/>
         <result column="score" property="score"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
     <insert id="insertAnswer" parameterType="com.yinxt.surveyscale.entity.Answer">
-     insert into tb_answer(answer_id, scale_paper_id, question_id, score, content, create_time, update_time)
+     insert into tb_answer(answer_id, scale_paper_id, question_id, score, content, insert_content, create_time, update_time)
      values (#{answerId,jdbcType=VARCHAR}, #{scalePaperId,jdbcType=VARCHAR}, #{questionId,jdbcType=VARCHAR},
-     #{score,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, now(), now())
+     #{score,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{insertContent,jdbcType=VARCHAR}, now(), now())
     </insert>
 
     <insert id="insertAnswerList">
-        insert into tb_answer(answer_id, scale_paper_id, question_id, score, content, create_time, update_time)
+        insert into tb_answer(answer_id, scale_paper_id, question_id, score, content, insert_content, create_time,
+        update_time)
         values
-        <foreach collection="answerList" item="answer" separator=",">
+        <foreach collection="answerList" item="answer" index="index" separator=",">
             (#{answer.answerId,jdbcType=VARCHAR}, #{answer.scalePaperId,jdbcType=VARCHAR},
             #{answer.questionId,jdbcType=VARCHAR}, #{answer.score,jdbcType=VARCHAR}, #{answer.content,jdbcType=VARCHAR},
-            now(), now())
+            #{answer.insertContent,jdbcType=VARCHAR}, now(), now())
         </foreach>
     </insert>
 

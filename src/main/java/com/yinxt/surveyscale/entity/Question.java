@@ -65,10 +65,6 @@ public class Question {
      */
     private String display;
     /**
-     * 插入内容
-     */
-    private String insertContent;
-    /**
      * 创建时间
      */
     private String createTime;

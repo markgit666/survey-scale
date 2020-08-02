@@ -25,6 +25,10 @@ public class CommitAnswerReqDTO {
      */
     private double score;
     /**
+     * 插入内容
+     */
+    private String insertContent;
+    /**
      * 选择题答案列表
      */
     private List<String> chooseAnswerList;

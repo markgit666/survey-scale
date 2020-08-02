@@ -26,6 +26,10 @@ public class Answer {
      */
     private String content;
     /**
+     * 补充插入的内容
+     */
+    private String insertContent;
+    /**
      * 选择题答案列表
      */
     private List<String> chooseAnswerList;

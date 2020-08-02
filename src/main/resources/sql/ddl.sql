@@ -403,6 +403,12 @@ ALTER TABLE `survey_scale`.`tb_patient`
 ADD UNIQUE INDEX `id_card_UNIQUE` (`id_card` ASC);
 
 
+alter table tb_answer
+	add insert_content varchar(256) null comment '补充插入的内容' after content;
+
+	alter table tb_question drop column insert_content;
+
+
 
 
 
