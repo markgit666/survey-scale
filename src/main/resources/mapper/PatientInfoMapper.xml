@@ -65,11 +65,15 @@
     </select>
 
     <select id="selectCountPatientByIdCard" resultType="int">
-        select count(*) from tb_patient where id_card = #{idCard,jdbcType=VARCHAR} and status = '1'
+        select count(*) from tb_patient where id_card = #{idCard,jdbcType=VARCHAR}
+        and patient_id != #{patientId,jdbcType=VARCHAR}
+        and status = '1'
     </select>
 
     <select id="selectCountPatientByMedicalNum" resultType="int">
-        select count(*) from tb_patient where medical_record_num=#{medicalRecordNum,jdbcType=VARCHAR} and status = '1'
+        select count(*) from tb_patient where medical_record_num=#{medicalRecordNum,jdbcType=VARCHAR}
+        and patient_id != #{patientId,jdbcType=VARCHAR}
+        and status = '1'
     </select>
 
     <select id="selectPatientInfoByPatientId" resultMap="patientInfoResultMap">

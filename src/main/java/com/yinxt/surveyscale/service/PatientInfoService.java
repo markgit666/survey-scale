@@ -49,20 +49,15 @@ public class PatientInfoService {
     @Transactional(rollbackFor = Exception.class)
     public PatientIdVO savePatientRelationInfo(PatientRelationInfoDTO patientRelationInfoDTO) {
         try {
-            //1、保存被试者信息
-            String patientId = savePatientInfo(patientRelationInfoDTO.getPatientInfo(), true);
+            PatientInfoCommitReqDTO patientInfoCommitReqDTO = patientRelationInfoDTO.getPatientInfo();
+            //保存被试者信息
+            String patientId = savePatientInfo(patientInfoCommitReqDTO, true);
             PatientIdVO patientIdVO = new PatientIdVO();
             patientIdVO.setPatientId(patientId);
-            //2、保存实验条件的答案
-//            List<PatientEligibleDTO> patientEligibleDTOList = patientRelationInfoDTO.getPatientEligibleList();
-//            for (PatientEligibleDTO patientEligibleDTO : patientEligibleDTOList) {
-//                patientEligibleDTO.setPatientId(patientId);
-//            }
-//            eligibleService.savePatientEligibleList(patientEligibleDTOList);
             return patientIdVO;
         } catch (Exception e) {
-            log.info("保存被试者相关信息失败", e);
-            throw new LogicException("被试者相关信息保存失败");
+            log.info("保存被试者信息失败", e);
+            throw new LogicException("被试者信息保存失败：" + e.getMessage());
         }
     }
 
@@ -72,20 +67,22 @@ public class PatientInfoService {
      * @param patientInfoCommitReqDTO
      */
     public String savePatientInfo(PatientInfoCommitReqDTO patientInfoCommitReqDTO, boolean isEncrypted) {
-        if (patientInfoMapper.selectCountPatientByIdCard(patientInfoCommitReqDTO.getIdCard()) > 0) {
-            throw new LogicException("该身份证号已存在");
-        }
-        if (patientInfoMapper.selectCountPatientByMedicalNum(patientInfoCommitReqDTO.getMedicalRecordNum()) > 0) {
-            throw new LogicException("该病历号已存在");
-        }
         PatientInfo patientInfo = new PatientInfo();
         BeanUtils.copyProperties(patientInfoCommitReqDTO, patientInfo);
         String patientId = patientInfo.getPatientId();
+        if (StringUtils.isBlank(patientId)) {
+            patientId = RedisUtil.getSequenceId(Constant.PATIENT_PREFIX);
+        }
+        if (patientInfoMapper.selectCountPatientByIdCard(patientInfoCommitReqDTO.getIdCard(), patientId) > 0) {
+            throw new LogicException("该身份证号已存在");
+        }
+        if (patientInfoMapper.selectCountPatientByMedicalNum(patientInfoCommitReqDTO.getMedicalRecordNum(), patientId) > 0) {
+            throw new LogicException("该病历号已存在");
+        }
         try {
             log.info("[savePatientInfo]请求参数：{}", JSON.toJSONString(patientInfo));
             PatientInfo checkPatientInfo = patientInfoMapper.selectPatientInfoByPatientId(patientInfo.getPatientId());
             if (checkPatientInfo == null) {
-                patientId = RedisUtil.getSequenceId(Constant.PATIENT_PREFIX);
                 patientInfo.setPatientId(patientId);
                 patientInfoMapper.insertPatientInfo(patientInfo);
             } else {
@@ -94,7 +91,7 @@ public class PatientInfoService {
             log.info("[savePatientInfo]数据保存成功");
         } catch (Exception e) {
             log.info("保存被试者信息异常：{}", e);
-            throw new LogicException("保存被试者信息异常");
+            throw new LogicException(e.getMessage());
         }
         return patientId;
     }

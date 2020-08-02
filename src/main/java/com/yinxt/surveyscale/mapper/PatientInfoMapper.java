@@ -13,9 +13,9 @@ public interface PatientInfoMapper {
 
     PatientInfo selectPatientInfo(PatientInfo patientInfo);
 
-    int selectCountPatientByIdCard(@Param("idCard") String idCard);
+    int selectCountPatientByIdCard(@Param("idCard") String idCard, @Param("patientId") String patientId);
 
-    int selectCountPatientByMedicalNum(@Param("medicalRecordNum") String medicalRecordNum);
+    int selectCountPatientByMedicalNum(@Param("medicalRecordNum") String medicalRecordNum, @Param("patientId") String patientId);
 
     PatientInfo selectPatientInfoByPatientId(@Param("patientId") String patientId);
 
