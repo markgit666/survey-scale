@@ -26,7 +26,7 @@ public class ExaminationPaperController {
     @ApiOperation(value = "被试者和报告表编号状态查询", notes = "被试者和报告表编号状态查询", httpMethod = "POST")
     @RequestMapping(value = "patient/report/status/check")
     public Result checkPatientStatus(@RequestBody @Valid CheckPatientStatusReqDTO checkPatientStatusReqDTO) {
-        return Result.success(examinationPaperService.checkReportAndPatientStatus(checkPatientStatusReqDTO.getReportId(), checkPatientStatusReqDTO.getIdCard()));
+        return Result.success(examinationPaperService.checkReportAndPatientStatus(checkPatientStatusReqDTO.getDoctorId(), checkPatientStatusReqDTO.getReportId(), checkPatientStatusReqDTO.getIdCard()));
     }
 
     @ApiOperation(value = "获取空报告表试卷", notes = "获取空报告表试卷，只含有编号列表", httpMethod = "POST")

@@ -6,9 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.yinxt.surveyscale.common.constant.Constant;
 import com.yinxt.surveyscale.common.enums.StatusEnum;
 import com.yinxt.surveyscale.common.exeption.LogicException;
-import com.yinxt.surveyscale.common.util.RSAUtil;
 import com.yinxt.surveyscale.dto.ListDataReqDTO;
-import com.yinxt.surveyscale.dto.PatientEligibleDTO;
 import com.yinxt.surveyscale.dto.PatientInfoCommitReqDTO;
 import com.yinxt.surveyscale.dto.PatientRelationInfoDTO;
 import com.yinxt.surveyscale.mapper.PatientInfoMapper;
@@ -25,7 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URLDecoder;
 import java.util.List;
 
 @Slf4j
@@ -97,6 +94,15 @@ public class PatientInfoService {
     }
 
     /**
+     * 判断身份证号是否已填写入其他医生名下
+     *
+     * @return
+     */
+    public boolean checkIdCardAlreadyExist(String doctorId, String idCard) {
+        return patientInfoMapper.selectCountPatientByDocotorIdAndIdCard(doctorId, idCard) > 0 ? true : false;
+    }
+
+    /**
      * 获取被试者信息
      *
      * @param patientInfo
@@ -127,8 +133,8 @@ public class PatientInfoService {
      * @param idCard
      * @return
      */
-    public PatientInfo getPatientInfoByReportIdAndIdCard(String reportId, String idCard) {
-        PatientInfo patientInfo = patientInfoMapper.selectPatientByReportIdAndIdCard(reportId, idCard);
+    public PatientInfo getPatientInfoByReportIdAndIdCard(String doctorId, String reportId, String idCard) {
+        PatientInfo patientInfo = patientInfoMapper.selectPatientByReportIdAndIdCardAndDoctorId(reportId, idCard, doctorId);
         return patientInfo;
     }
 

@@ -57,8 +57,11 @@ public class ExaminationPaperService {
      * @param idCard
      * @return
      */
-    public PatientInfo checkReportAndPatientStatus(String reportId, String idCard) {
-        return patientInfoService.getPatientInfoByReportIdAndIdCard(reportId, idCard);
+    public PatientInfo checkReportAndPatientStatus(String doctorId, String reportId, String idCard) {
+        if (patientInfoService.checkIdCardAlreadyExist(doctorId, idCard)) {
+            throw new LogicException("该身份证号已其他医生名下注册！");
+        }
+        return patientInfoService.getPatientInfoByReportIdAndIdCard(doctorId, reportId, idCard);
     }
 
     /**

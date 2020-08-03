@@ -23,5 +23,10 @@ public class CheckPatientStatusReqDTO {
      */
     @NotBlank(message = "身份证号不能为空")
     private String idCard;
+    /**
+     * 医生编号
+     */
+    @NotBlank(message = "医生编号不能为空")
+    private String doctorId;
 
 }

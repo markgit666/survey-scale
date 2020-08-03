@@ -15,6 +15,8 @@ public interface PatientInfoMapper {
 
     int selectCountPatientByIdCard(@Param("idCard") String idCard, @Param("patientId") String patientId);
 
+    int selectCountPatientByDocotorIdAndIdCard(@Param("doctorId") String doctorId, @Param("idCard") String idCard);
+
     int selectCountPatientByMedicalNum(@Param("medicalRecordNum") String medicalRecordNum, @Param("patientId") String patientId);
 
     PatientInfo selectPatientInfoByPatientId(@Param("patientId") String patientId);
@@ -25,7 +27,7 @@ public interface PatientInfoMapper {
 
     PatientInfo selectPatientByScaleIdAndPatientId(@Param("scaleId") String scaleId, @Param("patientId") String patientId);
 
-    PatientInfo selectPatientByReportIdAndIdCard(@Param("reportId") String reportId, @Param("idCard") String idCard);
+    PatientInfo selectPatientByReportIdAndIdCardAndDoctorId(@Param("reportId") String reportId, @Param("idCard") String idCard, @Param("doctorId") String doctorId);
 
     PatientInfo selectPatientByReportIdAndPatientId(@Param("reportId") String reportId, @Param("patientId") String patientId);
 
