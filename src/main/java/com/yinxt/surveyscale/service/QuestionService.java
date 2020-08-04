@@ -40,7 +40,7 @@ public class QuestionService {
             String questionId = question.getQuestionId();
             Question checkQuestion = questionMapper.selectQuestion(questionId);
             if (checkQuestion == null) {
-                questionId = RedisUtil.getSequenceId("QT");
+                questionId = RedisUtil.getSequenceId(Constant.QUESTION_PREFIX);
                 question.setQuestionId(questionId);
                 log.info("[saveQuestion]新增题目：{}", JSON.toJSONString(question));
                 questionMapper.insertQuestion(question);

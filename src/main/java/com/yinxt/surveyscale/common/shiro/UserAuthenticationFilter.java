@@ -1,5 +1,6 @@
 package com.yinxt.surveyscale.common.shiro;
 
+import com.yinxt.surveyscale.common.constant.Constant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.web.filter.authc.PassThruAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
@@ -16,7 +17,7 @@ public class UserAuthenticationFilter extends PassThruAuthenticationFilter {
     @Override
     public boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
         HttpServletRequest req = (HttpServletRequest) request;
-        String token = req.getHeader("Token");
+        String token = req.getHeader(Constant.TOKEN);
         log.info("token={}", token);
         if (req.getMethod().equals(RequestMethod.OPTIONS.name())) {
             return true;

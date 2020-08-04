@@ -8,6 +8,11 @@ package com.yinxt.surveyscale.common.constant;
  * @date 2019-10-23 21:45
  */
 public class Constant {
+
+    /**
+     * token
+     */
+    public static final String TOKEN = "Token";
     /**
      * 分隔符（附件/题目顺序）
      */
