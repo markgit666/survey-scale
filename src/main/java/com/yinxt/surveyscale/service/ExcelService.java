@@ -67,7 +67,8 @@ public class ExcelService {
     public void outPutPatientInfoList(HttpServletResponse response, List<String> list, String doctorId) {
         String nowDateTime = new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date());
         String nowDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        String directory = excelPath + File.separator + "patientInfo" + File.separator + "original" + File.separator + nowDate + File.separator + nowDateTime;
+        String nowTime = new SimpleDateFormat("HHmmss").format(new Date());
+        String directory = excelPath + File.separator + "patientInfo" + File.separator + "original" + File.separator + nowDate + File.separator + nowTime;
         List<PatientInfo> patientInfoList = patientInfoService.getPatientInfoListByIdArray(list, doctorId);
         outputPatientInfoExcel(patientInfoList, directory, nowDateTime);
         //压缩文件
@@ -175,7 +176,8 @@ public class ExcelService {
     public void outputExaminationPaperList(HttpServletResponse response, List<String> list, String doctorId) {
         String nowDateTime = new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date());
         String nowDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        String directory = excelPath + File.separator + "examinationPaper" + File.separator + "original" + File.separator + nowDate + File.separator + nowDateTime;
+        String nowTime = new SimpleDateFormat("HHmmss").format(new Date());
+        String directory = excelPath + File.separator + "examinationPaper" + File.separator + "original" + File.separator + nowDate + File.separator + nowTime;
         for (String examinationPaperId : list) {
             List<ExaminationPaperScalesListRespVO> examinationPaperScalesListRespVOS = examinationPaperService.getExaminationPaperScaleListById(examinationPaperId, doctorId);
             if (examinationPaperScalesListRespVOS.size() >= 1) {
@@ -243,7 +245,8 @@ public class ExcelService {
     public void getScalePaperExcelById(HttpServletResponse response, List<String> scalePaperIdList) {
         String nowDateTime = new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date());
         String nowDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        String directory = excelPath + File.separator + "scalePaper" + File.separator + "original" + File.separator + nowDate + File.separator + nowDateTime;
+        String nowTime = new SimpleDateFormat("HHmmss").format(new Date());
+        String directory = excelPath + File.separator + "scalePaper" + File.separator + "original" + File.separator + nowDate + File.separator + nowTime;
         for (String scalePaperId : scalePaperIdList) {
             List<ScalePaperQuestionListRespVO> scalePaperQuestionListRespVOList = examinationPaperService.getScalePaperQuestionListById(scalePaperId);
             if (scalePaperQuestionListRespVOList.size() > 0) {
@@ -282,9 +285,6 @@ public class ExcelService {
             col[2] = scalePaperQuestionListRespVO.getTitle();
             col[3] = scalePaperQuestionListRespVO.getItems();
             col[4] = scalePaperQuestionListRespVO.getAttachment();
-//            col[5] = scalePaperQuestionListRespVO.isRecordScore() ? "是" : "否";
-//            col[6] = scalePaperQuestionListRespVO.getGroupType();
-//            col[7] = scalePaperQuestionListRespVO.isDisplay() ? "是" : "否";
             col[5] = scalePaperQuestionListRespVO.getContent();
             col[6] = scalePaperQuestionListRespVO.getScore() == null ? "" : String.valueOf(scalePaperQuestionListRespVO.getScore());
         }
