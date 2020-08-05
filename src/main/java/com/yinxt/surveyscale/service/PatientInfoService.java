@@ -73,9 +73,9 @@ public class PatientInfoService {
         if (patientInfoMapper.selectCountPatientByIdCard(patientInfoCommitReqDTO.getIdCard(), patientId) > 0) {
             throw new LogicException("该身份证号已存在");
         }
-        if (patientInfoMapper.selectCountPatientByMedicalNum(patientInfoCommitReqDTO.getMedicalRecordNum(), patientId) > 0) {
-            throw new LogicException("该病历号已存在");
-        }
+//        if (patientInfoMapper.selectCountPatientByMedicalNum(patientInfoCommitReqDTO.getMedicalRecordNum(), patientId) > 0) {
+//            throw new LogicException("该病历号已存在");
+//        }
         try {
             log.info("[savePatientInfo]请求参数：{}", JSON.toJSONString(patientInfo));
             PatientInfo checkPatientInfo = patientInfoMapper.selectPatientInfoByPatientId(patientInfo.getPatientId());
