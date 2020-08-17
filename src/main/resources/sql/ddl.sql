@@ -15,13 +15,13 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
--- Table structure for table `tb_answer`
---
-
 CREATE SCHEMA `survey_scale` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 
 USE survey_scale;
+
+--
+-- Table structure for table `tb_answer`
+--
 
 DROP TABLE IF EXISTS `tb_answer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -32,6 +32,7 @@ CREATE TABLE `tb_answer` (
   `scale_paper_id` varchar(45) DEFAULT NULL COMMENT '量表答卷id',
   `question_id` varchar(45) NOT NULL,
   `content` varchar(225) NOT NULL,
+  `insert_content` varchar(256) DEFAULT NULL COMMENT '补充插入的内容',
   `score` double DEFAULT NULL,
   `create_time` datetime NOT NULL,
   `update_time` datetime DEFAULT NULL,
@@ -137,7 +138,10 @@ CREATE TABLE `tb_examination_paper` (
   `examination_paper_id` varchar(45) NOT NULL COMMENT '答卷编号',
   `patient_id` varchar(45) NOT NULL COMMENT '病人编号',
   `report_id` varchar(45) NOT NULL COMMENT '报告编号',
+  `answer_sequence` smallint(6) DEFAULT NULL COMMENT '答题次序',
   `effective_status` tinyint(4) DEFAULT '1',
+  `adverse_reactions` varchar(1024) DEFAULT NULL COMMENT '不良反应',
+  `medication` varchar(1024) DEFAULT NULL COMMENT '用药情况',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`),
@@ -180,6 +184,10 @@ CREATE TABLE `tb_judge` (
   `total_score` varchar(45) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
+  `frequency_total_score` varchar(45) DEFAULT NULL COMMENT '频率总分',
+  `serious_total_score` varchar(45) DEFAULT NULL COMMENT '严重程度总分',
+  `frequency_serious_total_score` varchar(45) DEFAULT NULL COMMENT '频率*严重程度总分',
+  `distress_total_score` varchar(45) DEFAULT NULL COMMENT '严重程度总分',
   PRIMARY KEY (`id`),
   UNIQUE KEY `judge_id_UNIQUE` (`judge_id`),
   UNIQUE KEY `scale_paper_id_UNIQUE` (`scale_paper_id`)
@@ -196,6 +204,8 @@ DROP TABLE IF EXISTS `tb_patient`;
 CREATE TABLE `tb_patient` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增主键',
   `patient_id` varchar(45) NOT NULL COMMENT '用户编号',
+  `medical_record_num` varchar(45) DEFAULT NULL COMMENT '病例号',
+  `patient_group` varchar(8) DEFAULT NULL COMMENT '病人组别',
   `doctor_id` varchar(24) NOT NULL COMMENT '医生ID',
   `patient_name` varchar(16) NOT NULL COMMENT '姓名',
   `id_card` varchar(45) DEFAULT NULL COMMENT '身份证号',
@@ -232,10 +242,9 @@ CREATE TABLE `tb_patient` (
   `drinking_type` varchar(45) DEFAULT NULL COMMENT '饮酒类型',
   `drinking_num_eachday` varchar(45) DEFAULT NULL COMMENT '每天饮酒量（两）',
   `drinking_years` varchar(45) DEFAULT NULL COMMENT '喝酒年数',
-  `drugs_type` varchar(45) DEFAULT NULL COMMENT '具体认知药物',
-  `sign_status` varchar(8) DEFAULT '0' COMMENT '是否签约合同',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `user_id_UNIQUE` (`patient_id`),
+  UNIQUE KEY `patient_id_UNIQUE` (`patient_id`),
+  UNIQUE KEY `id_card_UNIQUE` (`id_card`),
   KEY `idx_doctor_id` (`doctor_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='病人信息表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -259,7 +268,6 @@ CREATE TABLE `tb_question` (
   `record_score` tinyint(1) DEFAULT '1' COMMENT '是否记录总分',
   `group_type` varchar(8) DEFAULT NULL COMMENT '分组类型',
   `display` tinyint(1) DEFAULT '1' COMMENT '是否展示',
-  `insert_content` varchar(256) DEFAULT NULL COMMENT '插入内容',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
@@ -316,7 +324,7 @@ CREATE TABLE `tb_scale` (
   `scale_id` varchar(64) NOT NULL,
   `doctor_id` varchar(64) NOT NULL,
   `scale_name` varchar(256) NOT NULL,
-  `question_sort` varchar(1024) DEFAULT '',
+  `question_sort` varchar(2048) DEFAULT '',
   `question_count` int(11) DEFAULT NULL COMMENT '真实题目数量',
   `status` tinyint(2) NOT NULL DEFAULT '1',
   `create_time` datetime DEFAULT NULL,
@@ -361,52 +369,7 @@ CREATE TABLE `tb_scale_paper` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-05-30 23:13:44
-
-
-
-alter table tb_judge add frequency_total_score varchar(45) null comment '频率总分';
-alter table tb_judge add serious_total_score varchar(45) null comment '严重程度总分';
-alter table tb_judge add frequency_serious_total_score varchar(45) null comment '频率*严重程度总分';
-alter table tb_judge add distress_total_score varchar(45) null comment '严重程度总分';
-
-
-alter table tb_patient
-    add medical_record_num varchar(45) null comment '病例号' after patient_id;
-
-alter table tb_patient
-    add patient_group varchar(8) null comment '病人组别' after medical_record_num;
-
-create unique index idx_patient_medical_record_num
-    on tb_patient (medical_record_num);
-
-alter table tb_patient drop column drugs_type;
-
-alter table tb_patient drop column sign_status;
-
-alter table tb_examination_paper
-    add adverse_reactions varchar(1024) null comment '不良反应' after effective_status;
-
-alter table tb_examination_paper
-    add medication varchar(1024) null comment '用药情况' after adverse_reactions;
-
-alter table tb_examination_paper
-add answer_sequence smallint null comment '答题次序' after report_id;
-
-alter table tb_patient drop key user_id_UNIQUE;
-alter table tb_patient
-	add constraint patient_id_UNIQUE
-		unique (patient_id);
-
-
-ALTER TABLE `survey_scale`.`tb_patient`
-ADD UNIQUE INDEX `id_card_UNIQUE` (`id_card` ASC);
-
-
-alter table tb_answer
-	add insert_content varchar(256) null comment '补充插入的内容' after content;
-
-	alter table tb_question drop column insert_content;
+-- Dump completed on 2020-08-17 21:51:17
 
 
 
