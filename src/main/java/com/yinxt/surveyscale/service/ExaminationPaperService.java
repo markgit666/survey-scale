@@ -133,6 +133,22 @@ public class ExaminationPaperService {
     }
 
     /**
+     * description:修改随访信息
+     * <end>
+     *
+     * @param modifyFollowUpInfoReqDTO
+     * @return void
+     * @author yinxt
+     * @date 2020年08月25日 17:34
+     */
+    public void modifyFollowUpInfo(ModifyFollowUpInfoReqDTO modifyFollowUpInfoReqDTO) {
+        Examination examination = examinationPaperMapper.selectExamination(modifyFollowUpInfoReqDTO.getExaminationPaperId());
+        examination.setAdverseReactions(modifyFollowUpInfoReqDTO.getAdverseReactions());
+        examination.setMedication(modifyFollowUpInfoReqDTO.getMedication());
+        examinationPaperMapper.updateExaminationPaper(examination);
+    }
+
+    /**
      * 获取量表明细
      *
      * @param scaleId

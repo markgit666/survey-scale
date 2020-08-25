@@ -41,6 +41,13 @@ public class ExaminationPaperController {
         return Result.success(examinationPaperService.commitFollowUpInfo(followUpInfoCommitReqDTO));
     }
 
+    @ApiOperation(value = "修改随访信息", notes = "修改随访信息", httpMethod = "POST")
+    @RequestMapping(value = "patient/modifyFollowUpInfo")
+    public Result modifyFollowUpInfo(@RequestBody @Valid ModifyFollowUpInfoReqDTO modifyFollowUpInfoReqDTO) {
+        examinationPaperService.modifyFollowUpInfo(modifyFollowUpInfoReqDTO);
+        return Result.success();
+    }
+
     @ApiOperation(value = "获取量表试卷详情", notes = "获取量表详情", httpMethod = "POST")
     @RequestMapping(value = "patient/scale/get")
     public Result getPaperScaleDetail(@RequestBody @Valid ScaleInfoReqDTO scaleInfoReqDTO) {

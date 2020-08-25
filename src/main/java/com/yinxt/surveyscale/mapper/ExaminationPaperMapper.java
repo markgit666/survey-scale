@@ -28,6 +28,8 @@ public interface ExaminationPaperMapper {
 
     int insertExaminationPaper(Examination examination);
 
+    int updateExaminationPaper(Examination examination);
+
     int selectCountByExaminationPaper(@Param("examinationPaperId") String examinationPaperId);
 
     int selectCountByReportIdAndPatientId(@Param("reportId") String reportId, @Param("patientId") String patientId);

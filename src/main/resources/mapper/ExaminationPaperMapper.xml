@@ -24,6 +24,22 @@
          #{answerSequence,jdbcType=INTEGER}, #{adverseReactions,jdbcType=VARCHAR}, #{medication,jdbcType=VARCHAR}, now(), now())
     </insert>
 
+    <update id="updateExaminationPaper" parameterType="com.yinxt.surveyscale.entity.Examination">
+        update tb_examination_paper
+        <set>
+            <if test="adverseReactions != null">
+                adverse_reactions = #{adverseReactions,jdbcType=VARCHAR}
+            </if>
+            <if test="medication != null">
+                and medication = #{medication,jdbcType=VARCHAR}
+            </if>
+            and update_time = now()
+        </set>
+        <where>
+            examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
+        </where>
+    </update>
+
     <select id="selectCountByExaminationPaper" parameterType="string" resultType="int">
         select count(0) from tb_examination_paper where examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
     </select>
