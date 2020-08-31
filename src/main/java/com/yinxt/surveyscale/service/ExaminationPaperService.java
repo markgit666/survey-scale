@@ -143,6 +143,12 @@ public class ExaminationPaperService {
      */
     public void modifyFollowUpInfo(ModifyFollowUpInfoReqDTO modifyFollowUpInfoReqDTO) {
         Examination examination = examinationPaperMapper.selectExamination(modifyFollowUpInfoReqDTO.getExaminationPaperId());
+        if (examination == null) {
+            throw new LogicException("答卷不存在，请输入正确的答卷编号！");
+        }
+        if (examination.getAnswerSequence() == 1) {
+            throw new LogicException("首次答题不存在随访信息！");
+        }
         examination.setAdverseReactions(modifyFollowUpInfoReqDTO.getAdverseReactions());
         examination.setMedication(modifyFollowUpInfoReqDTO.getMedication());
         examinationPaperMapper.updateExaminationPaper(examination);

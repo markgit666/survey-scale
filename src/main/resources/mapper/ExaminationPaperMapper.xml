@@ -15,7 +15,7 @@
     </resultMap>
 
     <select id="selectExamination" parameterType="string" resultMap="BaseExaminationPaperResult">
-        select * from tb_examination_paper where examination_paper_id = #{papaerId,jdbcType=VARCHAR}
+        select * from tb_examination_paper where examination_paper_id = #{paperId,jdbcType=VARCHAR}
     </select>
 
     <insert id="insertExaminationPaper" parameterType="com.yinxt.surveyscale.entity.Examination">
@@ -28,12 +28,12 @@
         update tb_examination_paper
         <set>
             <if test="adverseReactions != null">
-                adverse_reactions = #{adverseReactions,jdbcType=VARCHAR}
+                adverse_reactions = #{adverseReactions,jdbcType=VARCHAR},
             </if>
             <if test="medication != null">
-                and medication = #{medication,jdbcType=VARCHAR}
+                medication = #{medication,jdbcType=VARCHAR},
             </if>
-            and update_time = now()
+            update_time = now()
         </set>
         <where>
             examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
