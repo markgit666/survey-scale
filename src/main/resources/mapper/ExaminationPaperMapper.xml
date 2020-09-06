@@ -45,7 +45,7 @@
     </select>
 
     <select id="selectCountByReportIdAndPatientId" parameterType="string" resultType="int">
-        select count(*) from tb_examination_paper where report_id = #{reportId,jdbcType=VARCHAR} and patient_id = #{patientId,jdbcType=VARCHAR}
+        select count(*) from tb_examination_paper where report_id = #{reportId,jdbcType=VARCHAR} and patient_id = #{patientId,jdbcType=VARCHAR} and effective_status = 1
     </select>
 
     <select id="selectExaminationPaperList" parameterType="com.yinxt.surveyscale.po.ExaminationPaperListQueryPO"

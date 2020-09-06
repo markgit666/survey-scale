@@ -35,6 +35,8 @@ public class PatientInfoService {
     private DoctorInfoService doctorInfoService;
     @Autowired
     private EligibleService eligibleService;
+    @Autowired
+    private ExaminationPaperService examinationPaperService;
     @Value("${rsa.key.private}")
     private String privateKey;
 
@@ -51,6 +53,8 @@ public class PatientInfoService {
             String patientId = savePatientInfo(patientInfoCommitReqDTO, true);
             PatientIdVO patientIdVO = new PatientIdVO();
             patientIdVO.setPatientId(patientId);
+            String examinationPaperId = examinationPaperService.createBlankExaminationPaper(patientId, patientRelationInfoDTO.getReportId());
+            patientIdVO.setExaminationPaperId(examinationPaperId);
             return patientIdVO;
         } catch (Exception e) {
             log.info("保存被试者信息失败", e);

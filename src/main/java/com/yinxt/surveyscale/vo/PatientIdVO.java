@@ -14,4 +14,8 @@ public class PatientIdVO {
      * 被试者编号
      */
     private String patientId;
+    /**
+     * 量表编号
+     */
+    private String examinationPaperId;
 }

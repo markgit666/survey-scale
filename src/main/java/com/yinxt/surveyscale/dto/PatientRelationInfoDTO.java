@@ -3,6 +3,7 @@ package com.yinxt.surveyscale.dto;
 import lombok.Data;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -23,6 +24,11 @@ public class PatientRelationInfoDTO {
     @Valid
     @NotNull(message = "被试者基本信息不能为空")
     private PatientInfoCommitReqDTO patientInfo;
+    /**
+     * 报告表编号
+     */
+    @NotBlank(message = "量表编号不能为空")
+    private String reportId;
     /**
      * 实验条件信息
      */
