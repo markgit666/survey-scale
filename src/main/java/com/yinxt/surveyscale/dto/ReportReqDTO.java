@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
  * @date 2020-03-12 23:46
  */
 @Data
-public class ReportDetailReqDTO {
+public class ReportReqDTO {
 
     /**
      * 报告表ID

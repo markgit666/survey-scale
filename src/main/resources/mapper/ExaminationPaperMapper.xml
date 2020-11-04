@@ -15,7 +15,7 @@
     </resultMap>
 
     <select id="selectExamination" parameterType="string" resultMap="BaseExaminationPaperResult">
-        select * from tb_examination_paper where examination_paper_id = #{papaerId,jdbcType=VARCHAR}
+        select * from tb_examination_paper where examination_paper_id = #{paperId,jdbcType=VARCHAR}
     </select>
 
     <insert id="insertExaminationPaper" parameterType="com.yinxt.surveyscale.entity.Examination">
@@ -24,12 +24,28 @@
          #{answerSequence,jdbcType=INTEGER}, #{adverseReactions,jdbcType=VARCHAR}, #{medication,jdbcType=VARCHAR}, now(), now())
     </insert>
 
+    <update id="updateExaminationPaper" parameterType="com.yinxt.surveyscale.entity.Examination">
+        update tb_examination_paper
+        <set>
+            <if test="adverseReactions != null">
+                adverse_reactions = #{adverseReactions,jdbcType=VARCHAR},
+            </if>
+            <if test="medication != null">
+                medication = #{medication,jdbcType=VARCHAR},
+            </if>
+            update_time = now()
+        </set>
+        <where>
+            examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
+        </where>
+    </update>
+
     <select id="selectCountByExaminationPaper" parameterType="string" resultType="int">
         select count(0) from tb_examination_paper where examination_paper_id = #{examinationPaperId,jdbcType=VARCHAR}
     </select>
 
     <select id="selectCountByReportIdAndPatientId" parameterType="string" resultType="int">
-        select count(*) from tb_examination_paper where report_id = #{reportId,jdbcType=VARCHAR} and patient_id = #{patientId,jdbcType=VARCHAR}
+        select count(*) from tb_examination_paper where report_id = #{reportId,jdbcType=VARCHAR} and patient_id = #{patientId,jdbcType=VARCHAR} and effective_status = 1
     </select>
 
     <select id="selectExaminationPaperList" parameterType="com.yinxt.surveyscale.po.ExaminationPaperListQueryPO"
@@ -143,7 +159,6 @@
         tj.check_time as checkTime,
         tj.total_score as totalScore
         from tb_scale_paper tsp
-        inner join tb_report_scale trs on tsp.scale_id = trs.scale_id
         left join tb_examination_paper tep on tsp.paper_id = tep.examination_paper_id
         left join tb_scale ts on tsp.scale_id = ts.scale_id
         left join tb_judge tj on tsp.scale_paper_id = tj.scale_paper_id

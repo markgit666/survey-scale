@@ -51,6 +51,16 @@ public class ExaminationPaperService {
     private String privateKey;
 
     /**
+     * 答题时获取报告表信息
+     *
+     * @param reportId
+     * @return
+     */
+    public Report getReportInfo(String reportId) {
+        return reportService.getReportById(reportId);
+    }
+
+    /**
      * 校验报告表和医生状态
      *
      * @param reportId
@@ -86,12 +96,27 @@ public class ExaminationPaperService {
     /**
      * 获取空试卷
      *
-     * @param blankExaminationPaperReqDTO
+     * @param patientId
+     * @param reportId
      * @return
      */
-    public ExaminationPaperVO getBlankExaminationPaper(BlankExaminationPaperReqDTO blankExaminationPaperReqDTO) {
-        String patientId = blankExaminationPaperReqDTO.getPatientId();
-        String reportId = blankExaminationPaperReqDTO.getReportId();
+    public ExaminationPaperVO getBlankExaminationPaper(String patientId, String reportId) {
+        String examinationPaperId = createBlankExaminationPaper(patientId, reportId);
+        ExaminationPaperVO examinationPaperVO = new ExaminationPaperVO();
+        examinationPaperVO.setExaminationPaperId(examinationPaperId);
+        //设置报告表信息
+        examinationPaperVO.setReportInfoVO(formatScaleAnswerStatus(reportId, examinationPaperId));
+        return examinationPaperVO;
+    }
+
+    /**
+     * 生成空白试卷
+     *
+     * @param patientId
+     * @param reportId
+     * @return
+     */
+    public String createBlankExaminationPaper(String patientId, String reportId) {
         if (reportService.getReportById(reportId) == null) {
             throw new LogicException("报告表不存在");
         }
@@ -107,11 +132,7 @@ public class ExaminationPaperService {
         examination.setPatientId(patientId);
         examination.setAnswerSequence(1);
         examinationPaperMapper.insertExaminationPaper(examination);
-        ExaminationPaperVO examinationPaperVO = new ExaminationPaperVO();
-        examinationPaperVO.setExaminationPaperId(examinationPaperId);
-        //设置报告表信息
-        examinationPaperVO.setReportInfoVO(formatScaleAnswerStatus(reportId, examinationPaperId));
-        return examinationPaperVO;
+        return examinationPaperId;
     }
 
     /**
@@ -130,6 +151,28 @@ public class ExaminationPaperService {
         FollowUpRespDTO followUpRespDTO = new FollowUpRespDTO();
         followUpRespDTO.setExaminationPaperId(examination.getExaminationPaperId());
         return followUpRespDTO;
+    }
+
+    /**
+     * description:修改随访信息
+     * <end>
+     *
+     * @param modifyFollowUpInfoReqDTO
+     * @return void
+     * @author yinxt
+     * @date 2020年08月25日 17:34
+     */
+    public void modifyFollowUpInfo(ModifyFollowUpInfoReqDTO modifyFollowUpInfoReqDTO) {
+        Examination examination = examinationPaperMapper.selectExamination(modifyFollowUpInfoReqDTO.getExaminationPaperId());
+        if (examination == null) {
+            throw new LogicException("答卷不存在，请输入正确的答卷编号！");
+        }
+        if (examination.getAnswerSequence() == 1) {
+            throw new LogicException("首次答题不存在随访信息！");
+        }
+        examination.setAdverseReactions(modifyFollowUpInfoReqDTO.getAdverseReactions());
+        examination.setMedication(modifyFollowUpInfoReqDTO.getMedication());
+        examinationPaperMapper.updateExaminationPaper(examination);
     }
 
     /**

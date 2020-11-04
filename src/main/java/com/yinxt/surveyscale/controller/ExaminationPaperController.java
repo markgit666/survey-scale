@@ -29,16 +29,23 @@ public class ExaminationPaperController {
         return Result.success(examinationPaperService.checkReportAndPatientStatus(checkPatientStatusReqDTO.getDoctorId(), checkPatientStatusReqDTO.getReportId(), checkPatientStatusReqDTO.getIdCard()));
     }
 
-    @ApiOperation(value = "获取空报告表试卷", notes = "获取空报告表试卷，只含有编号列表", httpMethod = "POST")
-    @RequestMapping(value = "patient/blank/get")
-    public Result getBlankExaminationPaper(@RequestBody @Valid BlankExaminationPaperReqDTO blankExaminationPaperReqDTO) {
-        return Result.success(examinationPaperService.getBlankExaminationPaper(blankExaminationPaperReqDTO));
-    }
+//    @ApiOperation(value = "获取空报告表试卷", notes = "获取空报告表试卷，只含有编号列表", httpMethod = "POST")
+//    @RequestMapping(value = "patient/blank/get")
+//    public Result getBlankExaminationPaper(@RequestBody @Valid BlankExaminationPaperReqDTO blankExaminationPaperReqDTO) {
+//        return Result.success(examinationPaperService.getBlankExaminationPaper(blankExaminationPaperReqDTO.getPatientId(), blankExaminationPaperReqDTO.getReportId()));
+//    }
 
     @ApiOperation(value = "随访信息提交", notes = "随访信息提交，非首次答题时填写", httpMethod = "POST")
     @RequestMapping(value = "patient/commitFollowUpInfo")
     public Result commitFollowUpInfo(@RequestBody @Valid FollowUpInfoCommitReqDTO followUpInfoCommitReqDTO) {
         return Result.success(examinationPaperService.commitFollowUpInfo(followUpInfoCommitReqDTO));
+    }
+
+    @ApiOperation(value = "修改随访信息", notes = "修改随访信息", httpMethod = "POST")
+    @RequestMapping(value = "patient/modifyFollowUpInfo")
+    public Result modifyFollowUpInfo(@RequestBody @Valid ModifyFollowUpInfoReqDTO modifyFollowUpInfoReqDTO) {
+        examinationPaperService.modifyFollowUpInfo(modifyFollowUpInfoReqDTO);
+        return Result.success();
     }
 
     @ApiOperation(value = "获取量表试卷详情", notes = "获取量表详情", httpMethod = "POST")
@@ -88,6 +95,12 @@ public class ExaminationPaperController {
     @RequestMapping(value = "scale/detail")
     public Result getScalePaperDetailInfo(@RequestBody @Valid ScalePaperDetailReqDTO scalePaperDetailReqDTO) {
         return Result.success(examinationPaperService.getScalePaperDetailInfo(scalePaperDetailReqDTO.getScalePaperId()));
+    }
+
+    @ApiOperation(value = "获取报告表信息", notes = "获取报告表信息", httpMethod = "POST")
+    @RequestMapping(value = "patient/getReportInfo")
+    public Result getReportInfo(@RequestBody @Valid ReportReqDTO reportReqDTO) {
+        return Result.success(examinationPaperService.getReportInfo(reportReqDTO.getReportId()));
     }
 
 

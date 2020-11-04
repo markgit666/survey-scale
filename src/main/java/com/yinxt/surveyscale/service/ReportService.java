@@ -1,13 +1,11 @@
 package com.yinxt.surveyscale.service;
 
-import com.yinxt.surveyscale.dto.ReportDetailReqDTO;
 import com.yinxt.surveyscale.entity.Report;
 import com.yinxt.surveyscale.entity.ScaleInfo;
 import com.yinxt.surveyscale.vo.ReportInfoVO;
 import com.yinxt.surveyscale.vo.ReportListVO;
 import com.yinxt.surveyscale.dto.ReportListReqDTO;
 import com.yinxt.surveyscale.mapper.ReportMapper;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

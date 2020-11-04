@@ -1,7 +1,7 @@
 package com.yinxt.surveyscale.controller;
 
 import com.yinxt.surveyscale.common.result.Result;
-import com.yinxt.surveyscale.dto.ReportDetailReqDTO;
+import com.yinxt.surveyscale.dto.ReportReqDTO;
 import com.yinxt.surveyscale.dto.ReportListReqDTO;
 import com.yinxt.surveyscale.service.ReportService;
 import io.swagger.annotations.Api;
@@ -40,8 +40,8 @@ public class ReportController {
 
     @ApiOperation(value = "获取报告表详情", notes = "获取报告表详情", httpMethod = "POST")
     @RequestMapping(value = "detail/info")
-    public Result getReportDetailInfo(@Valid @RequestBody ReportDetailReqDTO reportDetailReqDTO) {
-        return Result.success(reportService.getReportDetailInfo(reportDetailReqDTO.getReportId(), true, true, true));
+    public Result getReportDetailInfo(@Valid @RequestBody ReportReqDTO reportReqDTO) {
+        return Result.success(reportService.getReportDetailInfo(reportReqDTO.getReportId(), true, true, true));
     }
 
 }

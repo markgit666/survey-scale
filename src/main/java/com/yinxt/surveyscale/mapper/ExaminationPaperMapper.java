@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 public interface ExaminationPaperMapper {
 
-    Examination selectExamination(@Param("paperId") String papaerId);
+    Examination selectExamination(@Param("paperId") String paperId);
 
     int insertScalePaperInfo(ScalePaperInfo scalePaperInfo);
 
@@ -27,6 +27,8 @@ public interface ExaminationPaperMapper {
     ScalePaperInfo selectScalePaperInfo(@Param("scalePaperId") String scalePaperId);
 
     int insertExaminationPaper(Examination examination);
+
+    int updateExaminationPaper(Examination examination);
 
     int selectCountByExaminationPaper(@Param("examinationPaperId") String examinationPaperId);
 
